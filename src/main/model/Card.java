@@ -1,4 +1,4 @@
-package src;
+package main.model;
 
 class Card {
     private final String suit;

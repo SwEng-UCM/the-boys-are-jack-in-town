@@ -1,8 +1,8 @@
-package src;
+package main.model;
 
 import java.util.*;
 
-class Deck {
+public class Deck {
     private final List<Card> cards;
 
     public Deck() {

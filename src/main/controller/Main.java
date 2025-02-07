@@ -1,4 +1,6 @@
-package src;
+package main.controller;
+
+import main.model.Deck;
 
 public class Main {
 
