@@ -28,17 +28,10 @@ public class Deck {
         return cards.remove(cards.size() - 1);
     }
 
-    public Card drawRandomCard() {
-        if (cards.isEmpty()) {
-            throw new IllegalStateException("No cards left in the deck");
-        }
-        return cards.remove(random.nextInt(cards.size()));
-    }
-
     public List<Card> drawMultipleRandomCards(int n) {
         List<Card> drawnCards = new ArrayList<>();
         for (int i = 0; i < n && !cards.isEmpty(); i++) {
-            drawnCards.add(drawRandomCard());
+            drawnCards.add(dealCard());
         }
         return drawnCards;
     }
