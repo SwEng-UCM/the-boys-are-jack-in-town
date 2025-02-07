@@ -19,6 +19,13 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
+    public Card dealCard() {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("No cards left in the deck");
+        }
+        return cards.remove(cards.size() - 1);
+    }
+
     public void prettyPrint() {
         for (Card card : cards) {
             String rank = card.getRank();
