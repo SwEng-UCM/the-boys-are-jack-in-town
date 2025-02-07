@@ -4,12 +4,14 @@ import java.util.*;
 
 public class Deck {
     private final List<Card> cards;
+    private final Random random;
 
     public Deck() {
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 
         cards = new ArrayList<>();
+        random = new Random();
 
         for (String suit : suits) {
             for (String rank : ranks) {
@@ -24,6 +26,14 @@ public class Deck {
             throw new IllegalStateException("No cards left in the deck");
         }
         return cards.remove(cards.size() - 1);
+    }
+
+    public List<Card> drawMultipleRandomCards(int n) {
+        List<Card> drawnCards = new ArrayList<>();
+        for (int i = 0; i < n && !cards.isEmpty(); i++) {
+            drawnCards.add(dealCard());
+        }
+        return drawnCards;
     }
 
     public void prettyPrint() {
