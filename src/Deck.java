@@ -1,3 +1,5 @@
+package src;
+
 import java.util.*;
 
 class Deck {
@@ -15,5 +17,32 @@ class Deck {
             }
         }
         Collections.shuffle(cards);
+    }
+
+    public void prettyPrint() {
+        for (Card card : cards) {
+            String rank = card.getRank();
+            String suit = getSuitSymbol(card.getSuit());
+            char formattedRankChar = rank.charAt(0);
+            String formattedRank = String.valueOf(formattedRankChar);
+
+            System.out.println("+--------+");
+            System.out.println("|" + formattedRank + "       |");
+            System.out.println("|        |");
+            System.out.println("|   " + suit + "    |");
+            System.out.println("|        |");
+            System.out.println("|      " + formattedRank + " |");
+            System.out.println("+--------+");
+        }
+    }
+
+    private String getSuitSymbol(String suit) {
+        return switch (suit) {
+            case "Hearts" -> "♥";
+            case "Diamonds" -> "♦";
+            case "Clubs" -> "♣";
+            case "Spades" -> "♠";
+            default -> "?";
+        };
     }
 }
