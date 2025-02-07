@@ -1,8 +1,8 @@
-package src;
+package main.model;
 
 import java.util.*;
 
-class Deck {
+public class Deck {
     private final List<Card> cards;
 
     public Deck() {
@@ -17,6 +17,13 @@ class Deck {
             }
         }
         Collections.shuffle(cards);
+    }
+
+    public Card dealCard() {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("No cards left in the deck");
+        }
+        return cards.remove(cards.size() - 1);
     }
 
     public void prettyPrint() {
