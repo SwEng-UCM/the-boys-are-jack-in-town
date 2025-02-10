@@ -25,6 +25,15 @@ public class Main {
         view.showMessage("\nPlayer's score after receiving a new card:");
         view.showPlayerScore(dealer.getPlayer());
 
+        view.showMessage("\nDealing three more cards to the dealer...");
+        dealer.dealMultipleCardsToDealer();
+        view.showDealerHand(dealer.getDealer());
+
+       
+        view.showMessage("\nFinal hands:");
+        view.showPlayerHand(dealer.getPlayer());
+        view.showDealerHand(dealer.getDealer());
+
     //    Deck standard = new Deck();
     //    standard.prettyPrint();
     }
