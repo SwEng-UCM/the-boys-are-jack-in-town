@@ -1,5 +1,7 @@
 package main.model;
 
+import java.util.List;
+
 public class Dealer {
     private final Deck deck;
     private final Player player;
@@ -20,6 +22,20 @@ public class Dealer {
 
     public void dealCardToPlayer() {
         player.receiveCard(deck.dealCard());
+    }
+
+    public void dealMultipleRandomCardsToPlayer(int n) {
+        List<Card> cards = deck.drawMultipleRandomCards(n);
+        for (Card card : cards) {
+            player.receiveCard(card);
+        }
+    }
+
+    public void dealMultipleRandomCardsToDealer(int n) {
+        List<Card> cards = deck.drawMultipleRandomCards(n);
+        for (Card card : cards) {
+            dealer.receiveCard(card);
+        }
     }
 
     public void showPlayerHand() {
