@@ -26,7 +26,7 @@ public class Main {
         view.showPlayerScore(dealer.getPlayer());
 
         view.showMessage("\nDealing three more cards to the dealer...");
-        dealer.dealMultipleCardsToDealer();
+        dealer.dealMultipleRandomCardsToDealer(3);
         view.showDealerHand(dealer.getDealer());
 
        
