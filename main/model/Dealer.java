@@ -36,6 +36,7 @@ public class Dealer {
         for (Card card : cards) {
             dealer.receiveCard(card);
         }
+
     }
 
     public void showPlayerHand() {
@@ -53,4 +54,24 @@ public class Dealer {
     public Player getDealer() {
         return dealer;
     }
+
+   public void decideWinner(int dealerTotal, int playerTotal) {
+        // all face cards are 10, ace is 11 unless it gives dealer or player an excess of 21, in which case it gives 1.
+
+       if(dealerTotal > playerTotal && dealerTotal <= 21) {
+           System.out.println("Dealer wins!");
+       }
+
+       else if(playerTotal > dealerTotal && playerTotal <= 21) {
+           System.out.println("Player wins!");
+       }
+
+       else{
+           // A tie is a Standoff and nobody loses. After each player is satisfied with the cards he has asked for,
+           // the Dealer turns up his hidden card. If he has 16 or less he must draw additional cards until he reaches
+           // 17 or over. If he has 17 or more he does not take any more cards.
+       }
+    }
+
+
 }
