@@ -43,4 +43,9 @@ public class Player {
 
         return score;
     }
+
+    // Clears the player's hand for a new round
+    public void reset() {
+        hand.clear(); 
+    }
 }
