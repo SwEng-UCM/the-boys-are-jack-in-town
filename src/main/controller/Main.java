@@ -34,6 +34,9 @@ public class Main {
         view.showPlayerHand(dealer.getPlayer());
         view.showDealerHand(dealer.getDealer());
 
+        //view.showMessage("\nStart new game or terminate?");
+        
+
     //    Deck standard = new Deck();
     //    standard.prettyPrint();
     }

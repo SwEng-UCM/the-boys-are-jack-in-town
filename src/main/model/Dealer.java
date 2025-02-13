@@ -53,4 +53,10 @@ public class Dealer {
     public Player getDealer() {
         return dealer;
     }
+
+    public void resetGame() {
+        player.reset();
+        dealer.reset();
+        
+    }
 }
