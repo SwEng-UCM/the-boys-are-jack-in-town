@@ -2,8 +2,9 @@ package main.model;
 
 import java.util.List;
 
+
 public class Dealer {
-    private final Deck deck;
+    private  Deck deck;
     private final Player player;
     private final Player dealer;
 
@@ -41,6 +42,18 @@ public class Dealer {
     public void showPlayerHand() {
         player.showHand();
     }
+    public void showDealerHand(boolean hideSecondCard) {
+        if (hideSecondCard) {
+            System.out.println("Dealer's Hand:");
+            System.out.println(dealer.getHand().get(0) + " [Hidden]");
+        } else {
+            dealer.showHand();
+        }
+    }
+    public void revealDealerHand() {
+        System.out.println("Dealer reveals their full hand:");
+        showDealerHand(false);
+    }
 
     public void showDealerHand() {
         dealer.showHand();
@@ -57,6 +70,8 @@ public class Dealer {
     public void resetGame() {
         player.reset();
         dealer.reset();
+        this.deck = new Deck();
+
         
     }
 }
