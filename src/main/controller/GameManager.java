@@ -46,12 +46,15 @@ public class GameManager {
         
             if (playerHasBlackjack && dealerHasBlackjack) {
                 System.out.println("It's a tie! Both have Blackjack.");
+                view.printEmptyLine(); // Added empty line
                 return true;
             } else if (playerHasBlackjack) {
                 System.out.println("Player wins with a Blackjack");
+                view.printEmptyLine(); // Added empty line
                 return true;
             } else if (dealerHasBlackjack) {
                 System.out.println("Dealer wins with a Blackjack");
+                view.printEmptyLine(); // Added empty line
                 return true;
             }
         
@@ -61,8 +64,10 @@ public class GameManager {
         public void showGameState() {
             System.out.println("Player's Hand:");
             dealer.showPlayerHand();
+            view.showPlayerScore(dealer.getPlayer());
             System.out.println("\nDealer's Hand:");
             dealer.showDealerHand();
+            view.showDealerScore(dealer.getDealer());
         }
 
         private boolean handlePlayerActions() {
@@ -111,6 +116,7 @@ public class GameManager {
         } else {
             view.showMessage("It's a tie!");
         }
+        view.printEmptyLine(); // Added empty line
     }
     
 }

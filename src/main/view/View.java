@@ -17,7 +17,11 @@ public class View {
     }
 
     public void showPlayerScore(Player player) {
-        System.out.println("\nPlayer's score: " + player.calculateScore());
+        System.out.println("Player's score: " + player.calculateScore());
+    }
+
+    public void showDealerScore(Player dealer) {
+        System.out.println("Dealer's score: " + dealer.calculateScore());
     }
 
     // Added method to print an empty line

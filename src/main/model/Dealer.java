@@ -1,17 +1,19 @@
 package main.model;
 
+import main.view.View;
 import java.util.List;
-
 
 public class Dealer {
     private  Deck deck;
     private final Player player;
     private final Player dealer;
+    private final View view ;
 
     public Dealer() {
         this.deck = new Deck();
         this.player = new Player();
         this.dealer = new Player();
+        this.view = new View();
     }
 
     public void startNewGame() {
@@ -47,6 +49,7 @@ public class Dealer {
     public void showPlayerHand() {
         player.showHand();
     }
+
     public void showDealerHand(boolean hideSecondCard) {
         if (hideSecondCard) {
             System.out.println("\nDealer's Hand:");
@@ -58,6 +61,7 @@ public class Dealer {
     public void revealDealerHand() {
         System.out.println("\nDealer reveals their full hand:");
         showDealerHand(false);
+        view.showDealerScore(getDealer());
     }
 
     public void showDealerHand() {
@@ -76,7 +80,5 @@ public class Dealer {
         player.reset();
         dealer.reset();
         this.deck = new Deck();
-
-        
     }
 }
