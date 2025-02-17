@@ -25,6 +25,11 @@ public class Dealer {
         player.receiveCard(deck.dealCard());
     }
 
+    public void dealCardToDealer() {
+        dealer.receiveCard(deck.dealCard());
+    }
+
+
     public void dealMultipleRandomCardsToPlayer(int n) {
         List<Card> cards = deck.drawMultipleRandomCards(n);
         for (Card card : cards) {
