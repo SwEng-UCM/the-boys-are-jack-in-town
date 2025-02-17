@@ -49,14 +49,14 @@ public class Dealer {
     }
     public void showDealerHand(boolean hideSecondCard) {
         if (hideSecondCard) {
-            System.out.println("Dealer's Hand:");
+            System.out.println("\nDealer's Hand:");
             System.out.println(dealer.getHand().get(0) + " [Hidden]");
         } else {
             dealer.showHand();
         }
     }
     public void revealDealerHand() {
-        System.out.println("Dealer reveals their full hand:");
+        System.out.println("\nDealer reveals their full hand:");
         showDealerHand(false);
     }
 

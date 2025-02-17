@@ -26,6 +26,7 @@ public class GameManager {
     
         public void startNewRound() {
             System.out.println("Starting a new round...");
+            view.printEmptyLine(); // Added empty line
             dealer.resetGame();  // Clears hands for a new round
             dealer.startNewGame();
 
@@ -60,14 +61,14 @@ public class GameManager {
         public void showGameState() {
             System.out.println("Player's Hand:");
             dealer.showPlayerHand();
-            System.out.println("Dealer's Hand:");
+            System.out.println("\nDealer's Hand:");
             dealer.showDealerHand();
         }
 
         private boolean handlePlayerActions() {
             boolean roundOver = false;
             while (!roundOver) {
-                view.showMessage("Choose an action: (H)it, (S)tand, (Q)uit");
+                view.showMessage("\nChoose an action: (H)it, (S)tand, (Q)uit");
                 String action = scanner.nextLine().trim().toUpperCase();
     
                 switch (action) {

@@ -5,12 +5,10 @@ import main.model.Player;
 public class View {
 
     public void showPlayerHand(Player player) {
-        System.out.println("\nPlayer's hand:");
         player.showHand();
     }
 
     public void showDealerHand(Player dealer) {
-        System.out.println("\nDealer's hand:");
         dealer.showHand();
     }
 
@@ -19,6 +17,11 @@ public class View {
     }
 
     public void showPlayerScore(Player player) {
-        System.out.println("Player's score: " + player.calculateScore());
+        System.out.println("\nPlayer's score: " + player.calculateScore());
+    }
+
+    // Added method to print an empty line
+    public void printEmptyLine() {
+        System.out.println();
     }
 }
