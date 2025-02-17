@@ -62,12 +62,12 @@ public class GameManager {
         }
     
         public void showGameState() {
-            System.out.println("Player's Hand:");
-            dealer.showPlayerHand();
+            view.showPlayerHand(dealer.getPlayer());
             view.showPlayerScore(dealer.getPlayer());
-            System.out.println("\nDealer's Hand:");
-            dealer.showDealerHand();
+            view.printEmptyLine(); // Added empty line
+            view.showDealerHand(dealer.getDealer());
             view.showDealerScore(dealer.getDealer());
+            view.printEmptyLine(); // Added empty line
         }
 
         private boolean handlePlayerActions() {
@@ -81,8 +81,11 @@ public class GameManager {
                         dealer.dealCardToPlayer();
                         view.showPlayerHand(dealer.getPlayer());
                         view.showPlayerScore(dealer.getPlayer());
+                        view.printEmptyLine(); // Added empty line
                         if (dealer.getPlayer().calculateScore() > 21) {
                             view.showMessage("Player busts! Dealer wins.");
+                            view.printEmptyLine(); // Added empty line
+                            view.pause(); // Pause to allow user to see the end of the game
                             roundOver = true;
                         }
                         break;
@@ -91,21 +94,28 @@ public class GameManager {
                         while (dealer.getDealer().calculateScore() < 17) {
                             dealer.dealCardToDealer();
                         }
-                        view.showDealerHand(dealer.getDealer());
+                        showGameState();
+                        // view.showDealerHand(dealer.getDealer());
+                        // view.showDealerScore(dealer.getDealer());                        
                         determineWinner();
+                        view.printEmptyLine(); // Added empty line
+                        view.pause(); // Pause to allow user to see the end of the game
                         roundOver = true;
                         break;
                     case "Q":
                         view.showMessage("Thanks for playing!");
+                        view.printEmptyLine(); // Added empty line
                         return false;
                     default:
                     view.showMessage("Invalid action. Please choose again.");
+                    view.printEmptyLine(); // Added empty line
             }
         }
         return true;
     }
 
     private void determineWinner() {
+        showGameState(); // Show the game state before determining the winner
         int playerScore = dealer.getPlayer().calculateScore();
         int dealerScore = dealer.getDealer().calculateScore();
 
@@ -117,6 +127,7 @@ public class GameManager {
             view.showMessage("It's a tie!");
         }
         view.printEmptyLine(); // Added empty line
+        view.pause(); // Pause to allow user to see the end of the game
     }
     
 }

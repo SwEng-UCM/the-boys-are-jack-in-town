@@ -61,7 +61,7 @@ public class Dealer {
     public void revealDealerHand() {
         System.out.println("\nDealer reveals their full hand:");
         showDealerHand(false);
-        view.showDealerScore(getDealer());
+        view.showDealerScore(dealer);
     }
 
     public void showDealerHand() {
