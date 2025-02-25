@@ -27,7 +27,7 @@ public class GameManager {
         if (!gameOver) {
             player.receiveCard(deck.dealCard());
             checkPlayerBust();
-            gui.updateGameState(player, dealer);
+            gui.updateGameState(player, dealer, gameOver);
         }
     }
 
@@ -35,7 +35,7 @@ public class GameManager {
         if (!gameOver) {
             dealerTurn();
             determineWinner();
-            gui.updateGameState(player, dealer);
+            gui.updateGameState(player, dealer, gameOver);
         }
     }
 
@@ -50,7 +50,7 @@ public class GameManager {
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
 
-        gui.updateGameState(player, dealer);
+        gui.updateGameState(player, dealer, gameOver);
         gui.updateGameMessage("Player's turn. Hit or Stand.");
     }
 
@@ -77,17 +77,7 @@ public class GameManager {
             gameOver = true;
             gui.updateGameMessage("Player busts! Dealer wins.");
         }
-    /** Displays the player's and dealer's current hands and scores. */
-    public void showGameState() {
-        view.showPlayerHand(dealer.getPlayer());
-        view.showPlayerScore(dealer.getPlayer());
-        view.printEmptyLine();
-
-        // Show dealer's hand with hidden card if it exists
-        view.showDealerHand(dealer.getDealer(), dealer.getHiddenCard());
-        view.showDealerScore(dealer.getDealer(), dealer.getHiddenCard());
-        view.printEmptyLine();
-    }
+    
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {

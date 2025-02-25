@@ -102,26 +102,54 @@ public class BlackjackGUI extends JFrame {
         newGameButton.addActionListener(e -> gameManager.startNewGame());
     }
 
-    public void updateGameState(Player player, Player dealer) {
+    public void updateGameState(Player player, Player dealer, boolean gameOver) {
         playerPanel.removeAll();
         dealerPanel.removeAll();
-
+    
+        // Show player's cards
         for (Card card : player.getHand()) {
             playerPanel.add(createCardPanel(card));
         }
-        for (Card card : dealer.getHand()) {
-            dealerPanel.add(createCardPanel(card));
+    
+        // Show dealer's cards
+        if (gameOver) {
+            // Reveal all dealer cards at the end
+            for (Card card : dealer.getHand()) {
+                dealerPanel.add(createCardPanel(card));
+            }
+            dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
+        } else {
+            // Show only the first card and a hidden card
+            dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
+            dealerPanel.add(createHiddenCardPanel());
+            dealerScoreLabel.setText("Dealer's Score: ?"); // Hide score until reveal
         }
-
+    
         playerScoreLabel.setText("Player's Score: " + player.calculateScore());
-        dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
-
+    
         // Refresh UI
         playerPanel.revalidate();
         playerPanel.repaint();
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
+    
+    private JPanel createHiddenCardPanel() {
+        JPanel cardPanel = new JPanel();
+        cardPanel.setPreferredSize(new Dimension(80, 120));
+        cardPanel.setBackground(Color.BLACK);
+        cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+    
+        JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
+        hiddenLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        hiddenLabel.setForeground(Color.WHITE);
+    
+        cardPanel.setLayout(new BorderLayout());
+        cardPanel.add(hiddenLabel, BorderLayout.CENTER);
+    
+        return cardPanel;
+    }
+    
 
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
