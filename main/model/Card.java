@@ -3,7 +3,7 @@ package main.model;
 /**
  * Represents a playing card with a rank (2-10, J, Q, K, A) and a suit (Hearts, Diamonds, Clubs, Spades).
  */
-class Card {
+public class Card {
     private final String suit; // Suit of the card
     private final String rank; // Rank of the card
 
@@ -22,21 +22,36 @@ class Card {
 
     /**
      * Returns the card's value in Blackjack. Face cards are worth 10, Aces default to 11.
+     * This value can be adjusted later based on the hand's total value (e.g., Ace can be 1 or 11).
      */
     public int getValue() {
-        return switch (rank) {
-            case "2" -> 2;
-            case "3" -> 3;
-            case "4" -> 4;
-            case "5" -> 5;
-            case "6" -> 6;
-            case "7" -> 7;
-            case "8" -> 8;
-            case "9" -> 9;
-            case "10", "Jack", "Queen", "King" -> 10;
-            case "Ace" -> 11; // Default Ace value, game logic should adjust if needed
-            default -> 0;
-        };
+        switch (rank) {
+            case "2":
+                return 2;
+            case "3":
+                return 3;
+            case "4":
+                return 4;
+            case "5":
+                return 5;
+            case "6":
+                return 6;
+            case "7":
+                return 7;
+            case "8":
+                return 8;
+            case "9":
+                return 9;
+            case "10":
+            case "Jack":
+            case "Queen":
+            case "King":
+                return 10;
+            case "Ace":
+                return 11; // Default Ace value, will adjust during hand calculation if needed
+            default:
+                return 0;
+        }
     }
 
     /**

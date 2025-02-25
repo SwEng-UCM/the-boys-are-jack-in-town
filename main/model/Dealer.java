@@ -1,6 +1,5 @@
 package main.model;
 
-import main.view.View;
 import java.util.List;
 
 /**
@@ -10,13 +9,11 @@ public class Dealer {
     private Deck deck; // The deck of cards used in the game
     private final Player player; // The human player
     private final Player dealer; // The dealer (AI opponent)
-    private final View view; // Handles game output
 
     public Dealer() {
         this.deck = new Deck();
         this.player = new Player();
         this.dealer = new Player();
-        this.view = new View();
     }
 
     /**
@@ -74,7 +71,6 @@ public class Dealer {
     public void revealDealerHand() {
         System.out.println("\nDealer reveals their full hand:");
         showDealerHand(false);
-        view.showDealerScore(dealer);
     }
 
     /** Displays the dealer's hand without hiding any cards. */
