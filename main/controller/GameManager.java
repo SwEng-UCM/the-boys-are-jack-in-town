@@ -23,14 +23,6 @@ public class GameManager {
         this.gui = gui;
     }
 
-    public void handlePlayerHit() {
-        if (!gameOver) {
-            player.receiveCard(deck.dealCard());
-            checkPlayerBust();
-            gui.updateGameState(player, dealer, gameOver);
-        }
-    }
-
     public void handlePlayerStand() {
         if (!gameOver) {
             dealerTurn();
@@ -44,12 +36,14 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
-
+    
+        // Deal initial cards
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
-
+    
+        // Update game state immediately to show hands
         gui.updateGameState(player, dealer, gameOver);
         gui.updateGameMessage("Player's turn. Hit or Stand.");
     }
@@ -71,13 +65,20 @@ public class GameManager {
         }
         checkDealerBust();
     }
-
-    private void checkPlayerBust() {
+    public void handlePlayerHit() {
+        if (!gameOver && player.calculateScore() <= 21) {
+            player.receiveCard(deck.dealCard());
+            checkPlayerBust();
+            gui.updateGameState(player, dealer, gameOver);
+        }
+    }
+    
+    public void checkPlayerBust() {
         if (player.calculateScore() > 21) {
             gameOver = true;
             gui.updateGameMessage("Player busts! Dealer wins.");
         }
-    
+    }
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {

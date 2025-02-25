@@ -93,6 +93,8 @@ public class BlackjackGUI extends JFrame {
         mainPanel.add(playerArea, BorderLayout.SOUTH);
     
         add(mainPanel);
+
+        gameManager.startNewGame();
     }
     
 
@@ -195,6 +197,7 @@ public class BlackjackGUI extends JFrame {
             GameManager gameManager = new GameManager();
             BlackjackGUI gui = new BlackjackGUI(gameManager);
             gui.setVisible(true);
+
         });
     }
 }
