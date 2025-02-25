@@ -1,71 +1,82 @@
 package main.controller;
 
-import java.util.Scanner;
-import main.view.View;
-import main.model.Dealer;
+import main.model.Card;
+import main.model.Deck;
+import main.model.Player;
+import main.view.BlackjackGUI;
 
-/**
- * Manages the flow of the Blackjack game, handling player actions and game rounds.
- */
 public class GameManager {
-    private final Dealer dealer;
-    private final View view;
-    private final Scanner scanner;
+    private Player player;
+    private Player dealer;
+    private Deck deck;
+    private BlackjackGUI gui;
+    private boolean gameOver;
 
     public GameManager() {
-        this.dealer = new Dealer();
-        this.view = new View();
-        this.scanner = new Scanner(System.in);
+        this.player = new Player();
+        this.dealer = new Player();
+        this.deck = new Deck();
+        this.gameOver = false;
     }
 
-    /** Starts the game loop, allowing multiple rounds until the player quits. */
-    public void startGame() {
-        boolean playing = true;
-        while (playing) {
-            startNewRound();
-            playing = handlePlayerActions();
+    public void setGui(BlackjackGUI gui) {
+        this.gui = gui;
+    }
+
+    public void handlePlayerHit() {
+        if (!gameOver) {
+            player.receiveCard(deck.dealCard());
+            checkPlayerBust();
+            gui.updateGameState(player, dealer);
         }
     }
 
-    /** Begins a new round, resets the game state, and deals initial cards. */
-    public void startNewRound() {
-        System.out.println("Starting a new round...");
-        view.printEmptyLine();
-        dealer.resetGame();
-        dealer.startNewGame();
-
-        if (checkBlackjack()) {
-            return;
+    public void handlePlayerStand() {
+        if (!gameOver) {
+            dealerTurn();
+            determineWinner();
+            gui.updateGameState(player, dealer);
         }
-
-        showGameState();
     }
 
-    /** Checks for an immediate blackjack win and ends the round if necessary. */
-    private boolean checkBlackjack() {
-        int playerScore = dealer.getPlayer().calculateScore();
-        int dealerScore = dealer.getDealer().calculateScore();
+    public void startNewGame() {
+        player.reset();
+        dealer.reset();
+        deck = new Deck(); // Reset the deck for a new game
+        gameOver = false;
 
-        boolean playerHasBlackjack = (playerScore == 21 && dealer.getPlayer().getHand().size() == 2);
-        boolean dealerHasBlackjack = (dealerScore == 21 && dealer.getDealer().getHand().size() == 2);
+        player.receiveCard(deck.dealCard());
+        dealer.receiveCard(deck.dealCard());
+        player.receiveCard(deck.dealCard());
+        dealer.receiveCard(deck.dealCard());
 
-        if (playerHasBlackjack && dealerHasBlackjack) {
-            System.out.println("It's a tie! Both have Blackjack.");
-            view.printEmptyLine();
-            return true;
-        } else if (playerHasBlackjack) {
-            System.out.println("Player wins with a Blackjack!");
-            view.printEmptyLine();
-            return true;
-        } else if (dealerHasBlackjack) {
-            System.out.println("Dealer wins with a Blackjack!");
-            view.printEmptyLine();
-            return true;
-        }
-
-        return false;
+        gui.updateGameState(player, dealer);
+        gui.updateGameMessage("Player's turn. Hit or Stand.");
     }
 
+    public String getPlayerHand() {
+        return player.getHand().toString();
+    }
+
+    public String getDealerHand() {
+        if (gameOver) {
+            return dealer.getHand().toString();
+        }
+        return dealer.getHand().get(0).toString() + " [Hidden]";
+    }
+
+    private void dealerTurn() {
+        while (dealer.calculateScore() < 17) { // Dealer hits on 16 or below
+            dealer.receiveCard(deck.dealCard());
+        }
+        checkDealerBust();
+    }
+
+    private void checkPlayerBust() {
+        if (player.calculateScore() > 21) {
+            gameOver = true;
+            gui.updateGameMessage("Player busts! Dealer wins.");
+        }
     /** Displays the player's and dealer's current hands and scores. */
     public void showGameState() {
         view.showPlayerHand(dealer.getPlayer());
@@ -78,63 +89,26 @@ public class GameManager {
         view.printEmptyLine();
     }
 
-    /** Handles player actions during their turn, allowing hit, stand, or quit. */
-    private boolean handlePlayerActions() {
-        boolean roundOver = false;
-        while (!roundOver) {
-            view.showMessage("\nChoose an action: (H)it, (S)tand, (Q)uit");
-            String action = scanner.nextLine().trim().toUpperCase();
-
-            switch (action) {
-                case "H": // Player takes a card
-                    dealer.dealCardToPlayer();
-                    view.showPlayerHand(dealer.getPlayer());
-                    view.showPlayerScore(dealer.getPlayer());
-                    view.printEmptyLine();
-                    if (dealer.getPlayer().calculateScore() > 21) {
-                        view.showMessage("Player busts! Dealer wins.");
-                        view.printEmptyLine();
-                        view.pause();
-                        roundOver = true;
-                    }
-                    break;
-                case "S": // Player stands, dealer plays
-                    dealer.revealDealerHand();
-                    while (dealer.getDealer().calculateScore() < 17) {
-                        dealer.dealCardToDealer();
-                    }
-                    showGameState();
-                    determineWinner();
-                    view.printEmptyLine();
-                    view.pause();
-                    roundOver = true;
-                    break;
-                case "Q": // Player quits the game
-                    view.showMessage("Thanks for playing!");
-                    view.printEmptyLine();
-                    return false;
-                default:
-                    view.showMessage("Invalid action. Please choose again.");
-                    view.printEmptyLine();
-            }
+    private void checkDealerBust() {
+        if (dealer.calculateScore() > 21) {
+            gameOver = true;
+            gui.updateGameMessage("Dealer busts! Player wins.");
         }
-        return true;
     }
 
-    /** Determines the winner based on the final scores and displays the result. */
     private void determineWinner() {
-        showGameState();
-        int playerScore = dealer.getPlayer().calculateScore();
-        int dealerScore = dealer.getDealer().calculateScore();
+        if (!gameOver) {
+            int playerScore = player.calculateScore();
+            int dealerScore = dealer.calculateScore();
 
-        if (dealerScore > 21 || playerScore > dealerScore) {
-            view.showMessage("Player wins!");
-        } else if (playerScore < dealerScore) {
-            view.showMessage("Dealer wins!");
-        } else {
-            view.showMessage("It's a tie!");
+            if (playerScore > dealerScore) {
+                gui.updateGameMessage("Player wins!");
+            } else if (playerScore < dealerScore) {
+                gui.updateGameMessage("Dealer wins!");
+            } else {
+                gui.updateGameMessage("It's a tie!");
+            }
+            gameOver = true;
         }
-        view.printEmptyLine();
-        view.pause();
     }
 }
