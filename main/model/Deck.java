@@ -20,7 +20,7 @@ public class Deck {
         // Generate all 52 cards and shuffle the deck
         for (String suit : suits) {
             for (String rank : ranks) {
-                cards.add(new Card(rank, suit));
+                cards.add(new Card(rank, suit, false));
             }
         }
         Collections.shuffle(cards);
