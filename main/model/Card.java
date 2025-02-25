@@ -6,10 +6,12 @@ package main.model;
 public class Card {
     private final String suit; // Suit of the card
     private final String rank; // Rank of the card
+    boolean hidden;
 
-    public Card(String rank, String suit) {
+    public Card(String rank, String suit, boolean hidden) {
         this.rank = rank;
         this.suit = suit;
+        this.hidden = hidden;
     }
 
     public String getRank() {

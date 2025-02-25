@@ -10,6 +10,8 @@ public class Dealer {
     private final Player player; // The human player
     private final Player dealer; // The dealer (AI opponent)
 
+    private Card hiddenCard; // Stores the dealer's hidden card
+
     public Dealer() {
         this.deck = new Deck();
         this.player = new Player();
@@ -19,11 +21,12 @@ public class Dealer {
     /**
      * Starts a new game by dealing two initial cards to both the player and dealer.
      */
+
     public void startNewGame() {
         player.receiveCard(deck.dealCard());
-        dealer.receiveCard(deck.dealCard());
+        dealer.receiveCard(deck.dealCard()); // First visible card
+        hiddenCard = deck.dealCard(); // Hidden card
         player.receiveCard(deck.dealCard());
-        dealer.receiveCard(deck.dealCard());
     }
 
     /** Deals one card to the player. */
@@ -61,7 +64,7 @@ public class Dealer {
     public void showDealerHand(boolean hideSecondCard) {
         if (hideSecondCard) {
             System.out.println("\nDealer's Hand:");
-            System.out.println(dealer.getHand().get(0) + " [Hidden]");
+            System.out.println(dealer.getHand().get(2) + " [Hidden]");
         } else {
             dealer.showHand();
         }
@@ -69,8 +72,14 @@ public class Dealer {
 
     /** Reveals the dealer's full hand and updates the view. */
     public void revealDealerHand() {
+        dealer.receiveCard(hiddenCard); // Add hidden card back to the hand
+        hiddenCard = null; // Remove reference to avoid duplicate addition
         System.out.println("\nDealer reveals their full hand:");
         showDealerHand(false);
+    }
+
+    public Card getHiddenCard() {
+        return hiddenCard;
     }
 
     /** Displays the dealer's hand without hiding any cards. */

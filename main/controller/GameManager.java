@@ -77,6 +77,16 @@ public class GameManager {
             gameOver = true;
             gui.updateGameMessage("Player busts! Dealer wins.");
         }
+    /** Displays the player's and dealer's current hands and scores. */
+    public void showGameState() {
+        view.showPlayerHand(dealer.getPlayer());
+        view.showPlayerScore(dealer.getPlayer());
+        view.printEmptyLine();
+
+        // Show dealer's hand with hidden card if it exists
+        view.showDealerHand(dealer.getDealer(), dealer.getHiddenCard());
+        view.showDealerScore(dealer.getDealer(), dealer.getHiddenCard());
+        view.printEmptyLine();
     }
 
     private void checkDealerBust() {
