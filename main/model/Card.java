@@ -3,13 +3,15 @@ package main.model;
 /**
  * Represents a playing card with a rank (2-10, J, Q, K, A) and a suit (Hearts, Diamonds, Clubs, Spades).
  */
-class Card {
+public class Card {
     private final String suit; // Suit of the card
     private final String rank; // Rank of the card
+    boolean hidden;
 
-    public Card(String rank, String suit) {
+    public Card(String rank, String suit, boolean hidden) {
         this.rank = rank;
         this.suit = suit;
+        this.hidden = hidden;
     }
 
     public String getRank() {

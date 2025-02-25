@@ -71,8 +71,10 @@ public class GameManager {
         view.showPlayerHand(dealer.getPlayer());
         view.showPlayerScore(dealer.getPlayer());
         view.printEmptyLine();
-        view.showDealerHand(dealer.getDealer());
-        view.showDealerScore(dealer.getDealer());
+
+        // Show dealer's hand with hidden card if it exists
+        view.showDealerHand(dealer.getDealer(), dealer.getHiddenCard());
+        view.showDealerScore(dealer.getDealer(), dealer.getHiddenCard());
         view.printEmptyLine();
     }
 
