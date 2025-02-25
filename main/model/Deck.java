@@ -20,10 +20,10 @@ public class Deck {
         // Generate all 52 cards and shuffle the deck
         for (String suit : suits) {
             for (String rank : ranks) {
-                cards.add(new Card(rank, suit, false));
+                cards.add(new Card(rank, suit, false)); // Cards are not hidden initially
             }
         }
-        Collections.shuffle(cards);
+        Collections.shuffle(cards); // Shuffle the deck
     }
 
     /**
@@ -48,32 +48,39 @@ public class Deck {
         return drawnCards;
     }
 
+    /**
+     * Re-shuffles the deck, resetting the cards.
+     */
+    public void reshuffle() {
+        cards.clear();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                cards.add(new Card(rank, suit, false)); // Create new cards, not hidden
+            }
+        }
+        Collections.shuffle(cards); // Shuffle the deck
+    }
+
     /** Displays a simple visual representation of the remaining cards in the deck. */
     public void prettyPrint() {
         for (Card card : cards) {
             String rank = card.getRank();
-            String suit = getSuitSymbol(card.getSuit());
-            char formattedRankChar = rank.charAt(0);
-            String formattedRank = String.valueOf(formattedRankChar);
-
+            String suit = card.getSuit();
             System.out.println("+--------+");
-            System.out.println("|" + formattedRank + "       |");
+            System.out.println("| " + rank + "       |");
             System.out.println("|        |");
             System.out.println("|   " + suit + "    |");
             System.out.println("|        |");
-            System.out.println("|      " + formattedRank + " |");
+            System.out.println("|      " + rank + " |");
             System.out.println("+--------+");
         }
     }
 
-    /** Returns the Unicode symbol for a given suit. */
-    private String getSuitSymbol(String suit) {
-        return switch (suit) {
-            case "Hearts" -> "♥";
-            case "Diamonds" -> "♦";
-            case "Clubs" -> "♣";
-            case "Spades" -> "♠";
-            default -> "?";
-        };
+    /** Returns the number of cards remaining in the deck. */
+    public int getRemainingCards() {
+        return cards.size();
     }
 }

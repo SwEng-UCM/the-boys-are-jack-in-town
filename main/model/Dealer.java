@@ -96,6 +96,7 @@ public class Dealer {
         return dealer;
     }
 
+
     /** Resets the game by clearing hands and reinitializing the deck. */
     public void resetGame() {
         player.reset();

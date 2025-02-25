@@ -52,6 +52,10 @@ public class Player {
 
         return score;
     }
+    public boolean hasBlackjack() {
+        // Check if player has exactly two cards and their score equals 21
+        return calculateScore() == 21;
+    }
 
     /** Clears the player's hand for a new round. */
     public void reset() {

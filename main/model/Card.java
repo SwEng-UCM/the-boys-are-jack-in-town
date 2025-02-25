@@ -6,7 +6,7 @@ package main.model;
 public class Card {
     private final String suit; // Suit of the card
     private final String rank; // Rank of the card
-    boolean hidden;
+    private boolean hidden; // Whether the card is hidden (for GUI purposes)
 
     public Card(String rank, String suit, boolean hidden) {
         this.rank = rank;
@@ -57,10 +57,42 @@ public class Card {
     }
 
     /**
+     * Toggles the visibility of the card (for GUI purposes).
+     */
+    public void toggleVisibility() {
+        this.hidden = !this.hidden;
+    }
+
+    /**
      * Returns a formatted string like "Ace of Spades" or "10 of Hearts".
+     * If the card is hidden, it returns "Hidden Card" instead.
      */
     @Override
     public String toString() {
+        if (hidden) {
+            return "Hidden Card"; // For the GUI to display a hidden card
+        }
         return rank + " of " + suit;
+    }
+
+    /**
+     * Returns a simplified card name for the GUI (just rank and suit symbol).
+     */
+    public String getCardForDisplay() {
+        if (hidden) {
+            return "Hidden Card";
+        }
+        return rank + " " + getSuitSymbol(suit); // Ex: Ace ♥, 10 ♠, etc.
+    }
+
+    /** Returns the Unicode symbol for a given suit. */
+    private String getSuitSymbol(String suit) {
+        return switch (suit) {
+            case "Hearts" -> "♥";
+            case "Diamonds" -> "♦";
+            case "Clubs" -> "♣";
+            case "Spades" -> "♠";
+            default -> "?";
+        };
     }
 }

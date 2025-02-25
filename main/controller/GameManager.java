@@ -36,12 +36,23 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
-    
+
         // Deal initial cards
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
+
+        if (player.hasBlackjack()) {
+            gui.updateGameMessage("Player has Blackjack! Player wins!");
+            gui.updateGameState(player, dealer, true); // End the game
+        } else if (dealer.hasBlackjack()) {
+            gui.updateGameMessage("Dealer has Blackjack! Dealer wins!");
+            gui.updateGameState(player, dealer, true); // End the game
+        } else {
+            gui.updateGameMessage("Game On! Your turn.");
+            gui.updateGameState(player, dealer, false); // Continue the game
+        }
     
         // Update game state immediately to show hands
         gui.updateGameState(player, dealer, gameOver);
