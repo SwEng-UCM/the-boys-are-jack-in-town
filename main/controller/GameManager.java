@@ -36,19 +36,23 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
-
+    
         // Deal initial cards
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
         player.receiveCard(deck.dealCard());
         dealer.receiveCard(deck.dealCard());
-
+    
         if (player.hasBlackjack()) {
             gui.updateGameMessage("Player has Blackjack! Player wins!");
-            gui.updateGameState(player, dealer, true); // End the game
+            gameOver = true;  // Ensure game is marked as over
+            gui.updateGameState(player, dealer, true);
+            return;
         } else if (dealer.hasBlackjack()) {
             gui.updateGameMessage("Dealer has Blackjack! Dealer wins!");
-            gui.updateGameState(player, dealer, true); // End the game
+            gameOver = true;  // Ensure game is marked as over
+            gui.updateGameState(player, dealer, true);
+            return;
         } else {
             gui.updateGameMessage("Game On! Your turn.");
             gui.updateGameState(player, dealer, false); // Continue the game
@@ -58,6 +62,7 @@ public class GameManager {
         gui.updateGameState(player, dealer, gameOver);
         gui.updateGameMessage("Player's turn. Hit or Stand.");
     }
+    
 
     public String getPlayerHand() {
         return player.getHand().toString();
