@@ -107,10 +107,10 @@ public class BlackjackGUI extends JFrame {
     public void updateGameState(Player player, Player dealer, boolean gameOver) {
         playerPanel.removeAll();
         dealerPanel.removeAll();
-    
+        
         // Show player's cards
         for (Card card : player.getHand()) {
-            playerPanel.add(createCardPanel(card));
+            playerPanel.add(createCardPanel(card)); // Assuming createCardPanel is a method for displaying cards
         }
     
         // Show dealer's cards
@@ -119,14 +119,16 @@ public class BlackjackGUI extends JFrame {
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
             }
+            // Update the dealer's score
             dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
         } else {
-            // Show only the first card and a hidden card
-            dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
-            dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText("Dealer's Score: ?"); // Hide score until reveal
+            // Show only the first card and a hidden card for the dealer
+            dealerPanel.add(createCardPanel(dealer.getHand().get(0))); // Show first card
+            dealerPanel.add(createHiddenCardPanel()); // Display a "Hidden Card"
+            dealerScoreLabel.setText("Dealer's Score: ???"); // Hide the dealer's score
         }
     
+        // Show player's score
         playerScoreLabel.setText("Player's Score: " + player.calculateScore());
     
         // Refresh UI
@@ -135,6 +137,9 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
+    
+    
+    
     
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
@@ -191,6 +196,41 @@ public class BlackjackGUI extends JFrame {
 
         return cardPanel;
     }
+
+    public int promptJokerWildValue() {
+        int wildValue = 0;
+        boolean valid = false;
+        while (!valid) {
+            String input = JOptionPane.showInputDialog(
+                this, 
+                "Joker Wild! Choose a value between 1 and 11: 🤡", 
+                "Joker Wild", 
+                JOptionPane.QUESTION_MESSAGE
+            );
+            try {
+                wildValue = Integer.parseInt(input);
+                if (wildValue >= 1 && wildValue <= 11) {
+                    valid = true;
+                } else {
+                    JOptionPane.showMessageDialog(
+                        this, 
+                        "Invalid choice. Please choose a value between 1 and 11.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "Please enter a valid number.", 
+                    "Invalid Input", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+            }
+        }
+        return wildValue;
+    }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
