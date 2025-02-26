@@ -197,6 +197,41 @@ public class BlackjackGUI extends JFrame {
         return cardPanel;
     }
 
+    public int promptJokerWildValue() {
+        int wildValue = 0;
+        boolean valid = false;
+        while (!valid) {
+            String input = JOptionPane.showInputDialog(
+                this, 
+                "Joker Wild! Choose a value between 1 and 11: 🤡", 
+                "Joker Wild", 
+                JOptionPane.QUESTION_MESSAGE
+            );
+            try {
+                wildValue = Integer.parseInt(input);
+                if (wildValue >= 1 && wildValue <= 11) {
+                    valid = true;
+                } else {
+                    JOptionPane.showMessageDialog(
+                        this, 
+                        "Invalid choice. Please choose a value between 1 and 11.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "Please enter a valid number.", 
+                    "Invalid Input", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+            }
+        }
+        return wildValue;
+    }
+    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GameManager gameManager = new GameManager();

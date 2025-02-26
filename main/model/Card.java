@@ -1,17 +1,37 @@
 package main.model;
 
 /**
- * Represents a playing card with a rank (2-10, J, Q, K, A) and a suit (Hearts, Diamonds, Clubs, Spades).
+ * Represents a playing card with a rank and a suit, including special cards that modify Blackjack rules.
  */
 public class Card {
-    private final String suit; // Suit of the card
-    private final String rank; // Rank of the card
-    private boolean hidden; // Whether the card is hidden (for GUI purposes)
+    public enum CardType {
+        STANDARD, BLACKJACK_BOMB, SPLIT_ACE, JOKER_WILD
+    }
+
+    private final String suit;
+    private final String rank;
+    private final boolean hidden;
+    private final CardType type;
+    private int wildValue; // Dynamic value for Joker Wild
 
     public Card(String rank, String suit, boolean hidden) {
         this.rank = rank;
         this.suit = suit;
         this.hidden = hidden;
+        this.type = CardType.STANDARD;
+    }
+
+    public Card(CardType type) {
+        this.rank = switch (type) {
+            case BLACKJACK_BOMB -> "BB";
+            case SPLIT_ACE -> "SA";
+            case JOKER_WILD -> "JW";
+            default -> throw new IllegalArgumentException("Unknown special card type");
+        };
+        this.suit = "Special";
+        this.hidden = false;
+        this.type = type;
+        this.wildValue = 11; // Default value for Joker Wild
     }
 
     public String getRank() {
@@ -22,77 +42,50 @@ public class Card {
         return this.suit;
     }
 
-    /**
-     * Returns the card's value in Blackjack. Face cards are worth 10, Aces default to 11.
-     * This value can be adjusted later based on the hand's total value (e.g., Ace can be 1 or 11).
-     */
+    public CardType getType() {
+        return this.type;
+    }
+
     public int getValue() {
-        switch (rank) {
-            case "2":
-                return 2;
-            case "3":
-                return 3;
-            case "4":
-                return 4;
-            case "5":
-                return 5;
-            case "6":
-                return 6;
-            case "7":
-                return 7;
-            case "8":
-                return 8;
-            case "9":
-                return 9;
-            case "10":
-            case "Jack":
-            case "Queen":
-            case "King":
-                return 10;
-            case "Ace":
-                return 11; // Default Ace value, will adjust during hand calculation if needed
-            default:
-                return 0;
+        return switch (type) {
+            case BLACKJACK_BOMB -> 21; // Instant win
+            case SPLIT_ACE -> 0; // Special effect, not a number
+            case JOKER_WILD -> wildValue; // Dynamic value
+            default -> standardCardValue();
+        };
+    }
+
+    public void setWildValue(int value) {
+        if (type == CardType.JOKER_WILD && value >= 1 && value <= 11) {
+            this.wildValue = value;
+        } else {
+            throw new IllegalArgumentException("Invalid value for Joker Wild");
         }
     }
 
-    /**
-     * Toggles the visibility of the card (for GUI purposes).
-     */
-    public void toggleVisibility() {
-        this.hidden = !this.hidden;
+    private int standardCardValue() {
+        return switch (rank) {
+            case "2" -> 2;
+            case "3" -> 3;
+            case "4" -> 4;
+            case "5" -> 5;
+            case "6" -> 6;
+            case "7" -> 7;
+            case "8" -> 8;
+            case "9" -> 9;
+            case "10", "Jack", "Queen", "King" -> 10;
+            case "Ace" -> 11;
+            default -> 0;
+        };
     }
 
-    /**
-     * Returns a formatted string like "Ace of Spades" or "10 of Hearts".
-     * If the card is hidden, it returns "Hidden Card" instead.
-     */
     @Override
     public String toString() {
-        if (hidden) {
-            return "Hidden Card"; // For the GUI to display a hidden card
-        }
-        return rank + " of " + suit;
-    }
-
-    /**
-     * Returns a simplified card name for the GUI (just rank and suit symbol).
-     */
-    public String getCardForDisplay() {
-        if (hidden) {
-            return "Hidden Card";
-        }
-        return rank + " " + getSuitSymbol(suit); // Ex: Ace ♥, 10 ♠, etc.
-    }
-
-    /** Returns the Unicode symbol for a given suit. */
-    private String getSuitSymbol(String suit) {
-        return switch (suit) {
-            case "Hearts" -> "♥";
-            case "Diamonds" -> "♦";
-            case "Clubs" -> "♣";
-            case "Spades" -> "♠";
-            default -> "?";
+        return switch (type) {
+            case BLACKJACK_BOMB -> "Blackjack Bomb (💣)";
+            case SPLIT_ACE -> "Split Ace (♠♠)";
+            case JOKER_WILD -> "Joker Wild (🤡) [Value: " + wildValue + "]";
+            default -> rank + " of " + suit;
         };
     }
 }
