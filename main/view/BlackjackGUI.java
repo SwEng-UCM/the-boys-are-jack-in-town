@@ -58,7 +58,7 @@ public class BlackjackGUI extends JFrame {
         playerScorePanel.setOpaque(false);
         playerScorePanel.add(playerScoreLabel);
     
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 60));
         buttonPanel.setOpaque(false);
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
@@ -108,27 +108,25 @@ public class BlackjackGUI extends JFrame {
         playerPanel.removeAll();
         dealerPanel.removeAll();
         
-        // Show player's cards
+        // Show player's cards and check for special cards
         for (Card card : player.getHand()) {
-            playerPanel.add(createCardPanel(card)); // Assuming createCardPanel is a method for displaying cards
+            playerPanel.add(createCardPanel(card));
+            checkForSpecialCard(card);
         }
     
         // Show dealer's cards
         if (gameOver) {
-            // Reveal all dealer cards at the end
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
+                checkForSpecialCard(card);
             }
-            // Update the dealer's score
             dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
         } else {
-            // Show only the first card and a hidden card for the dealer
-            dealerPanel.add(createCardPanel(dealer.getHand().get(0))); // Show first card
-            dealerPanel.add(createHiddenCardPanel()); // Display a "Hidden Card"
-            dealerScoreLabel.setText("Dealer's Score: ???"); // Hide the dealer's score
+            dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
+            dealerPanel.add(createHiddenCardPanel());
+            dealerScoreLabel.setText("Dealer's Score: ???");
         }
     
-        // Show player's score
         playerScoreLabel.setText("Player's Score: " + player.calculateScore());
     
         // Refresh UI
@@ -137,6 +135,7 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
+    
     
     
     
@@ -230,6 +229,17 @@ public class BlackjackGUI extends JFrame {
         }
         return wildValue;
     }
+
+    private void checkForSpecialCard(Card card) {
+        if (card.isJokerWild()) {
+            updateGameMessage("Joker Wild! You can choose its value between 1 and 11.");
+        } else if (card.isSplitAce()) {
+            updateGameMessage("Split Ace drawn! Your score will be halved.");
+        } else if (card.isBlackjackBomb()) {
+            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+        }
+    }
+    
     
 
     public static void main(String[] args) {

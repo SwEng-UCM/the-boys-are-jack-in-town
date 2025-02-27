@@ -4,7 +4,6 @@ import main.model.Card;
 import main.model.Deck;
 import main.model.Player;
 import main.view.BlackjackGUI;
-import javax.swing.JOptionPane;
 
 public class GameManager {
     private Player player;
@@ -37,13 +36,14 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
-    
+
         // Deal initial cards
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
         dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
         dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
-    
+
+        // Check for instant Blackjack win
         if (player.hasBlackjack()) {
             gui.updateGameMessage("Player has Blackjack! Player wins!");
             gameOver = true;
@@ -54,24 +54,18 @@ public class GameManager {
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
-        } else {
-            gui.updateGameMessage("Game On! Your turn.");
-            gui.updateGameState(player, dealer, false);
         }
-    
-        gui.updateGameState(player, dealer, gameOver);
-        gui.updateGameMessage("Player's turn. Hit or Stand.");
+
+        gui.updateGameMessage("Game On! Your turn.");
+        gui.updateGameState(player, dealer, false);
     }
-    
+
     public String getPlayerHand() {
         return player.getHand().toString();
     }
 
     public String getDealerHand() {
-        if (gameOver) {
-            return dealer.getHand().toString();
-        }
-        return dealer.getHand().get(0).toString() + " [Hidden]";
+        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
     }
 
     private void dealerTurn() {
@@ -88,7 +82,7 @@ public class GameManager {
             gui.updateGameState(player, dealer, gameOver);
         }
     }
-    
+
     public void checkPlayerBust() {
         if (player.calculateScore() > 21) {
             gameOver = true;
@@ -118,10 +112,18 @@ public class GameManager {
             gameOver = true;
         }
     }
+
+    /**
+     * Handles special cards when drawn.
+     */
     private Card handleSpecialCard(Card card, Player recipient) {
         switch (card.getType()) {
             case BLACKJACK_BOMB:
-                gui.updateGameMessage("Blackjack Bomb! Player wins instantly! 💣");
+                if (recipient == player) {
+                    gui.updateGameMessage("Blackjack Bomb! Player wins instantly! 💣");
+                } else {
+                    gui.updateGameMessage("Blackjack Bomb! Dealer wins instantly! 💣");
+                }
                 gameOver = true;
                 break;
             case SPLIT_ACE:
@@ -129,17 +131,18 @@ public class GameManager {
                 splitHand(recipient);
                 break;
             case JOKER_WILD:
-                int wildValue = gui.promptJokerWildValue();  // Call your GUI prompt method
-                card.setWildValue(wildValue);
-                gui.updateGameMessage("Joker Wild set to " + wildValue + " 🤡");
+                if (recipient == player) {
+                    int wildValue = gui.promptJokerWildValue();  // Only prompt the player
+                    card.setWildValue(wildValue);
+                    gui.updateGameMessage("Joker Wild set to " + wildValue + " 🤡");
+                }
                 break;
             default:
-                // For standard cards, do nothing special.
+                // Standard cards, no special handling needed
                 break;
         }
         return card;
     }
-    
 
     private void splitHand(Player player) {
         // Logic to split the player's hand (assuming it’s implemented in Player class)

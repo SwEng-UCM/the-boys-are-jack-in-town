@@ -49,7 +49,7 @@ public class Card {
     public int getValue() {
         return switch (type) {
             case BLACKJACK_BOMB -> 21; // Instant win
-            case SPLIT_ACE -> 0; // Special effect, not a number
+            case SPLIT_ACE -> 11; // Default Ace value, can be adjusted in gameplay
             case JOKER_WILD -> wildValue; // Dynamic value
             default -> standardCardValue();
         };
@@ -87,5 +87,17 @@ public class Card {
             case JOKER_WILD -> "Joker Wild (🤡) [Value: " + wildValue + "]";
             default -> rank + " of " + suit;
         };
+    }
+
+    public boolean isJokerWild() {
+        return this.type == CardType.JOKER_WILD;
+    }
+
+    public boolean isSplitAce() {
+        return this.type == CardType.SPLIT_ACE;
+    }
+
+    public boolean isBlackjackBomb() {
+        return this.type == CardType.BLACKJACK_BOMB;
     }
 }
