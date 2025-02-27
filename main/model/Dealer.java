@@ -1,14 +1,9 @@
 package main.model;
 
-
-/**
- * Manages the game flow, dealing cards and handling player and dealer actions.
- */
 public class Dealer {
     private Deck deck; // The deck of cards used in the game
     private final Player player; // The human player
     private final Player dealer; // The dealer (AI opponent)
-
     private Card hiddenCard; // Stores the dealer's hidden card
 
     public Dealer() {
@@ -20,84 +15,86 @@ public class Dealer {
     /**
      * Starts a new game by dealing two initial cards to both the player and dealer.
      */
-
     public void startNewGame() {
-        player.receiveCard(deck.dealCard());
-        dealer.receiveCard(deck.dealCard()); // First visible card
-        hiddenCard = deck.dealCard(); // Hidden card
-        player.receiveCard(deck.dealCard());
-    }
-
-    /** Deals one card to the player. */
-    public void dealCardToPlayer() {
-        player.receiveCard(deck.dealCard());
-    }
-
-    /** Deals one card to the dealer. */
-    public void dealCardToDealer() {
-        dealer.receiveCard(deck.dealCard());
-    }
-
-    /** Deals multiple random cards to the player. */
-    public void dealMultipleRandomCardsToPlayer(int n) {
-        for (Card card : deck.drawMultipleRandomCards(n)) {
-            player.receiveCard(card);
-        }
-    }
-
-    /** Deals multiple random cards to the dealer. */
-    public void dealMultipleRandomCardsToDealer(int n) {
-        for (Card card : deck.drawMultipleRandomCards(n)) {
-            dealer.receiveCard(card);
-        }
-    }
-
-    /** Displays the player's hand. */
-    public void showPlayerHand() {
-        player.showHand();
+        dealInitialCards(player, false);
+        dealInitialCards(dealer, true); // Dealer receives one hidden card
+        player.receiveCard(deck.dealCard()); // Player gets their second card
     }
 
     /**
-     * Displays the dealer's hand. The second card can be hidden if required.
+     * Deals two cards to the given player. Optionally hides the second card.
      */
-    public void showDealerHand(boolean hideSecondCard) {
+    private void dealInitialCards(Player targetPlayer, boolean hideSecondCard) {
+        targetPlayer.receiveCard(deck.dealCard()); // First card
         if (hideSecondCard) {
-            System.out.println("\nDealer's Hand:");
-            System.out.println(dealer.getHand().get(2) + " [Hidden]");
+            hiddenCard = deck.dealCard(); // Store hidden card
         } else {
-            dealer.showHand();
+            targetPlayer.receiveCard(deck.dealCard()); // Second visible card
         }
     }
 
-    /** Reveals the dealer's full hand and updates the view. */
+    /**
+     * Deals one card to the specified player.
+     */
+    public void dealCardToPlayer(Player targetPlayer) {
+        targetPlayer.receiveCard(deck.dealCard());
+    }
+
+    /**
+     * Deals multiple random cards to the specified player.
+     */
+    public void dealMultipleRandomCardsToPlayer(Player targetPlayer, int n) {
+        for (Card card : deck.drawMultipleRandomCards(n)) {
+            targetPlayer.receiveCard(card);
+        }
+    }
+
+    /**
+     * Displays the hand of the specified player. Optionally hides the second card for the dealer.
+     */
+    public void showHand(Player targetPlayer, boolean hideSecondCard) {
+        if (targetPlayer == dealer && hideSecondCard) {
+            System.out.println("\nDealer's Hand:");
+            System.out.println(dealer.getHand().get(2) + " [Hidden]");
+        } else {
+            targetPlayer.showHand();
+        }
+    }
+
+    /**
+     * Reveals the dealer's full hand and updates the view.
+     */
     public void revealDealerHand() {
         dealer.receiveCard(hiddenCard); // Add hidden card back to the hand
         hiddenCard = null; // Remove reference to avoid duplicate addition
         System.out.println("\nDealer reveals their full hand:");
-        showDealerHand(false);
+        showHand(dealer, false); // Show the full hand without hiding any cards
     }
 
+    /**
+     * Returns the hidden card for the dealer.
+     */
     public Card getHiddenCard() {
         return hiddenCard;
     }
 
-    /** Displays the dealer's hand without hiding any cards. */
-    public void showDealerHand() {
-        dealer.showHand();
-    }
-
-    /** Returns the player instance. */
+    /**
+     * Returns the player instance.
+     */
     public Player getPlayer() {
         return player;
     }
 
-    /** Returns the dealer instance. */
+    /**
+     * Returns the dealer instance.
+     */
     public Player getDealer() {
         return dealer;
     }
 
-
-    /** Resets the game by clearing hands and reinitializing the deck. */
+    /**
+     * Resets the game by clearing hands and reinitializing the deck.
+     */
     public void resetGame() {
         player.reset();
         dealer.reset();
