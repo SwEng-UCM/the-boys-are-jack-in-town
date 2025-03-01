@@ -1,5 +1,10 @@
 package main.model;
 
+/**
+ * The Dealer class represents the dealer in the Blackjack game.
+ * It is responsible for managing the deck of cards, dealing cards to players,
+ * and controlling the game flow.
+ */
 public class Dealer {
     private Deck deck; // The deck of cards used in the game
     private final Player player; // The human player

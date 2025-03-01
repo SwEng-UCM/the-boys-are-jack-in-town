@@ -4,8 +4,10 @@ import main.view.BlackjackGUI;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * Main class to start the Blackjack game.
+ */
 public class Main {
-    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GameManager gameManager = new GameManager();

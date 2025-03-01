@@ -7,6 +7,10 @@ import main.model.Player;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The BlackjackGUI class represents the graphical user interface for the Blackjack game.
+ * It displays the game state, player actions, and messages to the user.
+ */
 public class BlackjackGUI extends JFrame {
     private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel;
     private JButton hitButton, standButton, newGameButton;
