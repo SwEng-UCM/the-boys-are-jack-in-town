@@ -7,6 +7,10 @@ import main.model.Player;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The BlackjackGUI class represents the graphical user interface for the Blackjack game.
+ * It displays the game state, player actions, and messages to the user.
+ */
 public class BlackjackGUI extends JFrame {
     private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel;
     private JButton hitButton, standButton, newGameButton;
@@ -75,13 +79,28 @@ public class BlackjackGUI extends JFrame {
         dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
         dealerArea.add(dealerPanel, BorderLayout.CENTER);
     
-        // Player Section (Bottom)
-        JPanel playerArea = new JPanel(new BorderLayout());
-        playerArea.setOpaque(false);
-        playerArea.add(playerPanel, BorderLayout.CENTER);
-        playerArea.add(playerScorePanel, BorderLayout.SOUTH);
+        // Player Section (Bottom) - Wrapped with Back Button
+        JPanel playerContainer = new JPanel(new BorderLayout());
+        playerContainer.setOpaque(false);
+        playerContainer.add(playerPanel, BorderLayout.CENTER);
+        playerContainer.add(playerScorePanel, BorderLayout.NORTH);
     
-        // Center: Buttons
+        // Back Button Panel
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton backButton = createStyledButton("Back to Main Menu");
+        backButtonPanel.setOpaque(false);
+        backButtonPanel.add(backButton);
+    
+        // Add action to back button
+        backButton.addActionListener(e -> {
+            new BlackJackMenu().setVisible(true);
+            dispose(); // Close the game window
+        });
+    
+        // Add Back Button to playerContainer BELOW the player's panel
+        playerContainer.add(backButtonPanel, BorderLayout.SOUTH);
+    
+        // Center Section (Buttons and Messages)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
@@ -90,14 +109,13 @@ public class BlackjackGUI extends JFrame {
         // Add everything to the main panel
         mainPanel.add(dealerArea, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(playerArea, BorderLayout.SOUTH);
+        mainPanel.add(playerContainer, BorderLayout.SOUTH); // The entire player area with back button
     
         add(mainPanel);
-
+    
         gameManager.startNewGame();
     }
     
-
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
@@ -239,15 +257,5 @@ public class BlackjackGUI extends JFrame {
             updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
         }
     }
-    
-    
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GameManager gameManager = new GameManager();
-            BlackjackGUI gui = new BlackjackGUI(gameManager);
-            gui.setVisible(true);
-
-        });
-    }
 }
