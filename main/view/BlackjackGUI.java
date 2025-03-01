@@ -239,15 +239,5 @@ public class BlackjackGUI extends JFrame {
             updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
         }
     }
-    
-    
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GameManager gameManager = new GameManager();
-            BlackjackGUI gui = new BlackjackGUI(gameManager);
-            gui.setVisible(true);
-
-        });
-    }
 }
