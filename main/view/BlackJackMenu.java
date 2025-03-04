@@ -5,12 +5,17 @@ import main.controller.GameManager;
 import javax.swing.*;
 import java.awt.*;
 
+import static main.view.Languages.*;
+
 public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton;
     private JLabel imageLabel;
 
+    public static int language = 2;
+
     public BlackJackMenu() {
-        setTitle("Blackjack Menu");
+        //setTitle("Blackjack Menu");
+        setTitle(Texts.startGame[language]);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -22,9 +27,9 @@ public class BlackJackMenu extends JFrame {
     }
 
     private void initializeComponents() {
-        startButton = createStyledButton("Start Game");
-        instructionsButton = createStyledButton("Instructions");
-        exitButton = createStyledButton("Exit");
+        startButton = createStyledButton(Texts.startGame[language]); // "Start Game"
+        instructionsButton = createStyledButton(Texts.instructions[language]);
+        exitButton = createStyledButton(Texts.exit[language]);
 
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");

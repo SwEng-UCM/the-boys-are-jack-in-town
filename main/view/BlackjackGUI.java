@@ -7,6 +7,8 @@ import main.model.Player;
 import javax.swing.*;
 import java.awt.*;
 
+import static main.view.BlackJackMenu.language;
+
 /**
  * The BlackjackGUI class represents the graphical user interface for the Blackjack game.
  * It displays the game state, player actions, and messages to the user.
@@ -21,7 +23,7 @@ public class BlackjackGUI extends JFrame {
         this.gameManager = gameManager;
         gameManager.setGui(this);
 
-        setTitle("Blackjack Game");
+        setTitle(Texts.guiTitle[language]);// "Blackjack Game"
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -36,9 +38,9 @@ public class BlackjackGUI extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
     
-        hitButton = createStyledButton("Hit");
-        standButton = createStyledButton("Stand");
-        newGameButton = createStyledButton("New Game");
+        hitButton = createStyledButton(Texts.guiHit[language]);
+        standButton = createStyledButton(Texts.guiStand[language]);
+        newGameButton = createStyledButton(Texts.guiNewGame[language]);
     
         gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
