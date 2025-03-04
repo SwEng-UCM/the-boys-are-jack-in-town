@@ -8,105 +8,68 @@ import java.util.List;
  */
 public class Player {
     private final List<Card> hand; // Stores the player's current hand
-    private List<Card> splitHand; // Stores the second hand when splitting
-    private boolean hasSplit; // Indicates if the player has split their hand
+    private double scoreMultiplier; // Multiplier for the player's score (default 1.0)
 
     public Player() {
         this.hand = new ArrayList<>();
-        this.splitHand = new ArrayList<>();
-        this.hasSplit = false;
+        this.scoreMultiplier = 1.0;
     }
 
     /** Adds a card to the player's hand. */
     public void receiveCard(Card card) {
-        if (hasSplit && splitHand.isEmpty()) {
-            splitHand.add(card);
-        } else {
-            hand.add(card);
-            if (card.getType() == Card.CardType.SPLIT_ACE && hand.size() == 2) {
-                splitHand();
-            }
+        hand.add(card);
+        // When a Split Ace wildcard is drawn, set the multiplier to 0.5
+        if (card.getType() == Card.CardType.SPLIT_ACE) {
+            scoreMultiplier = 0.5;
         }
     }
 
-    /** Displays the player's hands in the console. */
+    /** Displays the player's hand in the console. */
     public void showHand() {
-        System.out.println("Main Hand:");
+        System.out.println("Hand:");
         for (Card card : hand) {
             System.out.println(card);
         }
-        if (hasSplit) {
-            System.out.println("Split Hand:");
-            for (Card card : splitHand) {
-                System.out.println(card);
-            }
-        }
     }
 
-    /** Returns the list of cards in the player's main hand. */
+    /** Returns the list of cards in the player's hand. */
     public List<Card> getHand() {
         return hand;
     }
 
-    /** Returns the list of cards in the player's split hand, if applicable. */
-    public List<Card> getSplitHand() {
-        return hasSplit ? splitHand : null;
-    }
-
     /**
-     * Calculates the player's total score, adjusting Aces from 11 to 1 if necessary.
+     * Calculates the player's total score, adjusting Aces from 11 to 1 if necessary,
+     * and applying the score multiplier if a Split Ace wildcard was drawn.
      */
     public int calculateScore() {
-        return calculateHandScore(hand);
-    }
-
-    /** Calculates the score of the split hand, if applicable. */
-    public int calculateSplitScore() {
-        return hasSplit ? calculateHandScore(splitHand) : 0;
-    }
-
-    private int calculateHandScore(List<Card> handToCalculate) {
         int score = 0;
         int aceCount = 0;
 
-        for (Card card : handToCalculate) {
+        for (Card card : hand) {
             score += card.getValue();
-            if (card.getRank().equals("Ace")) {
+            // Only count standard Aces for adjustment purposes
+            if (card.getRank().equals("Ace") && card.getType() == Card.CardType.STANDARD) {
                 aceCount++;
             }
         }
 
-        // Convert Aces from 11 to 1 if score exceeds 21
+        // Convert standard Aces from 11 to 1 if score exceeds 21
         while (score > 21 && aceCount > 0) {
             score -= 10;
             aceCount--;
         }
-
-        return score;
+        // Apply the score multiplier (if a Split Ace wildcard was drawn, this will be 0.5)
+        return (int)(score * scoreMultiplier);
     }
 
     public boolean hasBlackjack() {
-        // Check if player has exactly two cards and their score equals 21
-        return calculateScore() == 21;
+        // Check if player has exactly two cards and their (possibly halved) score equals 21
+        return hand.size() == 2 && calculateScore() == 21;
     }
 
-    /** Splits the player's hand into two separate hands when a Split Ace is drawn. */
-    private void splitHand() {
-        if (hand.size() == 2 && hand.get(0).getRank().equals(hand.get(1).getRank())) {
-            splitHand.add(hand.remove(1));
-            hasSplit = true;
-        }
-    }
-
-    /** Checks if the player has split their hand. */
-    public boolean hasSplit() {
-        return hasSplit;
-    }
-
-    /** Clears the player's hands for a new round. */
+    /** Clears the player's hand and resets the score multiplier for a new round. */
     public void reset() {
         hand.clear();
-        splitHand.clear();
-        hasSplit = false;
+        scoreMultiplier = 1.0;
     }
 }

@@ -49,7 +49,7 @@ public class Card {
     public int getValue() {
         return switch (type) {
             case BLACKJACK_BOMB -> 21; // Instant win
-            case SPLIT_ACE -> 11; // Default Ace value, can be adjusted in gameplay
+            case SPLIT_ACE -> 0; // Default Ace value, can be adjusted in gameplay
             case JOKER_WILD -> wildValue; // Dynamic value
             default -> standardCardValue();
         };

@@ -23,10 +23,11 @@ public class Deck {
         }
 
         // Add special cards
-        cards.add(new Card(Card.CardType.BLACKJACK_BOMB));
-        cards.add(new Card(Card.CardType.SPLIT_ACE));
-        cards.add(new Card(Card.CardType.JOKER_WILD));
-
+        for(int i=0; i<10; i++){
+            cards.add(new Card(Card.CardType.BLACKJACK_BOMB));
+            cards.add(new Card(Card.CardType.SPLIT_ACE));
+            cards.add(new Card(Card.CardType.JOKER_WILD));
+        }
         Collections.shuffle(cards);
     }
 
