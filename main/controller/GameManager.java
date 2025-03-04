@@ -4,6 +4,9 @@ import main.model.Card;
 import main.model.Deck;
 import main.model.Player;
 import main.view.BlackjackGUI;
+import main.view.Texts;
+
+import static main.view.BlackJackMenu.language;
 
 /*
  * The GameManager class is responsible for managing the game state and logic.
@@ -61,7 +64,7 @@ public class GameManager {
             return;
         }
 
-        gui.updateGameMessage("Game On! Your turn.");
+        gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         gui.updateGameState(player, dealer, false);
     }
 

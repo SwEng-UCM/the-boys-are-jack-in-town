@@ -42,12 +42,12 @@ public class BlackjackGUI extends JFrame {
         standButton = createStyledButton(Texts.guiStand[language]);
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
     
-        gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
+        gameMessageLabel = new JLabel(Texts.guiWelcome[language], SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
     
-        dealerScoreLabel = createStyledLabel("Dealer's Score: 0");
-        playerScoreLabel = createStyledLabel("Player's Score: 0");
+        dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
+        playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
     
         // Initialize Panels
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -89,7 +89,7 @@ public class BlackjackGUI extends JFrame {
     
         // Back Button Panel
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton backButton = createStyledButton("Back to Main Menu");
+        JButton backButton = createStyledButton(Texts.guiBackToMain[language]);
         backButtonPanel.setOpaque(false);
         backButtonPanel.add(backButton);
     
@@ -140,14 +140,14 @@ public class BlackjackGUI extends JFrame {
                 dealerPanel.add(createCardPanel(card));
                 checkForSpecialCard(card);
             }
-            dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
+            dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore()); //  createStyledLabel(Texts.guiDealerScore[language])
         } else {
             dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
             dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText("Dealer's Score: ???");
+            dealerScoreLabel.setText("Dealer's Score: ???"); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         }
     
-        playerScoreLabel.setText("Player's Score: " + player.calculateScore());
+       playerScoreLabel.setText("Player's Score: " + player.calculateScore()); // -- need these to display after winning
     
         // Refresh UI
         playerPanel.revalidate();

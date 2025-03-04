@@ -6,6 +6,7 @@ import java.awt.*;
 public class Texts {
     Texts(){}
 
+
     public static String[] startGame =
             {"Start Game!","Empieza el juego!", "Tús a chur leis an gcluiche!", "ndítsa el a játékot", "ابدأ اللعبة"};
 
@@ -34,13 +35,33 @@ public class Texts {
             {"New Game","Juego nuevo", "cluiche nua",
                             "új játék", "لعبة جديدة"};
 
-//    Welcome to Blackjack!
-//    Dealer's Score:
-//    Player Score
-//
-//    "Back to Main Menu"
-//    "Dealer's Score: "
-//        Dealer's Score: ???
-// Player's Score:
+    public static String[] guiDealerScore =
+            {"Dealer's Score :","El scor del distribudor", "scor le déanta",
+                    "Kereskedő pontszáma", "نقاط التاجر"};
+
+    public static String[] guiPlayerScore =
+            {"Player's Score :","El scor del jugador", "scor le imreoir",
+                    "Játékos pontszáma", "نقاط اللاعب"};
+
+    public static String[] guiWelcome =
+            {"Welcome to BlackJack!","Bienvenido a BlackJack", "failte go dti BlackJack",
+                    "üdv a blackjackben", "مرحبا بكم في لعبة ورق"};
+
+    public static String[] guiBackToMain =
+            {"Back to Main Menu.","Salida al menú principal", "ar ais go dtí an príomh-roghchlár",
+                    "vissza a főmenübe", "العودة إلى القائمة الرئيسية"};
+
+    public static String[] gameManagerGameOn  =
+            {"Game On! Your turn.",
+                    "¡Juego encendido! Tu turno.", "Cluiche Ar! Do sheal.",
+                            "Game On! Ön a sor.", "اللعبة على! دورك."};
+// ("Dealer has Blackjack! Dealer wins!");
+    // ("Player has Blackjack! Player wins!");
+    // "Player busts! Dealer wins.");
+    // "Dealer busts! Player wins.");
+    // ("Player wins!");
+    // Dealer wins
+    // its a tie
+    // specialcards...
 
 }
