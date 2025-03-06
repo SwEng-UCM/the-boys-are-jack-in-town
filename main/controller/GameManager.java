@@ -6,6 +6,10 @@ import main.model.Player;
 import main.view.BlackjackGUI;
 
 /*
+ * Singleton class !
+ */
+
+/*
  * The GameManager class is responsible for managing the game state and logic.
  * It interacts with the Player, Deck, and BlackjackGUI classes to handle player actions,
  * dealer actions, and determine the game outcome.
