@@ -18,6 +18,10 @@ public class Texts {
             {"Exit","Salida", "Slí Amach",
                     "Kijárat", "مخرج"};
 
+    public static String[] options =
+            {"Options", "Opciónes", "Rogha",
+                    "opciók", "خيارات"};
+
     public static String[] guiTitle =
             {"Blackjack Game","El juego de BlackJack", "cluiche BlackJack",
                     "Blackjack játék", "لعبة البلاك جاك"};
@@ -36,11 +40,11 @@ public class Texts {
                             "új játék", "لعبة جديدة"};
 
     public static String[] guiDealerScore =
-            {"Dealer's Score :","El scor del distribudor", "scor le déanta",
+            {"Dealer's Score ","El scor del distribudor", "scor le déanta",
                     "Kereskedő pontszáma", "نقاط التاجر"};
 
     public static String[] guiPlayerScore =
-            {"Player's Score :","El scor del jugador", "scor le imreoir",
+            {"Player's Score ","El scor del jugador", "scor le imreoir",
                     "Játékos pontszáma", "نقاط اللاعب"};
 
     public static String[] guiWelcome =
@@ -76,13 +80,10 @@ public class Texts {
 
     public static String[] tie =
             {"It's a tie!", "¡Es un empate!", "Tá sé cothrom!", "Döntetlen!", "إنها تعادل!"};
+
+
 }
 
-// ("Dealer has Blackjack! Dealer wins!");
-    // ("Player has Blackjack! Player wins!");
-    // "Player busts! Dealer wins.");
-    // "Dealer busts! Player wins.");
-    // ("Player wins!");
-    // Dealer wins
-    // its a tie
+    // instructions main menu
+    // options menu
     // specialcards...

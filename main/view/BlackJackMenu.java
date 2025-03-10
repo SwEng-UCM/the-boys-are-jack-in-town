@@ -8,7 +8,7 @@ import java.awt.*;
 import static main.view.Languages.*;
 
 public class BlackJackMenu extends JFrame {
-    private JButton startButton, instructionsButton, exitButton;
+    private JButton startButton, instructionsButton, exitButton, optionsButton;
     private JLabel imageLabel;
 
     public static int language = 2;
@@ -29,6 +29,7 @@ public class BlackJackMenu extends JFrame {
         startButton = createStyledButton(Texts.startGame[language]); // "Start Game"
         instructionsButton = createStyledButton(Texts.instructions[language]);
         exitButton = createStyledButton(Texts.exit[language]);
+        optionsButton =  createStyledButton(Texts.options[language]);
 
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
@@ -50,20 +51,15 @@ public class BlackJackMenu extends JFrame {
         gbc.insets = new Insets(5, 0, 5, 0); // Add some space between buttons
         buttonPanel.add(startButton, gbc);
         buttonPanel.add(instructionsButton, gbc);
+        buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
+
 
         mainPanel.add(imageLabel, BorderLayout.NORTH);
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
         add(mainPanel);
     }
-
-
-    // private JPanel createCenteredPanel(JButton button) {
-    //     JPanel panel = new JPanel(new GridBagLayout());
-    //     panel.add(button);
-    //     return panel;
-    // }
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
@@ -78,6 +74,11 @@ public class BlackJackMenu extends JFrame {
         });
 
         exitButton.addActionListener(e -> System.exit(0));
+
+        optionsButton.addActionListener(e -> {
+            new OptionsPanel(this).setVisible(true);
+            // add option logic
+        });
     }
 
     private JButton createStyledButton(String text) {
@@ -89,4 +90,19 @@ public class BlackJackMenu extends JFrame {
         button.setPreferredSize(new Dimension(250, 50)); // Set preferred size to make buttons smaller
         return button;
     }
+
+    public void refreshMenu() {
+        setTitle(Texts.startGame[language]); // Update window title
+
+        // Update button texts
+        startButton.setText(Texts.startGame[language]);
+        instructionsButton.setText(Texts.instructions[language]);
+        exitButton.setText(Texts.exit[language]);
+        optionsButton.setText(Texts.options[language]);
+
+        // Repaint UI
+        revalidate();
+        repaint();
+    }
+
 }
