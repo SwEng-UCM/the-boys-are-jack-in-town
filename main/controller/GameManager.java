@@ -4,6 +4,13 @@ import main.model.Card;
 import main.model.Deck;
 import main.model.Player;
 import main.view.BlackjackGUI;
+import main.view.Texts;
+
+import static main.view.BlackJackMenu.language;
+
+/*
+ * Singleton class !
+ */
 
 /*
  * Singleton class !
@@ -54,18 +61,18 @@ public class GameManager {
 
         // Check for instant Blackjack win
         if (player.hasBlackjack()) {
-            gui.updateGameMessage("Player has Blackjack! Player wins!");
+            gui.updateGameMessage(Texts.playerBlackjack[language]);
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
         } else if (dealer.hasBlackjack()) {
-            gui.updateGameMessage("Dealer has Blackjack! Dealer wins!");
+            gui.updateGameMessage(Texts.dealerBlackjack[language]);
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
         }
 
-        gui.updateGameMessage("Game On! Your turn.");
+        gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         gui.updateGameState(player, dealer, false);
     }
 
@@ -95,14 +102,14 @@ public class GameManager {
     public void checkPlayerBust() {
         if (player.calculateScore() > 21) {
             gameOver = true;
-            gui.updateGameMessage("Player busts! Dealer wins.");
+            gui.updateGameMessage(Texts.playerBusts[language]);
         }
     }
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
             gameOver = true;
-            gui.updateGameMessage("Dealer busts! Player wins.");
+            gui.updateGameMessage(Texts.dealerBusts[language]);
         }
     }
 
@@ -112,11 +119,11 @@ public class GameManager {
             int dealerScore = dealer.calculateScore();
 
             if (playerScore > dealerScore) {
-                gui.updateGameMessage("Player wins!");
+                gui.updateGameMessage(Texts.playerWins[language]);
             } else if (playerScore < dealerScore) {
-                gui.updateGameMessage("Dealer wins!");
+                gui.updateGameMessage(Texts.dealerWins[language]);
             } else {
-                gui.updateGameMessage("It's a tie!");
+                gui.updateGameMessage(Texts.tie[language]);
             }
             gameOver = true;
         }

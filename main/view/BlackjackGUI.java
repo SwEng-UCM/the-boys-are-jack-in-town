@@ -7,6 +7,8 @@ import main.model.Player;
 import javax.swing.*;
 import java.awt.*;
 
+import static main.view.BlackJackMenu.language;
+
 /**
  * The BlackjackGUI class represents the graphical user interface for the Blackjack game.
  * It displays the game state, player actions, and messages to the user.
@@ -21,7 +23,7 @@ public class BlackjackGUI extends JFrame {
         this.gameManager = gameManager;
         gameManager.setGui(this);
 
-        setTitle("Blackjack Game");
+        setTitle(Texts.guiTitle[language]); // "Blackjack Game"
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -35,87 +37,88 @@ public class BlackjackGUI extends JFrame {
     private void initializeComponents() {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
-    
-        hitButton = createStyledButton("Hit");
-        standButton = createStyledButton("Stand");
-        newGameButton = createStyledButton("New Game");
-    
+
+
+        hitButton = createStyledButton(Texts.guiHit[language]);
+        standButton = createStyledButton(Texts.guiStand[language]);
+        newGameButton = createStyledButton(Texts.guiNewGame[language]);
+
         gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
-    
-        dealerScoreLabel = createStyledLabel("Dealer's Score: 0");
-        playerScoreLabel = createStyledLabel("Player's Score: 0");
-    
+
+        dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
+        playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
+
         // Initialize Panels
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         dealerPanel.setOpaque(false);
-    
+
         playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         playerPanel.setOpaque(false);
-    
+
         dealerScorePanel = new JPanel();
         dealerScorePanel.setOpaque(false);
         dealerScorePanel.add(dealerScoreLabel);
-    
+
         playerScorePanel = new JPanel();
         playerScorePanel.setOpaque(false);
         playerScorePanel.add(playerScoreLabel);
-    
+
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 60));
         buttonPanel.setOpaque(false);
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
     }
-    
+
 
     private void layoutComponents() {
         mainPanel.setLayout(new BorderLayout());
-    
+
         // Dealer Section (Top)
         JPanel dealerArea = new JPanel(new BorderLayout());
         dealerArea.setOpaque(false);
         dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
         dealerArea.add(dealerPanel, BorderLayout.CENTER);
-    
+
         // Player Section (Bottom) - Wrapped with Back Button
         JPanel playerContainer = new JPanel(new BorderLayout());
         playerContainer.setOpaque(false);
         playerContainer.add(playerPanel, BorderLayout.CENTER);
         playerContainer.add(playerScorePanel, BorderLayout.NORTH);
-    
+
         // Back Button Panel
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton backButton = createStyledButton("Back to Main Menu");
+        JButton backButton = createStyledButton(Texts.guiBackToMain[language]);
         backButtonPanel.setOpaque(false);
         backButtonPanel.add(backButton);
-    
+
         // Add action to back button
         backButton.addActionListener(e -> {
             new BlackJackMenu().setVisible(true);
             dispose(); // Close the game window
         });
-    
+
         // Add Back Button to playerContainer BELOW the player's panel
         playerContainer.add(backButtonPanel, BorderLayout.SOUTH);
-    
+
         // Center Section (Buttons and Messages)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
-    
+
         // Add everything to the main panel
         mainPanel.add(dealerArea, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(playerContainer, BorderLayout.SOUTH); // The entire player area with back button
-    
+
         add(mainPanel);
-    
+
         gameManager.startNewGame();
     }
-    
+
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
@@ -125,58 +128,55 @@ public class BlackjackGUI extends JFrame {
     public void updateGameState(Player player, Player dealer, boolean gameOver) {
         playerPanel.removeAll();
         dealerPanel.removeAll();
-        
+
         // Show player's cards and check for special cards
         for (Card card : player.getHand()) {
             playerPanel.add(createCardPanel(card));
             checkForSpecialCard(card);
         }
-    
+
         // Show dealer's cards
         if (gameOver) {
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
                 checkForSpecialCard(card);
             }
-            dealerScoreLabel.setText("Dealer's Score: " + dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" : "+ dealer.calculateScore());
         } else {
             dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
             dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText("Dealer's Score: ???");
+            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" ???");
         }
-    
-        playerScoreLabel.setText("Player's Score: " + player.calculateScore());
-    
+
+        playerScoreLabel.setText(Texts.guiPlayerScore[language]+" : "+ player.calculateScore());
+
         // Refresh UI
         playerPanel.revalidate();
         playerPanel.repaint();
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
-    
-    
-    
-    
-    
+
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(80, 120));
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-    
+
         JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
         hiddenLabel.setFont(new Font("Arial", Font.BOLD, 24));
         hiddenLabel.setForeground(Color.WHITE);
-    
+
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(hiddenLabel, BorderLayout.CENTER);
-    
+
         return cardPanel;
     }
-    
+
 
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
+
     }
 
     private JButton createStyledButton(String text) {
@@ -219,10 +219,10 @@ public class BlackjackGUI extends JFrame {
         boolean valid = false;
         while (!valid) {
             String input = JOptionPane.showInputDialog(
-                this, 
-                "Joker Wild! Choose a value between 1 and 11: 🤡", 
-                "Joker Wild", 
-                JOptionPane.QUESTION_MESSAGE
+                    this,
+                    "Joker Wild! Choose a value between 1 and 11: 🤡",
+                    "Joker Wild",
+                    JOptionPane.QUESTION_MESSAGE
             );
             try {
                 wildValue = Integer.parseInt(input);
@@ -230,18 +230,18 @@ public class BlackjackGUI extends JFrame {
                     valid = true;
                 } else {
                     JOptionPane.showMessageDialog(
-                        this, 
-                        "Invalid choice. Please choose a value between 1 and 11.",
-                        "Invalid Input",
-                        JOptionPane.WARNING_MESSAGE
+                            this,
+                            "Invalid choice. Please choose a value between 1 and 11.",
+                            "Invalid Input",
+                            JOptionPane.WARNING_MESSAGE
                     );
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
-                    this, 
-                    "Please enter a valid number.", 
-                    "Invalid Input", 
-                    JOptionPane.WARNING_MESSAGE
+                        this,
+                        "Please enter a valid number.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE
                 );
             }
         }
@@ -255,7 +255,11 @@ public class BlackjackGUI extends JFrame {
             updateGameMessage("Split Ace drawn! Your score will be halved.");
         } else if (card.isBlackjackBomb()) {
             updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+        } else {
+//            updateGameMessage(""); this overwrites all GameMessage text.
         }
+
+
     }
 
 }
