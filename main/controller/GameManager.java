@@ -9,6 +9,10 @@ import main.view.Texts;
 import static main.view.BlackJackMenu.language;
 
 /*
+ * Singleton class !
+ */
+
+/*
  * The GameManager class is responsible for managing the game state and logic.
  * It interacts with the Player, Deck, and BlackjackGUI classes to handle player actions,
  * dealer actions, and determine the game outcome.
@@ -53,12 +57,12 @@ public class GameManager {
 
         // Check for instant Blackjack win
         if (player.hasBlackjack()) {
-            gui.updateGameMessage("Player has Blackjack! Player wins!");
+            gui.updateGameMessage(Texts.playerBlackjack[language]);
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
         } else if (dealer.hasBlackjack()) {
-            gui.updateGameMessage("Dealer has Blackjack! Dealer wins!");
+            gui.updateGameMessage(Texts.dealerBlackjack[language]);
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
@@ -94,14 +98,14 @@ public class GameManager {
     public void checkPlayerBust() {
         if (player.calculateScore() > 21) {
             gameOver = true;
-            gui.updateGameMessage("Player busts! Dealer wins.");
+            gui.updateGameMessage(Texts.playerBusts[language]);
         }
     }
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
             gameOver = true;
-            gui.updateGameMessage("Dealer busts! Player wins.");
+            gui.updateGameMessage(Texts.dealerBusts[language]);
         }
     }
 
@@ -111,11 +115,11 @@ public class GameManager {
             int dealerScore = dealer.calculateScore();
 
             if (playerScore > dealerScore) {
-                gui.updateGameMessage("Player wins!");
+                gui.updateGameMessage(Texts.playerWins[language]);
             } else if (playerScore < dealerScore) {
-                gui.updateGameMessage("Dealer wins!");
+                gui.updateGameMessage(Texts.dealerWins[language]);
             } else {
-                gui.updateGameMessage("It's a tie!");
+                gui.updateGameMessage(Texts.tie[language]);
             }
             gameOver = true;
         }

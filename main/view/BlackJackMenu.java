@@ -11,10 +11,9 @@ public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton;
     private JLabel imageLabel;
 
-    public static int language = 4;
+    public static int language = 2;
 
     public BlackJackMenu() {
-        //setTitle("Blackjack Menu");
         setTitle(Texts.startGame[language]);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
