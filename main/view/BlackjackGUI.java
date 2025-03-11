@@ -143,13 +143,20 @@ public class BlackjackGUI extends JFrame {
         placeBetButton.addActionListener(e -> placeBet());
     }
 
+    /*
+     *  Betting system logic.
+    */
     private void placeBet() {
         try {
             int betAmount = Integer.parseInt(betField.getText());
             if (betAmount > 0 && gameManager.placeBet(betAmount)) {
                 betLabel.setText("Bet: $" + betAmount);
                 balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance());
-                
+    
+                // Disable the bet field and button after placing a bet
+                betField.setEnabled(false);
+                placeBetButton.setEnabled(false);
+    
                 // Update UI to reflect the new bet and balance
                 JOptionPane.showMessageDialog(this, "Bet placed: $" + betAmount, "Bet Confirmed", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -158,6 +165,15 @@ public class BlackjackGUI extends JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    // After the game ended the user should eb able to take another bet
+    public void enableBetting() {
+        betField.setEnabled(true);
+        placeBetButton.setEnabled(true);
+        betField.setText(""); // Clear the bet field
+        betLabel.setText("Bet: $0"); // Reset the bet label
+        balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance()); // Update the balance label
     }
 
     public void updateGameState(Player player, Player dealer, boolean gameOver) {

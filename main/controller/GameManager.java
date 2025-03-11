@@ -46,7 +46,10 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
-        bettingManager.resetBet(); // Reset the bet for a new game
+        // bettingManager.resetBet(); // Reset the bet for a new game
+
+        // Re-enable betting components
+        gui.enableBetting();
 
         // Deal initial cards
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
