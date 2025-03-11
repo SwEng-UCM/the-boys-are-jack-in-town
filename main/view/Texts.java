@@ -22,6 +22,7 @@ public class Texts {
             {"Options", "Opciónes", "Rogha",
                     "Opciók", "خيارات"};
 
+
     public static String[] guiTitle =
             {"Blackjack Game","El juego de BlackJack", "cluiche BlackJack",
                     "Huszonegy", "لعبة البلاك جاك"};
@@ -31,7 +32,7 @@ public class Texts {
                             "Lapkérés", "يأخذ"};
 
     public static String[] guiStand =
-            {"Stand","Queda", " folamh le",
+            {"Stand","Plantar", " folamh le",
                     "\n" +
                             "Állj", "وقوف"};
 
@@ -44,7 +45,7 @@ public class Texts {
                     "Osztó pontszáma", "نقاط التاجر"};
 
     public static String[] guiPlayerScore =
-            {"Player's Score ","El scor del jugador", "scor le imreoir",
+            {"Player's Score ","Puntuación del jugador", "scor le imreoir",
                     "Játékos pontszáma", "نقاط اللاعب"};
 
     public static String[] guiWelcome =
