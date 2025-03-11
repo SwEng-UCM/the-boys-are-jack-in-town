@@ -19,6 +19,10 @@ public class BlackJackMenu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        
+        // Custom image icon
+        ImageIcon icon = new ImageIcon("img/black.png");
+        setIconImage(icon.getImage());
 
         initializeComponents();
         layoutComponents();

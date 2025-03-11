@@ -30,6 +30,10 @@ public class BlackjackGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
+        // Custom image icon
+        ImageIcon icon = new ImageIcon("img/black.png");
+        setIconImage(icon.getImage());
+
         initializeComponents();
         layoutComponents();
         attachEventListeners();
