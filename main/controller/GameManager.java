@@ -26,7 +26,7 @@ public class GameManager {
         this.dealer = new Player();
         this.deck = new Deck();
         this.gameOver = false;
-        this.bettingManager = new BettingManager(1000); // Initial balance
+        this.bettingManager = new BettingManager(1000, 1000); // Initial balance
     }
 
     public void setGui(BlackjackGUI gui) {
