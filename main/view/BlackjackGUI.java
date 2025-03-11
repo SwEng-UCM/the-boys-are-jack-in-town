@@ -14,9 +14,10 @@ import static main.view.BlackJackMenu.language;
  * It displays the game state, player actions, and messages to the user.
  */
 public class BlackjackGUI extends JFrame {
-    private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel;
-    private JButton hitButton, standButton, newGameButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel;
+    private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
+    private JButton hitButton, standButton, newGameButton, placeBetButton;
+    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, balanceLabel, betLabel;
+    private JTextField betField;
     private GameManager gameManager;
 
     public BlackjackGUI(GameManager gameManager) {
@@ -38,10 +39,10 @@ public class BlackjackGUI extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
 
-
         hitButton = createStyledButton(Texts.guiHit[language]);
         standButton = createStyledButton(Texts.guiStand[language]);
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
+        placeBetButton = createStyledButton("Place Bet");
 
         gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
@@ -49,6 +50,10 @@ public class BlackjackGUI extends JFrame {
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
+        balanceLabel = createStyledLabel("Balance: $1000");
+        betLabel = createStyledLabel("Bet: $0");
+
+        betField = new JTextField(10);
 
         // Initialize Panels
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -70,8 +75,15 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
-    }
 
+        betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        betPanel.setOpaque(false);
+        betPanel.add(new JLabel("Enter Bet:"));
+        betPanel.add(betField);
+        betPanel.add(placeBetButton);
+        betPanel.add(balanceLabel);
+        betPanel.add(betLabel);
+    }
 
     private void layoutComponents() {
         mainPanel.setLayout(new BorderLayout());
@@ -112,8 +124,13 @@ public class BlackjackGUI extends JFrame {
         // Add everything to the main panel
         mainPanel.add(dealerArea, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(playerContainer, BorderLayout.SOUTH); // The entire player area with back button
-
+        JPanel southPanel = new JPanel(new BorderLayout()); // New container
+        southPanel.setOpaque(false);
+        southPanel.add(playerContainer, BorderLayout.CENTER);
+        southPanel.add(betPanel, BorderLayout.SOUTH);
+        
+        mainPanel.add(southPanel, BorderLayout.SOUTH); // Now added as a single section
+        
         add(mainPanel);
 
         gameManager.startNewGame();
@@ -123,6 +140,11 @@ public class BlackjackGUI extends JFrame {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
+        placeBetButton.addActionListener(e -> placeBet());
+    }
+
+    private void placeBet() {
+        // TODO: implement 
     }
 
     public void updateGameState(Player player, Player dealer, boolean gameOver) {
@@ -141,14 +163,14 @@ public class BlackjackGUI extends JFrame {
                 dealerPanel.add(createCardPanel(card));
                 checkForSpecialCard(card);
             }
-            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" : "+ dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
         } else {
             dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
             dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" ???");
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
         }
 
-        playerScoreLabel.setText(Texts.guiPlayerScore[language]+" : "+ player.calculateScore());
+        playerScoreLabel.setText(Texts.guiPlayerScore[language] + " : " + player.calculateScore());
 
         // Refresh UI
         playerPanel.revalidate();
@@ -173,10 +195,8 @@ public class BlackjackGUI extends JFrame {
         return cardPanel;
     }
 
-
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
-
     }
 
     private JButton createStyledButton(String text) {
@@ -258,8 +278,5 @@ public class BlackjackGUI extends JFrame {
         } else {
 //            updateGameMessage(""); this overwrites all GameMessage text.
         }
-
-
     }
-
 }
