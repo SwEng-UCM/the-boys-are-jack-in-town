@@ -8,15 +8,7 @@ import main.view.Texts;
 
 import static main.view.BlackJackMenu.language;
 
-/*
- * Singleton class !
- */
-
-/*
- * Singleton class !
- */
-
-/*
+/**
  * The GameManager class is responsible for managing the game state and logic.
  * It interacts with the Player, Deck, and BlackjackGUI classes to handle player actions,
  * dealer actions, and determine the game outcome.
@@ -27,12 +19,14 @@ public class GameManager {
     private Deck deck;
     private BlackjackGUI gui;
     private boolean gameOver;
+    private BettingManager bettingManager;
 
     public GameManager() {
         this.player = new Player();
         this.dealer = new Player();
         this.deck = new Deck();
         this.gameOver = false;
+        this.bettingManager = new BettingManager(1000); // Initial balance
     }
 
     public void setGui(BlackjackGUI gui) {
@@ -52,6 +46,7 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
+        bettingManager.resetBet(); // Reset the bet for a new game
 
         // Deal initial cards
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
@@ -120,13 +115,25 @@ public class GameManager {
 
             if (playerScore > dealerScore) {
                 gui.updateGameMessage(Texts.playerWins[language]);
+                bettingManager.playerWins(); // Player wins, double the bet amount
             } else if (playerScore < dealerScore) {
                 gui.updateGameMessage(Texts.dealerWins[language]);
+                // Player loses, bet amount is already deducted
             } else {
                 gui.updateGameMessage(Texts.tie[language]);
+                bettingManager.tie(); // Tie, return the bet amount
             }
             gameOver = true;
+            gui.updateGameState(player, dealer, true);
         }
+    }
+
+    public boolean placeBet(int betAmount) {
+        return bettingManager.placeBet(betAmount);
+    }
+
+    public int getPlayerBalance() {
+        return bettingManager.getPlayerBalance();
     }
 
     /**

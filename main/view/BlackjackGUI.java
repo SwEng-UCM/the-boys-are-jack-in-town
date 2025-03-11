@@ -144,7 +144,20 @@ public class BlackjackGUI extends JFrame {
     }
 
     private void placeBet() {
-        // TODO: implement 
+        try {
+            int betAmount = Integer.parseInt(betField.getText());
+            if (betAmount > 0 && gameManager.placeBet(betAmount)) {
+                betLabel.setText("Bet: $" + betAmount);
+                balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance());
+                
+                // Update UI to reflect the new bet and balance
+                JOptionPane.showMessageDialog(this, "Bet placed: $" + betAmount, "Bet Confirmed", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid bet amount or insufficient balance.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     public void updateGameState(Player player, Player dealer, boolean gameOver) {
