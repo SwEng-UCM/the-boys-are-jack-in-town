@@ -8,6 +8,8 @@ import main.view.Texts;
 
 import static main.view.BlackJackMenu.language;
 
+import javax.swing.SwingUtilities;
+
 /**
  * The GameManager class is responsible for managing the game state and logic.
  * It interacts with the Player, Deck, and BlackjackGUI classes to handle player actions,
@@ -47,6 +49,11 @@ public class GameManager {
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
         // bettingManager.resetBet(); // Reset the bet for a new game
+
+        // Place dealer's bet (e.g., 10% of dealer's balance)
+        // TODO: have a logic for dealer to place a bet
+        int dealerBet = (int) (bettingManager.getDealerBalance() * 0.1);
+        bettingManager.placeDealerBet(dealerBet);
 
         // Re-enable betting components
         gui.enableBetting();
@@ -111,32 +118,54 @@ public class GameManager {
         }
     }
 
-    private void determineWinner() {
-        if (!gameOver) {
-            int playerScore = player.calculateScore();
-            int dealerScore = dealer.calculateScore();
+private void determineWinner() {
+    if (!gameOver) {
+        int playerScore = player.calculateScore();
+        int dealerScore = dealer.calculateScore();
 
-            if (playerScore > dealerScore) {
-                gui.updateGameMessage(Texts.playerWins[language]);
-                bettingManager.playerWins(); // Player wins, double the bet amount
-            } else if (playerScore < dealerScore) {
-                gui.updateGameMessage(Texts.dealerWins[language]);
-                // Player loses, bet amount is already deducted
-            } else {
-                gui.updateGameMessage(Texts.tie[language]);
-                bettingManager.tie(); // Tie, return the bet amount
-            }
-            gameOver = true;
-            gui.updateGameState(player, dealer, true);
+        if (playerScore > dealerScore) {
+            gui.updateGameMessage(Texts.playerWins[language]);
+            bettingManager.playerWins(); // Player wins, dealer loses
+            System.out.println("Player wins! Player balance: " + bettingManager.getPlayerBalance() + 
+                               ", Dealer balance: " + bettingManager.getDealerBalance());
+        } else if (playerScore < dealerScore) {
+            gui.updateGameMessage(Texts.dealerWins[language]);
+            bettingManager.dealerWins(); // Dealer wins, player loses
+            System.out.println("Dealer wins! Player balance: " + bettingManager.getPlayerBalance() + 
+                               ", Dealer balance: " + bettingManager.getDealerBalance());
+        } else {
+            gui.updateGameMessage(Texts.tie[language]);
+            bettingManager.tie(); // Tie, both get their bets back
+            System.out.println("Tie! Player balance: " + bettingManager.getPlayerBalance() + 
+                               ", Dealer balance: " + bettingManager.getDealerBalance());
         }
-    }
+        gameOver = true;
 
+        // Refresh the UI on the EDT
+        SwingUtilities.invokeLater(() -> {
+            gui.enableBetting();
+            gui.updateGameState(player, dealer, true);
+        });
+    }
+}
+
+    /*
+     * Betting system.
+     */
     public boolean placeBet(int betAmount) {
         return bettingManager.placeBet(betAmount);
     }
 
     public int getPlayerBalance() {
         return bettingManager.getPlayerBalance();
+    }
+
+    public int getDealerBalance() {
+        return bettingManager.getDealerBalance();
+    }
+
+    public int getDealerBet() {
+        return bettingManager.getDealerBet();
     }
 
     /**
