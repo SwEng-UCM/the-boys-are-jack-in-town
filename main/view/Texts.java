@@ -100,6 +100,45 @@ public class Texts {
         
         public static String[] dealerBet =
                 {"Dealer Bet:", "Apuesta del crupier:", "Geall an déileálaí:", "Osztó tétje:", "رهان الموزع:", "Mise du croupier:"};
+        public static String[][] instructionsPopup = {
+                { // English
+                            "Instructions:",
+                            "1. Click 'Hit' to draw a card.",
+                            "2. Click 'Stand' to end your turn.",
+                            "3. Try to get as close to 21 without going over."
+                },
+                { // Spanish 🇪🇸
+                            "Instrucciones:",
+                            "1. Haz clic en 'Robar' para sacar una carta.",
+                            "2. Haz clic en 'Plantarse' para terminar tu turno.",
+                            "3. Intenta acercarte a 21 sin pasarte."
+                },
+                { // Irish (Gaeilge) 🇮🇪
+                            "Treoracha:",
+                            "1. Cliceáil 'Buail' chun cárta a tharraingt.",
+                            "2. Cliceáil 'Fanacht' chun do sheal a chríochnú.",
+                            "3. Déan iarracht teacht chomh gar do 21 agus is féidir gan dul thar fóir."
+                },
+                { // Hungarian 🇭🇺
+                            "Utasítások:",
+                            "1. Kattints a 'Lapkérés' gombra egy lap húzásához.",
+                            "2. Kattints az 'Állj' gombra a köröd befejezéséhez.",
+                            "3. Próbálj meg minél közelebb kerülni a 21-hez anélkül, hogy túllépnéd."
+                },
+                { // Arabic 🇸🇦
+                            "التعليمات:",
+                            "1. اضغط على 'سحب' لسحب بطاقة.",
+                            "2. اضغط على 'توقف' لإنهاء دورك.",
+                            "3. حاول الاقتراب من 21 دون تجاوزها."
+                },
+                { // French 🇫🇷
+                            "Instructions :",
+                            "1. Cliquez sur 'Tirer' pour piocher une carte.",
+                            "2. Cliquez sur 'Rester' pour terminer votre tour.",
+                            "3. Essayez d'atteindre 21 sans le dépasser."
+                }
+                };
+                    
         
 
 
