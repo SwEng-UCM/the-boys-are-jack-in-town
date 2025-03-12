@@ -16,7 +16,7 @@ import static main.view.BlackJackMenu.language;
 public class BlackjackGUI extends JFrame {
     private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel;
     private JButton hitButton, standButton, newGameButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel;
+    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, specialMessageLabel;
     private GameManager gameManager;
 
     public BlackjackGUI(GameManager gameManager) {
@@ -46,6 +46,10 @@ public class BlackjackGUI extends JFrame {
         gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
+
+        specialMessageLabel = new JLabel("", SwingConstants.CENTER);
+        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        specialMessageLabel.setForeground(Color.WHITE);
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
@@ -107,6 +111,7 @@ public class BlackjackGUI extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
+        centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Add everything to the main panel
@@ -176,7 +181,14 @@ public class BlackjackGUI extends JFrame {
 
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
+    }
 
+    public void updateSpecialMessage(String message) {
+        Timer timer = new Timer(2000, e -> specialMessageLabel.setText(message));
+        timer.setRepeats(false); // Ensure it only runs once
+        timer.start();
+
+        specialMessageLabel.setText("...");
     }
 
     private JButton createStyledButton(String text) {
@@ -250,16 +262,14 @@ public class BlackjackGUI extends JFrame {
 
     private void checkForSpecialCard(Card card) {
         if (card.isJokerWild()) {
-            updateGameMessage("Joker Wild! You can choose its value between 1 and 11.");
+//            updateGameMessage("Joker Wild! You can choose its value between 1 and 11.");
+            updateSpecialMessage("Joker Wild! You can choose its value between 1 and 11.");
         } else if (card.isSplitAce()) {
-            updateGameMessage("Split Ace drawn! Your score will be halved.");
+           // updateGameMessage("Split Ace! drawn. Your score will be halved.");
+            updateSpecialMessage("Split Ace! drawn. Your score will be halved.");
         } else if (card.isBlackjackBomb()) {
-            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
-        } else {
-//            updateGameMessage(""); this overwrites all GameMessage text.
+//            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+            updateSpecialMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
         }
-
-
     }
-
-}
+    }

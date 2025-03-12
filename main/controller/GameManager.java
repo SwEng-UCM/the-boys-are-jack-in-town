@@ -150,12 +150,14 @@ public class GameManager {
                 if (recipient == player) {
                     int wildValue = gui.promptJokerWildValue();  // Only prompt the player
                     card.setWildValue(wildValue);
-                    gui.updateGameMessage("Joker Wild set to " + wildValue + " 🤡");
+                    gui.updateGameMessage("Joker Wild! set to " + wildValue + " 🤡");
                 }
                 break;
             default:
                 // Standard cards, no special handling needed
+                //gui.updateGameState(player, dealer, false);
                 break;
+
         }
         return card;
     }
