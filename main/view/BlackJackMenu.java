@@ -74,8 +74,19 @@ public class BlackJackMenu extends JFrame {
         });
 
         instructionsButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Instructions:\n1. Click 'Hit' to draw a card.\n2. Click 'Stand' to end your turn.\n3. Try to get as close to 21 without going over.", "Instructions", JOptionPane.INFORMATION_MESSAGE);
+            String message = Texts.instructionsPopup[language][0] + "\n" +
+                             "1. " + Texts.instructionsPopup[language][1] + "\n" +
+                             "2. " + Texts.instructionsPopup[language][2] + "\n" +
+                             "3. " + Texts.instructionsPopup[language][3];
+        
+            JOptionPane.showMessageDialog(this, 
+                message, 
+                Texts.instructions[language], 
+                JOptionPane.INFORMATION_MESSAGE
+            );
         });
+        
+        
 
         exitButton.addActionListener(e -> System.exit(0));
 
