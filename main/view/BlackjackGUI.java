@@ -173,23 +173,41 @@ public class BlackjackGUI extends JFrame {
      *  Betting system logic.
     */
     private void placeBet() {
-        try {
-            int betAmount = Integer.parseInt(betField.getText());
-            if (betAmount > 0 && gameManager.placeBet(betAmount)) {
-                betLabel.setText(Texts.bet[language] + " $" + betAmount); 
-                balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance()); 
+       try {
+    int betAmount = Integer.parseInt(betField.getText());
+    if (betAmount > 0 && gameManager.placeBet(betAmount)) {
+        betLabel.setText(Texts.bet[language] + " $" + betAmount);
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
 
-                betField.setEnabled(false);
-                placeBetButton.setEnabled(false);
+        betField.setEnabled(false);
+        placeBetButton.setEnabled(false);
 
-                JOptionPane.showMessageDialog(this, Texts.placeBet[language] + ": $" + betAmount, "Bet Confirmed", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid bet amount or insufficient balance.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(
+            this, 
+            Texts.placeBet[language] + ": $" + betAmount, 
+            "Bet Confirmed", 
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    } else {
+        JOptionPane.showMessageDialog(
+            this, 
+            Texts.betError[language], // Translated "Invalid bet amount or insufficient balance."
+            Texts.error[language], // Translated "Error"
+            JOptionPane.ERROR_MESSAGE
+        );
     }
+} catch (NumberFormatException e) { // ✅ Moved inside the try-catch block properly
+    JOptionPane.showMessageDialog(
+        this, 
+        Texts.invalidInput[language], // Translated "Please enter a valid number."
+        Texts.invalidInputTitle[language], // Translated "Invalid Input"
+        JOptionPane.WARNING_MESSAGE
+    );
+}
+
+}
+
+            
 
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
