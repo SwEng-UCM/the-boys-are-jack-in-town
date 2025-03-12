@@ -138,6 +138,43 @@ public class Texts {
                             "3. Essayez d'atteindre 21 sans le dépasser."
                 }
                 };
+
+        public static String[] betError = {
+                "Invalid bet amount or insufficient balance.",  // English 🇬🇧
+                "Cantidad de apuesta no válida o saldo insuficiente.",  // Spanish 🇪🇸
+                "Méid geall neamhbhailí nó iarmhéid neamhleor.",  // Irish 🇮🇪
+                "Érvénytelen tétösszeg vagy elégtelen egyenleg.",  // Hungarian 🇭🇺
+                "مبلغ الرهان غير صالح أو رصيد غير كافٍ.",  // Arabic 🇸🇦
+                "Montant de mise invalide ou solde insuffisant."  // French 🇫🇷
+        };
+        public static String[] error = {
+                "Error",  // English 🇬🇧
+                "Error",  // Spanish 🇪🇸 (same spelling)
+                "Earráid",  // Irish 🇮🇪
+                "Hiba",  // Hungarian 🇭🇺
+                "خطأ",  // Arabic 🇸🇦
+                "Erreur"  // French 🇫🇷
+        };
+        public static String[] invalidInput = {
+                "Please enter a valid number.",  // English 🇬🇧
+                "Por favor, ingrese un número válido.",  // Spanish 🇪🇸
+                "Cuir isteach uimhir bhailí, le do thoil.",  // Irish 🇮🇪
+                "Kérjük, adjon meg egy érvényes számot.",  // Hungarian 🇭🇺
+                "يرجى إدخال رقم صالح.",  // Arabic 🇸🇦
+                "Veuillez entrer un nombre valide."  // French 🇫🇷
+        };
+        public static String[] invalidInputTitle = {
+                "Invalid Input",  // English 🇬🇧
+                "Entrada no válida",  // Spanish 🇪🇸
+                "Ionchur neamhbhailí",  // Irish 🇮🇪
+                "Érvénytelen bevitel",  // Hungarian 🇭🇺
+                "إدخال غير صالح",  // Arabic 🇸🇦
+                "Entrée invalide"  // French 🇫🇷
+ };
+            
+            
+            
+                    
                     
         
 
