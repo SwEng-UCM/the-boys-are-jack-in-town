@@ -46,7 +46,7 @@ public class BlackjackGUI extends JFrame {
         hitButton = createStyledButton(Texts.guiHit[language]);
         standButton = createStyledButton(Texts.guiStand[language]);
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
-        placeBetButton = createStyledButton("Place Bet");
+        placeBetButton = createStyledButton(Texts.placeBet[language]);
 
         gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
@@ -54,8 +54,8 @@ public class BlackjackGUI extends JFrame {
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
-        balanceLabel = createStyledLabel("Balance: $1000");
-        betLabel = createStyledLabel("Bet: $0");
+        balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        betLabel = createStyledLabel(Texts.bet[language] + " $0");
 
         betField = new JTextField(10);
 
@@ -66,8 +66,8 @@ public class BlackjackGUI extends JFrame {
         playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         playerPanel.setOpaque(false);
 
-        dealerBalanceLabel = createStyledLabel("Dealer Balance: $1000");
-        dealerBetLabel = createStyledLabel("Dealer Bet: $0");
+        dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
+        dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0"); // 🔹 Dealer bet translated
         
         // Use GridLayout for dealerScorePanel to place score on the first line and balance/bet on the second line
         dealerScorePanel = new JPanel(new GridLayout(2, 1)); // 2 rows, 1 column
@@ -104,7 +104,7 @@ public class BlackjackGUI extends JFrame {
 
         betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betPanel.setOpaque(false);
-        betPanel.add(new JLabel("Enter Bet:"));
+        betPanel.add(new JLabel(Texts.enterBet[language])); 
         betPanel.add(betField);
         betPanel.add(placeBetButton);
         betPanel.add(balanceLabel);
@@ -176,15 +176,13 @@ public class BlackjackGUI extends JFrame {
         try {
             int betAmount = Integer.parseInt(betField.getText());
             if (betAmount > 0 && gameManager.placeBet(betAmount)) {
-                betLabel.setText("Bet: $" + betAmount);
-                balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance());
-    
-                // Disable the bet field and button after placing a bet
+                betLabel.setText(Texts.bet[language] + " $" + betAmount); // 🔹 Updated for translation
+                balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance()); // 🔹 Updated for translation
+
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-    
-                // Update UI to reflect the new bet and balance
-                JOptionPane.showMessageDialog(this, "Bet placed: $" + betAmount, "Bet Confirmed", JOptionPane.INFORMATION_MESSAGE);
+
+                JOptionPane.showMessageDialog(this, Texts.placeBet[language] + ": $" + betAmount, "Bet Confirmed", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid bet amount or insufficient balance.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -203,10 +201,10 @@ public class BlackjackGUI extends JFrame {
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
-        betLabel.setText("Bet: $0"); // Reset the player's bet label
-        balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance()); // Update the player's balance
-        dealerBalanceLabel.setText("Dealer Balance: $" + gameManager.getDealerBalance()); // Update the dealer's balance
-        dealerBetLabel.setText("Dealer Bet: $" + gameManager.getDealerBet()); // Update the dealer's bet
+        betLabel.setText(Texts.bet[language] + " $0");
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+        dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
+        dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
     
         System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance() + 
                            ", Dealer Balance: " + gameManager.getDealerBalance() + 
@@ -255,9 +253,10 @@ public class BlackjackGUI extends JFrame {
         playerScoreLabel.setText(Texts.guiPlayerScore[language] + " : " + player.calculateScore());
 
         // Update balances and bets
-        balanceLabel.setText("Balance: $" + gameManager.getPlayerBalance());
-        dealerBalanceLabel.setText("Dealer Balance: $" + gameManager.getDealerBalance());
-        dealerBetLabel.setText("Dealer Bet: $" + gameManager.getDealerBet());
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+        dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + gameManager.getDealerBalance());
+        dealerBetLabel.setText(Texts.dealerBet[language] + " $" + gameManager.getDealerBet());
+
 
 
         // Refresh UI

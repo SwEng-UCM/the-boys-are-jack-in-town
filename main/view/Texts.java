@@ -78,9 +78,35 @@ public class Texts {
 
     public static String[] dealerWins =
             {"Dealer wins!", "¡El repartidor gana!", "Buaileann an dáileoir!", "Az osztó nyer!", "الموزع يفوز!",  "Le croupier gagne !"};
+            
 
     public static String[] tie =
             {"It's a tie!", "¡Es un empate!", "Tá sé cothrom!", "Döntetlen!", "إنها تعادل!", "Égalité !"};
+
+        public static String[] enterBet =
+                {"Enter Bet:", "Ingrese apuesta:", "Iontráil geall:", "Tegye meg a tétet:", "أدخل الرهان:", "Saisir mise :"};
+
+        public static String[] placeBet =
+                {"Place Bet", "Realizar apuesta", "Cuir geall", "Fogadás", "ضع الرهان", "Placer mise"};
+
+        public static String[] balance =
+                {"Balance:", "Saldo:", "Iarmhéid:", "Egyenleg:", "الرصيد:", "Solde :"};
+
+        public static String[] bet =
+                {"Bet:", "Apuesta:", "Geall:", "Tét:", "الرهان:", "Mise :"};
+
+                public static String[] dealerBalance =
+                {"Dealer Balance:", "Saldo del crupier:", "Iarmhéid an déileálaí:", "Osztó egyenlege:", "رصيد الموزع:", "Solde du croupier:"};
+        
+        public static String[] dealerBet =
+                {"Dealer Bet:", "Apuesta del crupier:", "Geall an déileálaí:", "Osztó tétje:", "رهان الموزع:", "Mise du croupier:"};
+        
+
+
+
+        
+
+
 
 
 }
