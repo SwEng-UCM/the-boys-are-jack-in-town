@@ -67,7 +67,7 @@ public class BlackJackMenu extends JFrame {
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
-            GameManager gameManager = new GameManager();
+            GameManager gameManager = GameManager.getInstance();
             BlackjackGUI gui = new BlackjackGUI(gameManager);
             gui.setVisible(true);
             dispose(); // Close the menu window

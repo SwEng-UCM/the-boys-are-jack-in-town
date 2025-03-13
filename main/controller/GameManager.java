@@ -10,12 +10,18 @@ import static main.view.BlackJackMenu.language;
 
 import javax.swing.SwingUtilities;
 
+/*
+ * Singleton class.
+ */
+
 /**
  * The GameManager class is responsible for managing the game state and logic.
  * It interacts with the Player, Deck, and BlackjackGUI classes to handle player actions,
  * dealer actions, and determine the game outcome.
  */
 public class GameManager {
+    private static GameManager instance;
+
     private Player player;
     private Player dealer;
     private Deck deck;
@@ -23,13 +29,21 @@ public class GameManager {
     private boolean gameOver;
     private BettingManager bettingManager;
 
-    public GameManager() {
+    private GameManager() {
         this.player = new Player();
         this.dealer = new Player();
         this.deck = new Deck();
         this.gameOver = false;
         this.bettingManager = new BettingManager(1000, 1000); // Initial balance
     }
+
+        // Public method to provide access to the singleton instance
+        public static GameManager getInstance() {
+            if (instance == null) {
+                instance = new GameManager();
+            }
+            return instance;
+        }
 
     public void setGui(BlackjackGUI gui) {
         this.gui = gui;
