@@ -48,7 +48,7 @@ public class BlackjackGUI extends JFrame {
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
         placeBetButton = createStyledButton(Texts.placeBet[language]);
 
-        gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
+        gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
 
@@ -191,16 +191,16 @@ public class BlackjackGUI extends JFrame {
     } else {
         JOptionPane.showMessageDialog(
             this, 
-            Texts.betError[language], // Translated "Invalid bet amount or insufficient balance."
-            Texts.error[language], // Translated "Error"
+            Texts.betError[language], 
+            Texts.error[language], 
             JOptionPane.ERROR_MESSAGE
         );
     }
-} catch (NumberFormatException e) { // ✅ Moved inside the try-catch block properly
+} catch (NumberFormatException e) { 
     JOptionPane.showMessageDialog(
         this, 
-        Texts.invalidInput[language], // Translated "Please enter a valid number."
-        Texts.invalidInputTitle[language], // Translated "Invalid Input"
+        Texts.invalidInput[language], 
+        Texts.invalidInputTitle[language], 
         JOptionPane.WARNING_MESSAGE
     );
 }
@@ -345,8 +345,8 @@ public class BlackjackGUI extends JFrame {
         while (!valid) {
             String input = JOptionPane.showInputDialog(
                     this,
-                    "Joker Wild! Choose a value between 1 and 11: 🤡",
-                    "Joker Wild",
+                    Texts.jokerWildMessage[language],  
+                    Texts.jokerWildTitle[language],   
                     JOptionPane.QUESTION_MESSAGE
             );
             try {
@@ -356,16 +356,17 @@ public class BlackjackGUI extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(
                             this,
-                            "Invalid choice. Please choose a value between 1 and 11.",
-                            "Invalid Input",
+                            Texts.invalidJokerInput[language], 
+                            Texts.invalidInputTitle[language], 
+
                             JOptionPane.WARNING_MESSAGE
                     );
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Please enter a valid number.",
-                        "Invalid Input",
+                        Texts.invalidJokerInput[language], 
+                        Texts.invalidInputTitle[language], 
                         JOptionPane.WARNING_MESSAGE
                 );
             }
@@ -375,11 +376,11 @@ public class BlackjackGUI extends JFrame {
 
     private void checkForSpecialCard(Card card) {
         if (card.isJokerWild()) {
-            updateGameMessage("Joker Wild! You can choose its value between 1 and 11.");
+            updateGameMessage(Texts.jokerWildMessage[language]);
         } else if (card.isSplitAce()) {
-            updateGameMessage("Split Ace drawn! Your score will be halved.");
+            updateGameMessage(Texts.splitAceMessage[language]);
         } else if (card.isBlackjackBomb()) {
-            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+            updateGameMessage(Texts.blackjackBombMessage[language]);
         } else {
 //            updateGameMessage(""); this overwrites all GameMessage text.
         }

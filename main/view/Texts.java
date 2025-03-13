@@ -170,7 +170,60 @@ public class Texts {
                 "Érvénytelen bevitel",  // Hungarian 🇭🇺
                 "إدخال غير صالح",  // Arabic 🇸🇦
                 "Entrée invalide"  // French 🇫🇷
- };
+        };
+        public static String[] splitAceMessage = {
+                "Split Ace drawn! Your score will be halved.",  // English 🇬🇧
+                "¡As dividido extraído! Tu puntuación se reducirá a la mitad.", // Spanish 🇪🇸
+                "Roinnte Ace tarraingthe! Laghdaítear do scór go leith.", // Irish 🇮🇪
+                "Kihúzott Osztott Ász! Az eredményed feleződik.", // Hungarian 🇭🇺
+                "تم سحب الآس المقسم! سيتم تقليل نتيجتك إلى النصف.", // Arabic 🇸🇦
+                "As divisé tiré! Votre score sera réduit de moitié." // French 🇫🇷
+        };
+        public static String[] blackjackBombMessage = {
+                "Blackjack Bomb! The game is over, and the Blackjack Bomb wins.",  // English 🇬🇧
+                "¡Bomba de Blackjack! El juego ha terminado, y la Bomba de Blackjack gana.", // Spanish 🇪🇸
+                "Buama Blackjack! Tá an cluiche thart, agus bhuaigh an Buama Blackjack.", // Irish 🇮🇪
+                "Blackjack Bomba! A játék véget ért, és a Blackjack Bomba nyert.", // Hungarian 🇭🇺
+                "قنبلة البلاك جاك! انتهت اللعبة، وفازت قنبلة البلاك جاك.", // Arabic 🇸🇦
+                "Bombe de Blackjack! La partie est terminée, et la Bombe de Blackjack gagne." // French 🇫🇷
+        };
+        public static String[] jokerWildMessage = {
+                "Joker Wild! Choose a value between 1 and 11: 🤡",  // English 🇬🇧
+                "¡Joker Salvaje! Elige un valor entre 1 y 11: 🤡", // Spanish 🇪🇸
+                "Joker Fiáin! Roghnaigh luach idir 1 agus 11: 🤡", // Irish 🇮🇪
+                "Joker Vad! Válassz egy értéket 1 és 11 között: 🤡", // Hungarian 🇭🇺
+                "جوكر البري! اختر قيمة بين 1 و 11: 🤡", // Arabic 🇸🇦
+                "Joker Sauvage ! Choisissez une valeur entre 1 et 11 : 🤡" // French 🇫🇷
+        };
+            
+        public static String[] jokerWildTitle = {
+                "Joker Wild",  // English 🇬🇧
+                "Joker Salvaje", // Spanish 🇪🇸
+                "Joker Fiáin", // Irish 🇮🇪
+                "Joker Vad", // Hungarian 🇭🇺
+                "جوكر البري", // Arabic 🇸🇦
+                "Joker Sauvage" // French 🇫🇷
+        };
+            
+        public static String[] invalidJokerInput = {
+                "Invalid choice. Please choose a value between 1 and 11.",  // English 🇬🇧
+                "Elección inválida. Elige un valor entre 1 y 11.", // Spanish 🇪🇸
+                "Roghnú neamhbhailí. Roghnaigh luach idir 1 agus 11.", // Irish 🇮🇪
+                "Érvénytelen választás. Válassz egy értéket 1 és 11 között.", // Hungarian 🇭🇺
+                "اختيار غير صالح. اختر قيمة بين 1 و 11.", // Arabic 🇸🇦
+                "Choix invalide. Choisissez une valeur entre 1 et 11." // French 🇫🇷
+        };
+        public static String[] welcomeMessage = {
+                "Welcome to Blackjack!",  // English 🇬🇧
+                "¡Bienvenido a Blackjack!", // Spanish 🇪🇸
+                "Fáilte go Blackjack!", // Irish 🇮🇪
+                "Üdvözöljük a Blackjackben!", // Hungarian 🇭🇺
+                "مرحبًا بك في بلاك جاك!", // Arabic 🇸🇦
+                "Bienvenue au Blackjack !" // French 🇫🇷
+        };
+            
+            
+            
             
             
             
