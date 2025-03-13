@@ -59,7 +59,7 @@ public class Texts {
     public static String[] gameManagerGameOn  =
             {"Game On! Your turn.",
                     "¡Juego encendido! Tu turno.", "Cluiche Ar! Do sheal.",
-                            "Game On! Te jössz.", "اللعبة بدأت! دورك الآن.", "C'est parti ! À vous."};
+                            "Game On! Te jössz!", "اللعبة بدأت! دورك الآن.", "C'est parti ! À vous."};
 
     public static String[] dealerBlackjack =
             {"Dealer has Blackjack! Dealer wins!", "¡El repartidor tiene Blackjack! ¡El repartidor gana!", "Tá Blackjack ag an dáileoir! Buaileann an dáileoir!", "Az osztónak Blackjackje van! Az osztó nyer!", "الموزع لديه بلاك جاك! الموزع يفوز!", "Le croupier a un Blackjack ! Il gagne !"};
@@ -191,7 +191,7 @@ public class Texts {
                 "Joker Wild! Choose a value between 1 and 11: 🤡",  // English 🇬🇧
                 "¡Joker Salvaje! Elige un valor entre 1 y 11: 🤡", // Spanish 🇪🇸
                 "Joker Fiáin! Roghnaigh luach idir 1 agus 11: 🤡", // Irish 🇮🇪
-                "Joker Vad! Válassz egy értéket 1 és 11 között: 🤡", // Hungarian 🇭🇺
+                "Vad Joker! Válassz egy értéket 1 és 11 között: 🤡", // Hungarian 🇭🇺
                 "جوكر البري! اختر قيمة بين 1 و 11: 🤡", // Arabic 🇸🇦
                 "Joker Sauvage ! Choisissez une valeur entre 1 et 11 : 🤡" // French 🇫🇷
         };
@@ -200,7 +200,7 @@ public class Texts {
                 "Joker Wild",  // English 🇬🇧
                 "Joker Salvaje", // Spanish 🇪🇸
                 "Joker Fiáin", // Irish 🇮🇪
-                "Joker Vad", // Hungarian 🇭🇺
+                "Vad Joker", // Hungarian 🇭🇺
                 "جوكر البري", // Arabic 🇸🇦
                 "Joker Sauvage" // French 🇫🇷
         };
