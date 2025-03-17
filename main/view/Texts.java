@@ -221,6 +221,42 @@ public class Texts {
                 "مرحبًا بك في بلاك جاك!", // Arabic 🇸🇦
                 "Bienvenue au Blackjack !" // French 🇫🇷
         };
+        public static String[] gameOverMessage = {
+                "Game Over! You ran out of money! 😢", // English 🇬🇧
+                "¡Juego terminado! Te has quedado sin dinero. 😢", // Spanish 🇪🇸
+                "Cluiche thart! Tá tú as airgead. 😢", // Irish 🇮🇪
+                "Játék vége! Elfogyott a pénzed. 😢", // Hungarian 🇭🇺
+                "انتهت اللعبة! لقد نفد مالك. 😢", // Arabic 🇸🇦
+                "Jeu terminé ! Vous n'avez plus d'argent. 😢" // French 🇫🇷
+            };
+            
+            public static String[] gameOverTitle = {
+                "Game Over!", // English 🇬🇧
+                "¡Juego terminado!", // Spanish 🇪🇸
+                "Cluiche thart!", // Irish 🇮🇪
+                "Játék vége!", // Hungarian 🇭🇺
+                "انتهت اللعبة!", // Arabic 🇸🇦
+                "Jeu terminé !" // French 🇫🇷
+            };
+            
+            public static String[] restartGame = {
+                "Restart Game", // English 🇬🇧
+                "Reiniciar juego", // Spanish 🇪🇸
+                "Tosaigh an cluiche arís", // Irish 🇮🇪
+                "Játék újraindítása", // Hungarian 🇭🇺
+                "إعادة تشغيل اللعبة", // Arabic 🇸🇦
+                "Redémarrer la partie" // French 🇫🇷
+            };
+            
+            public static String[] exitGame = {
+                "Exit", // English 🇬🇧
+                "Salir", // Spanish 🇪🇸
+                "Slí Amach", // Irish 🇮🇪
+                "Kilépés", // Hungarian 🇭🇺
+                "خروج", // Arabic 🇸🇦
+                "Quitter" // French 🇫🇷
+            };
+            
             
             
             

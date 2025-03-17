@@ -179,13 +179,13 @@ public class BlackjackGUI extends JFrame {
         // Show a pop-up with "Game Over" message and Restart button
         int option = JOptionPane.showOptionDialog(
             this,
-            message + "\nWould you like to start a new game?",
-            "Game Over!",
+            Texts.gameOverMessage[language],
+            Texts.gameOverMessage[language],
             JOptionPane.YES_NO_OPTION,
             JOptionPane.ERROR_MESSAGE,
             null,
-            new String[]{"Restart Game", "Exit"},
-            "Restart Game"
+            new String[]{Texts.restartGame[language], Texts.exitGame[language]}, // Buttons
+            Texts.restartGame[language]
         );
     
         // If user clicks "Restart Game", reset everything
