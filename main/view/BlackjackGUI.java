@@ -1,5 +1,6 @@
 package main.view;
 
+import main.controller.BettingManager;
 import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
@@ -14,9 +15,10 @@ import static main.view.BlackJackMenu.language;
  * It displays the game state, player actions, and messages to the user.
  */
 public class BlackjackGUI extends JFrame {
-    private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel;
-    private JButton hitButton, standButton, newGameButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel;
+    private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
+    private JButton hitButton, standButton, newGameButton, placeBetButton;
+    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel;
+    private JTextField betField;
     private GameManager gameManager;
 
     public BlackjackGUI(GameManager gameManager) {
@@ -29,6 +31,10 @@ public class BlackjackGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
+        // Custom image icon
+        ImageIcon icon = new ImageIcon("img/black.png");
+        setIconImage(icon.getImage());
+
         initializeComponents();
         layoutComponents();
         attachEventListeners();
@@ -38,17 +44,21 @@ public class BlackjackGUI extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
 
-
         hitButton = createStyledButton(Texts.guiHit[language]);
         standButton = createStyledButton(Texts.guiStand[language]);
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
+        placeBetButton = createStyledButton(Texts.placeBet[language]);
 
-        gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
+        gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
+        balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        betLabel = createStyledLabel(Texts.bet[language] + " $0");
+
+        betField = new JTextField(10);
 
         // Initialize Panels
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -57,21 +67,50 @@ public class BlackjackGUI extends JFrame {
         playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         playerPanel.setOpaque(false);
 
-        dealerScorePanel = new JPanel();
+        dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
+        dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0"); 
+        
+        // Use GridLayout for dealerScorePanel to place score on the first line and balance/bet on the second line
+        dealerScorePanel = new JPanel(new GridLayout(2, 1)); // 2 rows, 1 column
         dealerScorePanel.setOpaque(false);
-        dealerScorePanel.add(dealerScoreLabel);
+
+            // First row: Dealer score
+    JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    scoreRow.setOpaque(false);
+    scoreRow.add(dealerScoreLabel);
+
+    // Second row: Dealer balance and bet
+    JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0)); // 20px horizontal gap
+    balanceBetRow.setOpaque(false);
+    balanceBetRow.add(dealerBalanceLabel);
+    balanceBetRow.add(dealerBetLabel);
+
+    // Add rows to dealerScorePanel
+    dealerScorePanel.add(scoreRow);
+    dealerScorePanel.add(balanceBetRow);
+    
+        playerScorePanel = new JPanel();
+        playerScorePanel.setOpaque(false);
+        playerScorePanel.add(playerScoreLabel);
 
         playerScorePanel = new JPanel();
         playerScorePanel.setOpaque(false);
         playerScorePanel.add(playerScoreLabel);
 
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 60));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setOpaque(false);
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
-    }
 
+        betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        betPanel.setOpaque(false);
+        betPanel.add(new JLabel(Texts.enterBet[language])); 
+        betPanel.add(betField);
+        betPanel.add(placeBetButton);
+        betPanel.add(balanceLabel);
+        betPanel.add(betLabel);
+    }
 
     private void layoutComponents() {
         mainPanel.setLayout(new BorderLayout());
@@ -79,8 +118,8 @@ public class BlackjackGUI extends JFrame {
         // Dealer Section (Top)
         JPanel dealerArea = new JPanel(new BorderLayout());
         dealerArea.setOpaque(false);
-        dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
-        dealerArea.add(dealerPanel, BorderLayout.CENTER);
+        dealerArea.add(dealerScorePanel, BorderLayout.NORTH); // Dealer balance and bet at the top
+        dealerArea.add(dealerPanel, BorderLayout.CENTER); // Dealer's cards below
 
         // Player Section (Bottom) - Wrapped with Back Button
         JPanel playerContainer = new JPanel(new BorderLayout());
@@ -112,17 +151,133 @@ public class BlackjackGUI extends JFrame {
         // Add everything to the main panel
         mainPanel.add(dealerArea, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(playerContainer, BorderLayout.SOUTH); // The entire player area with back button
-
+        JPanel southPanel = new JPanel(new BorderLayout()); // New container
+        southPanel.setOpaque(false);
+        southPanel.add(playerContainer, BorderLayout.CENTER);
+        southPanel.add(betPanel, BorderLayout.SOUTH);
+        
+        mainPanel.add(southPanel, BorderLayout.SOUTH); // Now added as a single section
+        
         add(mainPanel);
 
         gameManager.startNewGame();
     }
+    public void restartGame() {
+        gameManager = GameManager.getInstance(); // Get game instance
+        gameManager.setGui(this);
+    
+        // Reset betting manager using the public method
+        gameManager.resetBettingManager(1000, 1000);
+    
+        enableBetting(); // Enable betting input again
+        gameManager.startNewGame(); // Start a fresh game
+    }
+    
+    
+
+    public void showGameOverMessage(String message) {
+        // Show a pop-up with "Game Over" message and Restart button
+        int option = JOptionPane.showOptionDialog(
+            this,
+            Texts.gameOverMessage[language],
+            Texts.gameOverMessage[language],
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            new String[]{Texts.restartGame[language], Texts.exitGame[language]}, // Buttons
+            Texts.restartGame[language]
+        );
+    
+        // If user clicks "Restart Game", reset everything
+        if (option == JOptionPane.YES_OPTION) {
+            restartGame();
+        } else {
+            System.exit(0); // Exit the game if "Exit" is selected
+        }
+    }
+    
 
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
+        placeBetButton.addActionListener(e -> placeBet());
+    }
+
+    /*
+     *  Betting system logic.
+    */
+    private void placeBet() {
+       try {
+    int betAmount = Integer.parseInt(betField.getText());
+    if (betAmount > 0 && gameManager.placeBet(betAmount)) {
+        betLabel.setText(Texts.bet[language] + " $" + betAmount);
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+
+        betField.setEnabled(false);
+        placeBetButton.setEnabled(false);
+
+        JOptionPane.showMessageDialog(
+            this, 
+            Texts.placeBet[language] + ": $" + betAmount, 
+            "Bet Confirmed", 
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    } else {
+        JOptionPane.showMessageDialog(
+            this, 
+            Texts.betError[language], 
+            Texts.error[language], 
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+} catch (NumberFormatException e) { 
+    JOptionPane.showMessageDialog(
+        this, 
+        Texts.invalidInput[language], 
+        Texts.invalidInputTitle[language], 
+        JOptionPane.WARNING_MESSAGE
+    );
+}
+
+}
+
+            
+
+    // After the game ended the user should be able to take another bet
+    public void enableBetting() {
+        System.out.println("enableBetting called");
+        System.out.println("Player Balance: " + gameManager.getPlayerBalance());
+        System.out.println("Dealer Balance: " + gameManager.getDealerBalance());
+        System.out.println("Dealer Bet: " + gameManager.getDealerBet());
+    
+        betField.setEnabled(true);
+        placeBetButton.setEnabled(true);
+        betField.setText(""); // Clear the bet field
+        betLabel.setText(Texts.bet[language] + " $0");
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+        dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
+        dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
+    
+        System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance() + 
+                           ", Dealer Balance: " + gameManager.getDealerBalance() + 
+                           ", Dealer Bet: " + gameManager.getDealerBet());
+
+            // Force UI refresh
+    balanceLabel.revalidate();
+    balanceLabel.repaint();
+    dealerBalanceLabel.revalidate();
+    dealerBalanceLabel.repaint();
+    dealerBetLabel.revalidate();
+    dealerBetLabel.repaint();
+
+    // Refresh the entire main panel
+    mainPanel.revalidate();
+    mainPanel.repaint();
+
+    System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance() + 
+                       ", Dealer Balance: " + gameManager.getDealerBalance() + 
+                       ", Dealer Bet: " + gameManager.getDealerBet());
     }
 
     public void updateGameState(Player player, Player dealer, boolean gameOver) {
@@ -141,14 +296,21 @@ public class BlackjackGUI extends JFrame {
                 dealerPanel.add(createCardPanel(card));
                 checkForSpecialCard(card);
             }
-            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" : "+ dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
         } else {
             dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
             dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText(Texts.guiDealerScore[language]+" ???");
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
         }
 
-        playerScoreLabel.setText(Texts.guiPlayerScore[language]+" : "+ player.calculateScore());
+        playerScoreLabel.setText(Texts.guiPlayerScore[language] + " : " + player.calculateScore());
+
+        // Update balances and bets
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+        dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + gameManager.getDealerBalance());
+        dealerBetLabel.setText(Texts.dealerBet[language] + " $" + gameManager.getDealerBet());
+
+
 
         // Refresh UI
         playerPanel.revalidate();
@@ -173,10 +335,8 @@ public class BlackjackGUI extends JFrame {
         return cardPanel;
     }
 
-
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
-
     }
 
     private JButton createStyledButton(String text) {
@@ -220,8 +380,8 @@ public class BlackjackGUI extends JFrame {
         while (!valid) {
             String input = JOptionPane.showInputDialog(
                     this,
-                    "Joker Wild! Choose a value between 1 and 11: 🤡",
-                    "Joker Wild",
+                    Texts.jokerWildMessage[language],  
+                    Texts.jokerWildTitle[language],   
                     JOptionPane.QUESTION_MESSAGE
             );
             try {
@@ -231,16 +391,17 @@ public class BlackjackGUI extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(
                             this,
-                            "Invalid choice. Please choose a value between 1 and 11.",
-                            "Invalid Input",
+                            Texts.invalidJokerInput[language], 
+                            Texts.invalidInputTitle[language], 
+
                             JOptionPane.WARNING_MESSAGE
                     );
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Please enter a valid number.",
-                        "Invalid Input",
+                        Texts.invalidJokerInput[language], 
+                        Texts.invalidInputTitle[language], 
                         JOptionPane.WARNING_MESSAGE
                 );
             }
@@ -250,16 +411,13 @@ public class BlackjackGUI extends JFrame {
 
     private void checkForSpecialCard(Card card) {
         if (card.isJokerWild()) {
-            updateGameMessage("Joker Wild! You can choose its value between 1 and 11.");
+            updateGameMessage(Texts.jokerWildMessage[language]);
         } else if (card.isSplitAce()) {
-            updateGameMessage("Split Ace drawn! Your score will be halved.");
+            updateGameMessage(Texts.splitAceMessage[language]);
         } else if (card.isBlackjackBomb()) {
-            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+            updateGameMessage(Texts.blackjackBombMessage[language]);
         } else {
 //            updateGameMessage(""); this overwrites all GameMessage text.
         }
-
-
     }
-
 }
