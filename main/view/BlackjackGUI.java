@@ -1,5 +1,6 @@
 package main.view;
 
+import main.controller.BettingManager;
 import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
@@ -161,6 +162,40 @@ public class BlackjackGUI extends JFrame {
 
         gameManager.startNewGame();
     }
+    public void restartGame() {
+        gameManager = GameManager.getInstance(); // Get game instance
+        gameManager.setGui(this);
+    
+        // Reset betting manager using the public method
+        gameManager.resetBettingManager(1000, 1000);
+    
+        enableBetting(); // Enable betting input again
+        gameManager.startNewGame(); // Start a fresh game
+    }
+    
+    
+
+    public void showGameOverMessage(String message) {
+        // Show a pop-up with "Game Over" message and Restart button
+        int option = JOptionPane.showOptionDialog(
+            this,
+            message + "\nWould you like to start a new game?",
+            "Game Over!",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            new String[]{"Restart Game", "Exit"},
+            "Restart Game"
+        );
+    
+        // If user clicks "Restart Game", reset everything
+        if (option == JOptionPane.YES_OPTION) {
+            restartGame();
+        } else {
+            System.exit(0); // Exit the game if "Exit" is selected
+        }
+    }
+    
 
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());

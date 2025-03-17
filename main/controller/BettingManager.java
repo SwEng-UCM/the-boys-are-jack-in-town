@@ -66,7 +66,7 @@ public class BettingManager {
     }
 
     // Reset bets after a round
-    private void resetBets() {
+    public void resetBets() {
         playerBet = 0;
         dealerBet = 0;
     }
