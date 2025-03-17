@@ -37,13 +37,13 @@ public class GameManager {
         this.bettingManager = new BettingManager(1000, 1000); // Initial balance
     }
 
-        // Public method to provide access to the singleton instance
-        public static GameManager getInstance() {
-            if (instance == null) {
-                instance = new GameManager();
-            }
-            return instance;
+    // Public method to provide access to the singleton instance
+    public static GameManager getInstance() {
+        if (instance == null) {
+            instance = new GameManager();
         }
+        return instance;
+    }
 
     public void setGui(BlackjackGUI gui) {
         this.gui = gui;
@@ -62,6 +62,7 @@ public class GameManager {
         dealer.reset();
         deck = new Deck(); // Reset the deck for a new game
         gameOver = false;
+
         // bettingManager.resetBet(); // Reset the bet for a new game
 
         // Place dealer's bet (e.g., 10% of dealer's balance)
@@ -81,6 +82,7 @@ public class GameManager {
         // Check for instant Blackjack win
         if (player.hasBlackjack()) {
             gui.updateGameMessage(Texts.playerBlackjack[language]);
+            bettingManager.playerBlackjack(); // Handle Blackjack payout
             gameOver = true;
             gui.updateGameState(player, dealer, true);
             return;
@@ -122,6 +124,7 @@ public class GameManager {
         if (player.calculateScore() > 21) {
             gameOver = true;
             gui.updateGameMessage(Texts.playerBusts[language]);
+            bettingManager.dealerWins(); // Player busts, dealer wins
         }
     }
 
@@ -129,39 +132,40 @@ public class GameManager {
         if (dealer.calculateScore() > 21) {
             gameOver = true;
             gui.updateGameMessage(Texts.dealerBusts[language]);
+            bettingManager.playerWins(); // Dealer busts, player wins
         }
     }
 
-private void determineWinner() {
-    if (!gameOver) {
-        int playerScore = player.calculateScore();
-        int dealerScore = dealer.calculateScore();
-
-        if (playerScore > dealerScore) {
-            gui.updateGameMessage(Texts.playerWins[language]);
-            bettingManager.playerWins(); // Player wins, dealer loses
-            System.out.println("Player wins! Player balance: " + bettingManager.getPlayerBalance() + 
-                               ", Dealer balance: " + bettingManager.getDealerBalance());
-        } else if (playerScore < dealerScore) {
-            gui.updateGameMessage(Texts.dealerWins[language]);
-            bettingManager.dealerWins(); // Dealer wins, player loses
-            System.out.println("Dealer wins! Player balance: " + bettingManager.getPlayerBalance() + 
-                               ", Dealer balance: " + bettingManager.getDealerBalance());
-        } else {
-            gui.updateGameMessage(Texts.tie[language]);
-            bettingManager.tie(); // Tie, both get their bets back
-            System.out.println("Tie! Player balance: " + bettingManager.getPlayerBalance() + 
-                               ", Dealer balance: " + bettingManager.getDealerBalance());
+    private void determineWinner() {
+        if (!gameOver) {
+            int playerScore = player.calculateScore();
+            int dealerScore = dealer.calculateScore();
+    
+            if (playerScore > 21) {
+                gui.updateGameMessage(Texts.playerBusts[language]);
+                bettingManager.dealerWins(); // Player busts, dealer wins
+            } else if (dealerScore > 21) {
+                gui.updateGameMessage(Texts.dealerBusts[language]);
+                bettingManager.playerWins(); // Dealer busts, player wins
+            } else if (playerScore > dealerScore) {
+                gui.updateGameMessage(Texts.playerWins[language]);
+                bettingManager.playerWins(); // Player wins
+            } else if (playerScore < dealerScore) {
+                gui.updateGameMessage(Texts.dealerWins[language]);
+                bettingManager.dealerWins(); // Dealer wins
+            } else {
+                gui.updateGameMessage(Texts.tie[language]);
+                bettingManager.tie(); // Tie
+            }
+            gameOver = true;
+    
+            // Refresh the UI on the EDT
+            SwingUtilities.invokeLater(() -> {
+                gui.enableBetting();
+                gui.updateGameState(player, dealer, true);
+            });
         }
-        gameOver = true;
-
-        // Refresh the UI on the EDT
-        SwingUtilities.invokeLater(() -> {
-            gui.enableBetting();
-            gui.updateGameState(player, dealer, true);
-        });
     }
-}
 
     /*
      * Betting system.
@@ -190,8 +194,10 @@ private void determineWinner() {
             case BLACKJACK_BOMB:
                 if (recipient == player) {
                     gui.updateGameMessage("Blackjack Bomb! Player wins instantly! 💣");
+                    bettingManager.playerWins(); // Player wins instantly
                 } else {
                     gui.updateGameMessage("Blackjack Bomb! Dealer wins instantly! 💣");
+                    bettingManager.dealerWins(); // Dealer wins instantly
                 }
                 gameOver = true;
                 break;
