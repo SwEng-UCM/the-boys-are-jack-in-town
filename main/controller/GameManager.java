@@ -205,6 +205,8 @@ public class GameManager {
         return bettingManager.getDealerBalance();
     }
 
+    // DAVID JIMENEZ CALDERON akrjhg
+
     public int getDealerBet() {
         return bettingManager.getDealerBet();
     }
