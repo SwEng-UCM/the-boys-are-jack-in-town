@@ -17,7 +17,7 @@ import static main.view.BlackJackMenu.language;
 public class BlackjackGUI extends JFrame {
     private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
     private JButton hitButton, standButton, newGameButton, placeBetButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel;
+    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel;
     private JTextField betField;
     private GameManager gameManager;
 
