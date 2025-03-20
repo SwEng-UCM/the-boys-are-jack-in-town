@@ -77,6 +77,8 @@ public class GameManager {
         dealer.reset();
         deck = new Deck();
         gameOver = false;
+
+        gui.resetSpecialMessage(); // Reset special card messages
     
         bettingManager.resetBets(); // Reset bets before new game
         
@@ -89,25 +91,24 @@ public class GameManager {
         
         // Deal initial cards
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
-        dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
+        dealer.receiveCard(deck.dealCard()); // Dealer's cards don't trigger special messages
         player.receiveCard(handleSpecialCard(deck.dealCard(), player));
-        dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
-    
-        // Check for Blackjack
+
+        dealer.receiveCard(deck.dealCard());
         if (player.hasBlackjack()) {
             gui.updateGameMessage("🎉 Player has Blackjack!");
             bettingManager.playerWins();
             gameOver = true;
-            return;
         } else if (dealer.hasBlackjack()) {
             gui.updateGameMessage("🎲 Dealer has Blackjack!");
             bettingManager.dealerWins();
             gameOver = true;
-            return;
+        } else {
+            gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         }
-    
-        // Update UI
-        gui.updateGameState(player, dealer, false);
+
+        gui.updateGameState(player, dealer, gameOver);
+
     }
     
 
@@ -211,36 +212,30 @@ public class GameManager {
 
     /**
      * Handles special cards when drawn.
-     */
-    private Card handleSpecialCard(Card card, Player recipient) {
+//     */
+
+private Card handleSpecialCard(Card card, Player recipient) {
+    if (recipient == player) { // Display special messages only when the player draws them
         switch (card.getType()) {
             case BLACKJACK_BOMB:
-                if (recipient == player) {
-                    gui.updateGameMessage("Blackjack Bomb! Player wins instantly! 💣");
-                    bettingManager.playerWins(); // Player wins instantly
-                } else {
-                    gui.updateGameMessage("Blackjack Bomb! Dealer wins instantly! 💣");
-                    bettingManager.dealerWins(); // Dealer wins instantly
-                }
+                gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
+
                 gameOver = true;
                 break;
             case SPLIT_ACE:
-                gui.updateGameMessage("Split Ace! Automatically splitting your hand! ♠♠");
-                splitHand(recipient);
+                gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
                 break;
             case JOKER_WILD:
-                if (recipient == player) {
-                    int wildValue = gui.promptJokerWildValue();  // Only prompt the player
-                    card.setWildValue(wildValue);
-                    gui.updateGameMessage("Joker Wild set to " + wildValue + " 🤡");
-                }
+                int wildValue = gui.promptJokerWildValue();
+                card.setWildValue(wildValue);
+                gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
                 break;
             default:
-                // Standard cards, no special handling needed
                 break;
         }
-        return card;
     }
+    return card;
+}
 
     private void splitHand(Player player) {
         // Logic to split the player's hand (assuming it’s implemented in Player class)

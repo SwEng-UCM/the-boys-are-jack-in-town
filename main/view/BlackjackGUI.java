@@ -38,6 +38,8 @@ public class BlackjackGUI extends JFrame {
         initializeComponents();
         layoutComponents();
         attachEventListeners();
+
+        specialMessageLabel.setText("...");
     }
 
     private void initializeComponents() {
@@ -52,6 +54,10 @@ public class BlackjackGUI extends JFrame {
         gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
         gameMessageLabel.setForeground(Color.WHITE);
+
+        specialMessageLabel = new JLabel("", SwingConstants.CENTER);
+        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        specialMessageLabel.setForeground(Color.WHITE);
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
@@ -146,6 +152,7 @@ public class BlackjackGUI extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
+        centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Add everything to the main panel
@@ -284,17 +291,20 @@ public class BlackjackGUI extends JFrame {
         playerPanel.removeAll();
         dealerPanel.removeAll();
 
+        //updateSpecialMessage("- - - ");
+
+
         // Show player's cards and check for special cards
         for (Card card : player.getHand()) {
             playerPanel.add(createCardPanel(card));
-            checkForSpecialCard(card);
+            //checkForSpecialCard(card);
         }
 
         // Show dealer's cards
         if (gameOver) {
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
-                checkForSpecialCard(card);
+                //checkForSpecialCard(card);
             }
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
         } else {
@@ -338,6 +348,22 @@ public class BlackjackGUI extends JFrame {
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
     }
+
+
+    public void updateSpecialMessage(String message) {
+        if (!message.equals("...")) {
+            specialMessageLabel.setText(message);
+            Timer timer = new Timer(2000, e -> specialMessageLabel.setText("...")); // Reset after 2 sec
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    public void resetSpecialMessage() {
+        specialMessageLabel.setText("...");
+
+    }
+
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -417,7 +443,8 @@ public class BlackjackGUI extends JFrame {
         } else if (card.isBlackjackBomb()) {
             updateGameMessage(Texts.blackjackBombMessage[language]);
         } else {
-//            updateGameMessage(""); this overwrites all GameMessage text.
+            updateSpecialMessage("...");
         }
     }
 }
+
