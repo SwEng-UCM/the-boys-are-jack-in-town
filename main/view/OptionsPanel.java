@@ -19,7 +19,7 @@ public class OptionsPanel extends JDialog {
         setLayout(new BorderLayout());
 
         // Language selection
-        String[] languages = {"English", "Espanol", "Gaelige", "Hungarian", "Arabic"};
+        String[] languages = {"English", "Español", "Gaelige", "Hungarian", "Arabic","Français"};
         languageDropdown = new JComboBox<>(languages);
         languageDropdown.setSelectedIndex(BlackJackMenu.language);
 
