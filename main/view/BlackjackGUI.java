@@ -32,6 +32,8 @@ public class BlackjackGUI extends JFrame {
         initializeComponents();
         layoutComponents();
         attachEventListeners();
+
+        specialMessageLabel.setText("...");
     }
 
     private void initializeComponents() {
@@ -134,17 +136,20 @@ public class BlackjackGUI extends JFrame {
         playerPanel.removeAll();
         dealerPanel.removeAll();
 
+        //updateSpecialMessage("- - - ");
+
+
         // Show player's cards and check for special cards
         for (Card card : player.getHand()) {
             playerPanel.add(createCardPanel(card));
-            checkForSpecialCard(card);
+            //checkForSpecialCard(card);
         }
 
         // Show dealer's cards
         if (gameOver) {
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
-                checkForSpecialCard(card);
+                //checkForSpecialCard(card);
             }
             dealerScoreLabel.setText(Texts.guiDealerScore[language]+" : "+ dealer.calculateScore());
         } else {
@@ -183,13 +188,20 @@ public class BlackjackGUI extends JFrame {
         gameMessageLabel.setText(message);
     }
 
-    public void updateSpecialMessage(String message) {
-        Timer timer = new Timer(2000, e -> specialMessageLabel.setText(message));
-        timer.setRepeats(false); // Ensure it only runs once
-        timer.start();
 
+    public void updateSpecialMessage(String message) {
+        if (!message.equals("...")) {
+            specialMessageLabel.setText(message);
+            Timer timer = new Timer(2000, e -> specialMessageLabel.setText("...")); // Reset after 2 sec
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    public void resetSpecialMessage() {
         specialMessageLabel.setText("...");
     }
+
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -270,6 +282,8 @@ public class BlackjackGUI extends JFrame {
         } else if (card.isBlackjackBomb()) {
 //            updateGameMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
             updateSpecialMessage("Blackjack Bomb! The game is over, and the Blackjack Bomb wins.");
+        } else {
+            updateSpecialMessage("...");
         }
     }
     }
