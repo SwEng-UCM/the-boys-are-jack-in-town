@@ -25,8 +25,9 @@ public class BlackjackGUI extends JFrame {
         this.gameManager = gameManager;
         gameManager.setGui(this);
 
-        setTitle(Texts.guiTitle[language]); // "Blackjack Game"
-        setSize(800, 600);
+        setTitle(Texts.guiTitle[language]);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
