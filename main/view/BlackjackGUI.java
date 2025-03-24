@@ -21,13 +21,14 @@ public class BlackjackGUI extends JFrame {
     private JTextField betField;
     private GameManager gameManager;
 
+    private int buttonHeight, buttonWidth, buttonFontSize, cardHeight, cardWidth, cardFontSize;
+
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
         gameManager.setGui(this);
 
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -44,6 +45,19 @@ public class BlackjackGUI extends JFrame {
     }
 
     private void initializeComponents() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+
+        buttonWidth = (int) (screenWidth * 0.15);
+        buttonHeight = (int) (screenHeight * 0.08);
+        buttonFontSize = screenWidth / 60;
+
+        cardWidth = (int) (screenWidth * 0.10);
+        cardHeight = (int) (screenHeight * 0.22);
+        cardFontSize = screenWidth / 60;
+
+
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
 
@@ -263,8 +277,6 @@ public class BlackjackGUI extends JFrame {
 
 }
 
-            
-
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
         System.out.println("enableBetting called");
@@ -345,12 +357,12 @@ public class BlackjackGUI extends JFrame {
 
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
-        cardPanel.setPreferredSize(new Dimension(180, 240));
+        cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
         JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
-        hiddenLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        hiddenLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
         hiddenLabel.setForeground(Color.WHITE);
 
         cardPanel.setLayout(new BorderLayout());
@@ -384,8 +396,8 @@ public class BlackjackGUI extends JFrame {
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(300, 75));
-        button.setFont(new Font("Arial", Font.BOLD, 26));
+        button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        button.setFont(new Font("Arial", Font.BOLD, buttonFontSize));
         button.setBackground(new Color(255, 215, 0)); // Gold
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
@@ -401,7 +413,7 @@ public class BlackjackGUI extends JFrame {
 
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel();
-        cardPanel.setPreferredSize(new Dimension(180, 240));
+        cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
