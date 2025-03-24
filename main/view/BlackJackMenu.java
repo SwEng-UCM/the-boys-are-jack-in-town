@@ -49,7 +49,7 @@ public class BlackJackMenu extends JFrame {
 
         //
         mainTitleLabel = new JLabel(Texts.mainTitle[language]);
-        mainTitleLabel.setFont(new Font("", Font.ITALIC, 42));
+        mainTitleLabel.setFont(new Font("Serif", Font.ITALIC, 56));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainTitleLabel.setForeground(Color.WHITE);
 
@@ -76,7 +76,7 @@ public class BlackJackMenu extends JFrame {
         JPanel titlePanel = new JPanel(null);
         titlePanel.setBackground(new Color(34, 139, 34));
         titlePanel.setPreferredSize(new Dimension(getWidth(), 50));
-        mainTitleLabel.setBounds(titleX, 25, 1000, 50);
+        mainTitleLabel.setBounds(titleX, 75, 1000, 75);
         titlePanel.add(mainTitleLabel);
 
         mainPanel.add(imageLabel, BorderLayout.NORTH);
@@ -148,11 +148,10 @@ public class BlackJackMenu extends JFrame {
             titleX -= 2; // Move left
 
             // If it goes off-screen, reset to right side
-            if (titleX + mainTitleLabel.getWidth() < 0) {
+            if ((titleX + mainTitleLabel.getWidth() - 100) < 0) {
                 titleX = getWidth();
             }
 
-            // Update label position
             mainTitleLabel.setLocation(titleX, mainTitleLabel.getY());
         });
         titleTimer.start();

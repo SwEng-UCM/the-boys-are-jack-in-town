@@ -356,6 +356,10 @@ public class BlackjackGUI extends JFrame {
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(hiddenLabel, BorderLayout.CENTER);
 
+        // Location of custom background
+        ImageIcon cardBackground = new ImageIcon("img/card-background2.jpeg");
+        hiddenLabel.setIcon(cardBackground);
+
         return cardPanel;
     }
 
