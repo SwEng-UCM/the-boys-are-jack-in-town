@@ -11,7 +11,7 @@ public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton, optionsButton;
     private JLabel imageLabel, mainTitleLabel;
 
-    private int titleX = 0; // X-coordinate of the title
+    private int titleX = 0;
     private Timer titleTimer;
 
     public static int language = 0;
@@ -49,7 +49,7 @@ public class BlackJackMenu extends JFrame {
 
         //
         mainTitleLabel = new JLabel(Texts.mainTitle[language]);
-        mainTitleLabel.setFont(new Font("Ariel", Font.BOLD, 42));
+        mainTitleLabel.setFont(new Font("", Font.ITALIC, 42));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainTitleLabel.setForeground(Color.WHITE);
 
@@ -58,11 +58,11 @@ public class BlackJackMenu extends JFrame {
 
     private void layoutComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
+        mainPanel.setBackground(new Color(34, 139, 34));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.setBackground(new Color(34, 139, 34)); // Casino table green
+        buttonPanel.setBackground(new Color(34, 139, 34));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
@@ -72,13 +72,12 @@ public class BlackJackMenu extends JFrame {
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
 
-        // Moving Title Panel (Absolute Positioning)
-        JPanel titlePanel = new JPanel(null); // Use null layout to set absolute positions
+        // Moving Title Panel
+        JPanel titlePanel = new JPanel(null);
         titlePanel.setBackground(new Color(34, 139, 34));
-        titlePanel.setPreferredSize(new Dimension(getWidth(), 50)); // Ensure enough space for movement
-        mainTitleLabel.setBounds(titleX, 10, 1000, 50); // Initial bounds
+        titlePanel.setPreferredSize(new Dimension(getWidth(), 50));
+        mainTitleLabel.setBounds(titleX, 25, 1000, 50);
         titlePanel.add(mainTitleLabel);
-
 
         mainPanel.add(imageLabel, BorderLayout.NORTH);
         mainPanel.add(titlePanel, BorderLayout.CENTER);
