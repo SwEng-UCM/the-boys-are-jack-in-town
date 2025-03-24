@@ -9,13 +9,16 @@ import static main.view.Languages.*;
 
 public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton, optionsButton;
-    private JLabel imageLabel;
+    private JLabel imageLabel, mainTitleLabel;
+
+    private int titleX = 0;
+    private Timer titleTimer;
 
     public static int language = 0;
 
     public BlackJackMenu() {
         setTitle(Texts.startGame[language]);
-        setSize(800, 600);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -42,13 +45,24 @@ public class BlackJackMenu extends JFrame {
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
         imageLabel = new JLabel(resizedIcon);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+        //
+        mainTitleLabel = new JLabel(Texts.mainTitle[language]);
+        mainTitleLabel.setFont(new Font("Serif", Font.ITALIC, 56));
+        mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        mainTitleLabel.setForeground(Color.WHITE);
+
+        startTitleAnimation();
     }
 
     private void layoutComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(34, 139, 34));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setBackground(new Color(34, 139, 34));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
@@ -58,9 +72,17 @@ public class BlackJackMenu extends JFrame {
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
 
+        // Moving Title Panel
+        JPanel titlePanel = new JPanel(null);
+        titlePanel.setBackground(new Color(34, 139, 34));
+        titlePanel.setPreferredSize(new Dimension(getWidth(), 50));
+        mainTitleLabel.setBounds(titleX, 75, 1000, 75);
+        titlePanel.add(mainTitleLabel);
 
         mainPanel.add(imageLabel, BorderLayout.NORTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        mainPanel.add(titlePanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
 
         add(mainPanel);
     }
@@ -98,11 +120,11 @@ public class BlackJackMenu extends JFrame {
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 25));
+        button.setFont(new Font("Arial", Font.BOLD, 28));
         button.setBackground(new Color(255, 215, 0)); // Gold
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(250, 50)); // Set preferred size to make buttons smaller
+        button.setPreferredSize(new Dimension(300, 75)); // Set preferred size to make buttons smaller
         return button;
     }
 
@@ -118,6 +140,21 @@ public class BlackJackMenu extends JFrame {
         // Repaint UI
         revalidate();
         repaint();
+    }
+
+    private void startTitleAnimation() {
+        titleX = getWidth(); // Start from the right side of the window
+        titleTimer = new Timer(10, e -> {
+            titleX -= 2; // Move left
+
+            // If it goes off-screen, reset to right side
+            if ((titleX + mainTitleLabel.getWidth() - 100) < 0) {
+                titleX = getWidth();
+            }
+
+            mainTitleLabel.setLocation(titleX, mainTitleLabel.getY());
+        });
+        titleTimer.start();
     }
 
 }

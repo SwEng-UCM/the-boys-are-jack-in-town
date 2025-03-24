@@ -17,7 +17,7 @@ import static main.view.BlackJackMenu.language;
 public class BlackjackGUI extends JFrame {
     private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
     private JButton hitButton, standButton, newGameButton, placeBetButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel;
+    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
 
@@ -25,8 +25,9 @@ public class BlackjackGUI extends JFrame {
         this.gameManager = gameManager;
         gameManager.setGui(this);
 
-        setTitle(Texts.guiTitle[language]); // "Blackjack Game"
-        setSize(800, 600);
+        setTitle(Texts.guiTitle[language]);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -52,11 +53,11 @@ public class BlackjackGUI extends JFrame {
         placeBetButton = createStyledButton(Texts.placeBet[language]);
 
         gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
-        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 26));
         gameMessageLabel.setForeground(Color.WHITE);
 
         specialMessageLabel = new JLabel("", SwingConstants.CENTER);
-        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 32));
         specialMessageLabel.setForeground(Color.WHITE);
 
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
@@ -65,6 +66,7 @@ public class BlackjackGUI extends JFrame {
         betLabel = createStyledLabel(Texts.bet[language] + " $0");
 
         betField = new JTextField(10);
+        betField.setPreferredSize(new Dimension(200, 50));
 
         // Initialize Panels
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -110,13 +112,21 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.add(newGameButton);
 
         betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        enterBetLabel = new JLabel(Texts.enterBet[language]);
+        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        enterBetLabel.setForeground(Color.WHITE);
+
         betPanel.setOpaque(false);
-        betPanel.add(new JLabel(Texts.enterBet[language])); 
+        betPanel.add(enterBetLabel);
         betPanel.add(betField);
         betPanel.add(placeBetButton);
         betPanel.add(balanceLabel);
         betPanel.add(betLabel);
+
+//        betPanel.setPreferredSize(new Dimension(200, 55));
     }
+
 
     private void layoutComponents() {
         mainPanel.setLayout(new BorderLayout());
@@ -127,14 +137,8 @@ public class BlackjackGUI extends JFrame {
         dealerArea.add(dealerScorePanel, BorderLayout.NORTH); // Dealer balance and bet at the top
         dealerArea.add(dealerPanel, BorderLayout.CENTER); // Dealer's cards below
 
-        // Player Section (Bottom) - Wrapped with Back Button
-        JPanel playerContainer = new JPanel(new BorderLayout());
-        playerContainer.setOpaque(false);
-        playerContainer.add(playerPanel, BorderLayout.CENTER);
-        playerContainer.add(playerScorePanel, BorderLayout.NORTH);
-
-        // Back Button Panel
-        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // Back Button Panel (Top-Left)
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton backButton = createStyledButton(Texts.guiBackToMain[language]);
         backButtonPanel.setOpaque(false);
         backButtonPanel.add(backButton);
@@ -145,8 +149,17 @@ public class BlackjackGUI extends JFrame {
             dispose(); // Close the game window
         });
 
-        // Add Back Button to playerContainer BELOW the player's panel
-        playerContainer.add(backButtonPanel, BorderLayout.SOUTH);
+        // Create a new top panel to hold back button and dealer area
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.add(backButtonPanel, BorderLayout.WEST); // Back button at the top-left
+        topPanel.add(dealerArea, BorderLayout.CENTER); // Dealer area next to it
+
+        // Player Section (Bottom)
+        JPanel playerContainer = new JPanel(new BorderLayout());
+        playerContainer.setOpaque(false);
+        playerContainer.add(playerPanel, BorderLayout.CENTER);
+        playerContainer.add(playerScorePanel, BorderLayout.NORTH);
 
         // Center Section (Buttons and Messages)
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -155,20 +168,23 @@ public class BlackjackGUI extends JFrame {
         centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        // Add everything to the main panel
-        mainPanel.add(dealerArea, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        JPanel southPanel = new JPanel(new BorderLayout()); // New container
+        // Bottom Section (Player and Bet Panel)
+        JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setOpaque(false);
         southPanel.add(playerContainer, BorderLayout.CENTER);
         southPanel.add(betPanel, BorderLayout.SOUTH);
-        
-        mainPanel.add(southPanel, BorderLayout.SOUTH); // Now added as a single section
-        
+
+        // Add everything to the main panel
+        mainPanel.add(topPanel, BorderLayout.NORTH); // Now using topPanel to position back button correctly
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(southPanel, BorderLayout.SOUTH);
+
         add(mainPanel);
 
         gameManager.startNewGame();
     }
+
+
     public void restartGame() {
         gameManager = GameManager.getInstance(); // Get game instance
         gameManager.setGui(this);
@@ -179,8 +195,6 @@ public class BlackjackGUI extends JFrame {
         enableBetting(); // Enable betting input again
         gameManager.startNewGame(); // Start a fresh game
     }
-    
-    
 
     public void showGameOverMessage(String message) {
         // Show a pop-up with "Game Over" message and Restart button
@@ -331,7 +345,7 @@ public class BlackjackGUI extends JFrame {
 
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
-        cardPanel.setPreferredSize(new Dimension(80, 120));
+        cardPanel.setPreferredSize(new Dimension(180, 240));
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
@@ -341,6 +355,10 @@ public class BlackjackGUI extends JFrame {
 
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(hiddenLabel, BorderLayout.CENTER);
+
+        // Location of custom background
+        ImageIcon cardBackground = new ImageIcon("img/card-background2.jpeg");
+        hiddenLabel.setIcon(cardBackground);
 
         return cardPanel;
     }
@@ -361,13 +379,13 @@ public class BlackjackGUI extends JFrame {
 
     public void resetSpecialMessage() {
         specialMessageLabel.setText("...");
-
     }
 
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setPreferredSize(new Dimension(300, 75));
+        button.setFont(new Font("Arial", Font.BOLD, 26));
         button.setBackground(new Color(255, 215, 0)); // Gold
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
@@ -376,22 +394,22 @@ public class BlackjackGUI extends JFrame {
 
     private JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 16));
+        label.setFont(new Font("Arial", Font.BOLD, 26));
         label.setForeground(Color.WHITE);
         return label;
     }
 
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel();
-        cardPanel.setPreferredSize(new Dimension(80, 120));
+        cardPanel.setPreferredSize(new Dimension(180, 240));
         cardPanel.setBackground(Color.WHITE);
-        cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
         JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        suitLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(rankLabel, BorderLayout.CENTER);
