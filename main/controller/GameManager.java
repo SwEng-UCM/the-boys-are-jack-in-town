@@ -9,6 +9,7 @@ import main.view.Texts;
 import static main.view.BlackJackMenu.language;
 
 import javax.swing.SwingUtilities;
+import java.io.File;
 
 /*
  * Singleton class.
@@ -28,6 +29,9 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
+    private GameStateManager gameStateManager = new GameStateManager();
+    private GameState gameState;
+
 
     private GameManager() {
         this.player = new Player();
@@ -62,6 +66,9 @@ public class GameManager {
     
 
     public void startNewGame() {
+        // check if a file has been provided
+
+
         // 🔍 Check if player or dealer has a balance of 0 or less
         if (bettingManager.getPlayerBalance() <= 0) {
             gui.showGameOverMessage("Game Over! You ran out of money! 😢");
@@ -252,5 +259,8 @@ private Card handleSpecialCard(Card card, Player recipient) {
 
     private void splitHand(Player player) {
         // Logic to split the player's hand (assuming it’s implemented in Player class)
+    }
+
+    public void startGame() {
     }
 }
