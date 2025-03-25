@@ -16,6 +16,7 @@ public class Deck {
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 
+        // Add normal cards to the deck
         for (String suit : suits) {
             for (String rank : ranks) {
                 cards.add(new Card(rank, suit, false));
@@ -23,11 +24,12 @@ public class Deck {
         }
 
         // Add special cards
+        cards.add(new Card(Card.CardType.BLACKJACK_BOMB));
+        cards.add(new Card(Card.CardType.SPLIT_ACE));
+        cards.add(new Card(Card.CardType.JOKER_WILD));
 
-            cards.add(new Card(Card.CardType.BLACKJACK_BOMB));
-            cards.add(new Card(Card.CardType.SPLIT_ACE));
-            cards.add(new Card(Card.CardType.JOKER_WILD));
-        Collections.shuffle(cards);
+        // Shuffle the deck initially
+        shuffle();
     }
 
     public Card dealCard() {
@@ -43,5 +45,10 @@ public class Deck {
             drawnCards.add(dealCard());
         }
         return drawnCards;
+    }
+
+    public void shuffle() {
+        // Shuffle the deck using Collections.shuffle
+        Collections.shuffle(cards, random);
     }
 }
