@@ -13,8 +13,8 @@ public class Dealer {
 
     public Dealer() {
         this.deck = new Deck();
-        this.player = new Player();
-        this.dealer = new Player();
+        this.player = new Player(1);
+        this.dealer = new Player(0);
     }
 
     /**

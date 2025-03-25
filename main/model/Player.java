@@ -7,12 +7,19 @@ import java.util.List;
  * Represents a Blackjack player, managing their hand and score calculations.
  */
 public class Player {
+    private final int userId;
     private final List<Card> hand; // Stores the player's current hand
     private double scoreMultiplier; // Multiplier for the player's score (default 1.0)
 
-    public Player() {
+    public Player(int UserId) {
+        this.userId = UserId;
         this.hand = new ArrayList<>();
         this.scoreMultiplier = 1.0;
+    }
+
+    /** Returns the user's ID. */
+    public int getUserId() {
+        return userId;
     }
 
     /** Adds a card to the player's hand. */

@@ -28,13 +28,15 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
+    private AchievementController achievementController;
 
     private GameManager() {
-        this.player = new Player();
-        this.dealer = new Player();
+        this.player = new Player(1);
+        this.dealer = new Player(0);
         this.deck = new Deck();
         this.gameOver = false;
         this.bettingManager = new BettingManager(1000, 1000); // Initial balance
+        this.achievementController = new AchievementController();
     }
 
     // Public method to provide access to the singleton instance
@@ -170,6 +172,9 @@ public class GameManager {
             } else if (dealerScore > 21 || playerScore > dealerScore) { 
                 gui.updateGameMessage(Texts.playerWins[language]);
                 bettingManager.playerWins();
+
+                // Unlock achievement for winning a game
+                achievementController.addUserAchievement(player.getUserId(), 2);
             } else if (playerScore < dealerScore) { 
                 gui.updateGameMessage(Texts.dealerWins[language]);
                 bettingManager.dealerWins();
