@@ -5,6 +5,7 @@ import main.model.Deck;
 import main.model.Player;
 import main.view.BlackjackGUI;
 import main.view.Texts;
+import javax.swing.Timer;
 
 import static main.view.BlackJackMenu.language;
 
@@ -28,6 +29,10 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
+    private boolean isPaused = false;
+    private Timer gameTimer; // If you have any timers running
+
+
 
     private GameManager() {
         this.player = new Player();
@@ -50,7 +55,7 @@ public class GameManager {
     }
 
     public void handlePlayerStand() {
-        if (!gameOver) {
+        if (!gameOver && !isPaused) {
             dealerTurn();
             determineWinner();
             gui.updateGameState(player, dealer, gameOver);
@@ -58,6 +63,34 @@ public class GameManager {
     }
     public void resetBettingManager(int playerBalance, int dealerBalance) {
         this.bettingManager = new BettingManager(playerBalance, dealerBalance);
+    }
+
+    public void pauseGame() {
+        isPaused = true;
+        
+        // Pause any game timers if you have them
+        if (gameTimer != null && gameTimer.isRunning()) {
+            gameTimer.stop();
+        }
+        
+        gui.updateGameMessage(Texts.GAME_PAUSED[language]);
+        gui.updateGameState(player, dealer, true); // Treat as game over for UI purposes
+    }
+
+    public void resumeGame() {
+        isPaused = false;
+        
+        // Resume any game timers if you have them
+        if (gameTimer != null) {
+            gameTimer.start();
+        }
+        
+        gui.updateGameMessage(Texts.gameManagerGameOn[language]);
+        gui.updateGameState(player, dealer, gameOver); // Restore actual game state
+    }
+
+    public boolean isGamePaused() {
+        return isPaused;
     }
     
 
@@ -128,7 +161,7 @@ public class GameManager {
     }
 
     public void handlePlayerHit() {
-        if (!gameOver && player.calculateScore() <= 21) {
+        if (!gameOver && !isPaused && player.calculateScore() <= 21) {
             player.receiveCard(handleSpecialCard(deck.dealCard(), player));
             checkPlayerBust();
             gui.updateGameState(player, dealer, gameOver);
@@ -200,6 +233,9 @@ public class GameManager {
 
     public int getPlayerBalance() {
         return bettingManager.getPlayerBalance();
+    }
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     public int getDealerBalance() {

@@ -4,8 +4,12 @@ import main.controller.BettingManager;
 import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
+
+
 import java.awt.*;
 
 import static main.view.BlackJackMenu.language;
@@ -20,6 +24,8 @@ public class BlackjackGUI extends JFrame {
     private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
+    private JButton pauseButton;
+    private JPopupMenu pauseMenu;
 
     private int buttonHeight, buttonWidth, buttonFontSize, cardHeight, cardWidth, cardFontSize;
 
@@ -106,6 +112,45 @@ public class BlackjackGUI extends JFrame {
     balanceBetRow.setOpaque(false);
     balanceBetRow.add(dealerBalanceLabel);
     balanceBetRow.add(dealerBetLabel);
+    // Create pause button
+    pauseButton = new JButton("☰"); // Hamburger icon
+    pauseButton.setFont(new Font("Arial", Font.BOLD, 36));
+    pauseButton.setForeground(Color.WHITE);
+    pauseButton.setBackground(new Color(255, 165, 0)); // Keep your orange color
+    pauseButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15)); // Add padding
+    pauseButton.setContentAreaFilled(false);
+    pauseButton.setOpaque(true);
+    pauseButton.setFocusPainted(false);
+    
+    // ===== ADD HOVER EFFECTS RIGHT HERE =====
+    pauseButton.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            pauseButton.setBackground(new Color(255, 140, 0)); // Darker on hover
+        }
+        
+        @Override
+        public void mouseExited(MouseEvent e) {
+            pauseButton.setBackground(new Color(255, 165, 0)); // Original color
+        }
+    });
+    // Create pause menu
+    pauseMenu = new JPopupMenu();
+    JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
+    JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
+    JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
+    
+    // Style menu items
+    Font menuFont = new Font("Arial", Font.BOLD, 18);
+    resumeItem.setFont(menuFont);
+    mainMenuItem.setFont(menuFont);
+    exitItem.setFont(menuFont);
+    
+    pauseMenu.add(resumeItem);
+    pauseMenu.addSeparator();
+    pauseMenu.add(mainMenuItem);
+    pauseMenu.addSeparator();
+    pauseMenu.add(exitItem);
 
     // Add rows to dealerScorePanel
     dealerScorePanel.add(scoreRow);
@@ -143,58 +188,61 @@ public class BlackjackGUI extends JFrame {
 
 
     private void layoutComponents() {
+        // Declare topPanel first (keep this one)
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        
+        // Rest of your layout code...
         mainPanel.setLayout(new BorderLayout());
-
+    
         // Dealer Section (Top)
         JPanel dealerArea = new JPanel(new BorderLayout());
         dealerArea.setOpaque(false);
-        dealerArea.add(dealerScorePanel, BorderLayout.NORTH); // Dealer balance and bet at the top
-        dealerArea.add(dealerPanel, BorderLayout.CENTER); // Dealer's cards below
-
-        // Back Button Panel (Top-Left)
-        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton backButton = createStyledButton(Texts.guiBackToMain[language]);
-        backButtonPanel.setOpaque(false);
-        backButtonPanel.add(backButton);
-
-        // Add action to back button
-        backButton.addActionListener(e -> {
-            new BlackJackMenu().setVisible(true);
-            dispose(); // Close the game window
-        });
-
-        // Create a new top panel to hold back button and dealer area
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        topPanel.add(backButtonPanel, BorderLayout.WEST); // Back button at the top-left
-        topPanel.add(dealerArea, BorderLayout.CENTER); // Dealer area next to it
-
+        dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
+        dealerArea.add(dealerPanel, BorderLayout.CENTER);
+    
+        
+        // Add pause button to the top-right corner
+        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topRightPanel.setOpaque(false);
+        topRightPanel.add(pauseButton);
+        
+        // Now you can add to topPanel
+        topPanel.add(dealerArea, BorderLayout.CENTER);
+        topPanel.add(topRightPanel, BorderLayout.EAST);
+    
+        // Remove this duplicate declaration:
+        // JPanel topPanel = new JPanel(new BorderLayout());
+        // topPanel.setOpaque(false);
+        // topPanel.add(backButtonPanel, BorderLayout.WEST);
+        // topPanel.add(dealerArea, BorderLayout.CENTER);
+    
         // Player Section (Bottom)
         JPanel playerContainer = new JPanel(new BorderLayout());
         playerContainer.setOpaque(false);
         playerContainer.add(playerPanel, BorderLayout.CENTER);
         playerContainer.add(playerScorePanel, BorderLayout.NORTH);
-
+    
         // Center Section (Buttons and Messages)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
         centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
-
+    
         // Bottom Section (Player and Bet Panel)
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setOpaque(false);
         southPanel.add(playerContainer, BorderLayout.CENTER);
         southPanel.add(betPanel, BorderLayout.SOUTH);
-
+    
         // Add everything to the main panel
-        mainPanel.add(topPanel, BorderLayout.NORTH); // Now using topPanel to position back button correctly
+        mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(southPanel, BorderLayout.SOUTH);
-
+    
         add(mainPanel);
-
+    
         gameManager.startNewGame();
     }
 
@@ -230,6 +278,37 @@ public class BlackjackGUI extends JFrame {
             System.exit(0); // Exit the game if "Exit" is selected
         }
     }
+    private void showPauseMenu() {
+        gameManager.pauseGame();
+        setGameButtonsEnabled(false);
+        pauseMenu.show(pauseButton, 0, pauseButton.getHeight());
+    }
+    
+    private void resumeGame() {
+        gameManager.resumeGame();
+        setGameButtonsEnabled(true);
+    }
+    
+    private void returnToMainMenu() {
+        new BlackJackMenu().setVisible(true);
+        dispose();
+    }
+    
+    private void setGameButtonsEnabled(boolean enabled) {
+        hitButton.setEnabled(enabled);
+        standButton.setEnabled(enabled);
+        newGameButton.setEnabled(enabled);
+        pauseButton.setEnabled(enabled);
+        
+        // Only enable betting if game isn't in progress
+        if (enabled && gameManager.isGameOver()) {
+            betField.setEnabled(true);
+            placeBetButton.setEnabled(true);
+        } else {
+            betField.setEnabled(false);
+            placeBetButton.setEnabled(false);
+        }
+    }
     
 
     private void attachEventListeners() {
@@ -237,7 +316,25 @@ public class BlackjackGUI extends JFrame {
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet());
+        // Pause button listener
+        pauseButton.addActionListener(e -> showPauseMenu());
+    
+        // Pause menu listeners
+        Component[] components = pauseMenu.getComponents();
+        for (Component component : components) {
+            if (component instanceof JMenuItem) {
+                JMenuItem menuItem = (JMenuItem) component;
+                if (menuItem.getText().equals(Texts.RESUME[language])) {
+                    menuItem.addActionListener(e -> resumeGame());
+                } else if (menuItem.getText().equals(Texts.guiBackToMain[language])) {
+                    menuItem.addActionListener(e -> returnToMainMenu());
+                } else if (menuItem.getText().equals(Texts.exitGame[language])) {
+                    menuItem.addActionListener(e -> System.exit(0));
+                }
+            }
+        }
     }
+    
 
     /*
      *  Betting system logic.
