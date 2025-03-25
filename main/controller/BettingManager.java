@@ -28,7 +28,7 @@ public class BettingManager {
         if (betAmount > 0 && betAmount <= dealerBalance) {
             dealerBalance -= betAmount; 
             dealerBet = betAmount; 
-        }
+        } // commit
     }
 
     public void playerWins() {
@@ -88,3 +88,4 @@ public class BettingManager {
         return dealerBet;
     }
 }
+// commit
