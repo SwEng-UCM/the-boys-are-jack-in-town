@@ -8,6 +8,8 @@ import main.view.Texts;
 
 import static main.view.BlackJackMenu.language;
 
+import java.io.File;
+
 import javax.swing.SwingUtilities;
 
 /*
@@ -28,6 +30,8 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
+    private GameStateManager gameStateManager = new GameStateManager();
+    private GameState gameState;
 
     private GameManager() {
         this.player = new Player();
@@ -253,4 +257,10 @@ private Card handleSpecialCard(Card card, Player recipient) {
     private void splitHand(Player player) {
         // Logic to split the player's hand (assuming it’s implemented in Player class)
     }
+
+    public void startGame() {
+        //
+    }
+
 }
+
