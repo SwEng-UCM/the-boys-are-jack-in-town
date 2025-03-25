@@ -210,6 +210,19 @@ public class GameManager {
         return bettingManager.getDealerBet();
     }
 
+    public int getDealerScore () {
+        return dealer.calculateScore();
+    }
+
+    public int getPlayerScore () {
+        return player.calculateScore();
+    }
+
+    public int getPlayerBet (){
+        return bettingManager.getPlayerBet();
+    }
+
+    
     /**
      * Handles special cards when drawn.
 //     */
