@@ -167,6 +167,15 @@ public class GameManager {
             gui.updateGameState(player, dealer, gameOver);
         }
     }
+    public boolean canPlaceBet() {
+        return isGameOver() && 
+               !isPaused && 
+               getPlayerBalance() > 0 && 
+               getDealerBalance() > 0;
+    }
+    public boolean isGameRunning() {
+        return !isGameOver(); // Or whatever logic determines if game is running
+    }
 
     public void checkPlayerBust() {
         if (player.calculateScore() > 21) {

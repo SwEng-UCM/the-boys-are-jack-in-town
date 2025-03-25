@@ -6,9 +6,12 @@ import main.model.Card;
 import main.model.Player;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import javax.swing.*;
-
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import java.awt.*;
 
@@ -281,6 +284,26 @@ public class BlackjackGUI extends JFrame {
     private void showPauseMenu() {
         gameManager.pauseGame();
         setGameButtonsEnabled(false);
+        
+        pauseMenu.setFocusable(true);
+        pauseMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+            
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // Only resume if not selecting an option
+                if (!e.getSource().equals(pauseMenu)) {
+                    resumeGame();
+                }
+            }
+            
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                popupMenuWillBecomeInvisible(e);
+            }
+        });
+        
         pauseMenu.show(pauseButton, 0, pauseButton.getHeight());
     }
     
@@ -295,19 +318,17 @@ public class BlackjackGUI extends JFrame {
     }
     
     private void setGameButtonsEnabled(boolean enabled) {
-        hitButton.setEnabled(enabled);
-        standButton.setEnabled(enabled);
-        newGameButton.setEnabled(enabled);
-        pauseButton.setEnabled(enabled);
+        hitButton.setEnabled(enabled && !gameManager.isGameOver());
+        standButton.setEnabled(enabled && !gameManager.isGameOver());
+        newGameButton.setEnabled(true); // Always enabled
+        pauseButton.setEnabled(true); // Always enabled
         
-        // Only enable betting if game isn't in progress
-        if (enabled && gameManager.isGameOver()) {
-            betField.setEnabled(true);
-            placeBetButton.setEnabled(true);
-        } else {
-            betField.setEnabled(false);
-            placeBetButton.setEnabled(false);
-        }
+        // Enable betting only when game is over or hasn't started
+        boolean bettingEnabled = gameManager.isGameOver() || 
+                              (gameManager.getPlayerBalance() > 0 && 
+                               gameManager.getDealerBalance() > 0);
+        betField.setEnabled(bettingEnabled);
+        placeBetButton.setEnabled(bettingEnabled);
     }
     
 
@@ -316,20 +337,29 @@ public class BlackjackGUI extends JFrame {
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet());
+        
         // Pause button listener
         pauseButton.addActionListener(e -> showPauseMenu());
-    
+        
         // Pause menu listeners
-        Component[] components = pauseMenu.getComponents();
-        for (Component component : components) {
+        for (Component component : pauseMenu.getComponents()) {
             if (component instanceof JMenuItem) {
                 JMenuItem menuItem = (JMenuItem) component;
                 if (menuItem.getText().equals(Texts.RESUME[language])) {
-                    menuItem.addActionListener(e -> resumeGame());
+                    menuItem.addActionListener(e -> {
+                        resumeGame();
+                        pauseMenu.setVisible(false);
+                    });
                 } else if (menuItem.getText().equals(Texts.guiBackToMain[language])) {
-                    menuItem.addActionListener(e -> returnToMainMenu());
+                    menuItem.addActionListener(e -> {
+                        returnToMainMenu();
+                        pauseMenu.setVisible(false);
+                    });
                 } else if (menuItem.getText().equals(Texts.exitGame[language])) {
-                    menuItem.addActionListener(e -> System.exit(0));
+                    menuItem.addActionListener(e -> {
+                        pauseMenu.setVisible(false);
+                        System.exit(0);
+                    });
                 }
             }
         }
