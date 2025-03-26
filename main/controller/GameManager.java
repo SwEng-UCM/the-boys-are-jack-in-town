@@ -5,6 +5,7 @@ import main.model.Deck;
 import main.model.Player;
 import main.view.BlackjackGUI;
 import main.view.Texts;
+import javax.swing.Timer;
 
 import static main.view.BlackJackMenu.language;
 
@@ -28,6 +29,10 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
+    private boolean isPaused = false;
+    private Timer gameTimer; // If you have any timers running
+
+
 
     private GameManager() {
         this.player = new Player();
@@ -50,14 +55,43 @@ public class GameManager {
     }
 
     public void handlePlayerStand() {
-        if (!gameOver) {
+        if (!gameOver && !isPaused) {
             dealerTurn();
             determineWinner();
-            gui.updateGameState(player, dealer, gameOver);
+            gui.updateGameState(player, dealer, gameOver, false);;
         }
     }
     public void resetBettingManager(int playerBalance, int dealerBalance) {
         this.bettingManager = new BettingManager(playerBalance, dealerBalance);
+    }
+
+    public void pauseGame() {
+        isPaused = true;
+        if (gameTimer != null && gameTimer.isRunning()) {
+            gameTimer.stop();
+        }
+        gui.updateGameMessage(Texts.GAME_PAUSED[language]);
+        // Force UI update while keeping cards hidden
+        gui.updateGameState(player, dealer, false, true); // gameOver=false, isPaused=true
+    }
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void resumeGame() {
+        isPaused = false;
+        
+        if (gameTimer != null) {
+            gameTimer.start();
+        }
+        
+        gui.updateGameMessage(Texts.gameManagerGameOn[language]);
+        // Restore the actual game state (hidden card if game isn't over)
+        gui.updateGameState(player, dealer, gameOver, false); // gameOver=actual state, isPaused=false;
+    }
+
+    public boolean isGamePaused() {
+        return isPaused;
     }
     
 
@@ -107,7 +141,7 @@ public class GameManager {
             gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         }
 
-        gui.updateGameState(player, dealer, gameOver);
+        gui.updateGameState(player, dealer, gameOver, false);
 
     }
     
@@ -128,11 +162,20 @@ public class GameManager {
     }
 
     public void handlePlayerHit() {
-        if (!gameOver && player.calculateScore() <= 21) {
+        if (!gameOver && !isPaused && player.calculateScore() <= 21) {
             player.receiveCard(handleSpecialCard(deck.dealCard(), player));
             checkPlayerBust();
-            gui.updateGameState(player, dealer, gameOver);
+            gui.updateGameState(player, dealer, gameOver, false);;
         }
+    }
+    public boolean canPlaceBet() {
+        return isGameOver() && 
+               !isPaused && 
+               getPlayerBalance() > 0 && 
+               getDealerBalance() > 0;
+    }
+    public boolean isGameRunning() {
+        return !isGameOver(); // Or whatever logic determines if game is running
     }
 
     public void checkPlayerBust() {
@@ -185,7 +228,7 @@ public class GameManager {
     
             SwingUtilities.invokeLater(() -> {
                 gui.enableBetting();
-                gui.updateGameState(player, dealer, true);
+                gui.updateGameState(player, dealer, gameOver, false);
             });
         }
     }
@@ -200,6 +243,9 @@ public class GameManager {
 
     public int getPlayerBalance() {
         return bettingManager.getPlayerBalance();
+    }
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     public int getDealerBalance() {

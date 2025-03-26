@@ -266,4 +266,36 @@ public class Texts {
             "بلاك جاك 2: الأولاد عادوا إلى المدينة.", // Arabic 🇸🇦
             "Blackjack 2: Les garçons sont de retour en ville!!" // French 🇫🇷
     };
+ 
+
+  
+    public static String[] PAUSE = {
+        "Pause", 
+        "Pausa", 
+        "Sos", 
+        "Szünet", 
+        "إيقاف مؤقت", 
+        "Pause"
+    };
+
+    public static String[] RESUME = {
+        "Resume", 
+        "Reanudar", 
+        "Atosaigh", 
+        "Folytatás", 
+        "استئناف", 
+        "Reprendre"
+    };
+
+    public static String[] GAME_PAUSED = {
+        "Game Paused", 
+        "Juego en Pausa", 
+        "Cluiche ar Sos", 
+        "Játék Szünetel", 
+        "اللعبة متوقفة", 
+        "Jeu en Pause"
+    };
+
+    
+
 }
