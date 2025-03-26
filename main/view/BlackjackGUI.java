@@ -318,15 +318,20 @@ public class BlackjackGUI extends JFrame {
     }
     
     private void setGameButtonsEnabled(boolean enabled) {
-        hitButton.setEnabled(enabled && !gameManager.isGameOver());
-        standButton.setEnabled(enabled && !gameManager.isGameOver());
-        newGameButton.setEnabled(true); // Always enabled
+        // Disable all game buttons when paused
+        boolean buttonsEnabled = enabled && !gameManager.isPaused();
+        
+        hitButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
         
-        // Enable betting only when game is over or hasn't started
-        boolean bettingEnabled = gameManager.isGameOver() || 
-                              (gameManager.getPlayerBalance() > 0 && 
-                               gameManager.getDealerBalance() > 0);
+        // Enable betting only when game is over or hasn't started AND not paused
+        boolean bettingEnabled = (gameManager.isGameOver() || 
+                               (gameManager.getPlayerBalance() > 0 && 
+                                gameManager.getDealerBalance() > 0)) && 
+                                !gameManager.isPaused();
+        
         betField.setEnabled(bettingEnabled);
         placeBetButton.setEnabled(bettingEnabled);
     }

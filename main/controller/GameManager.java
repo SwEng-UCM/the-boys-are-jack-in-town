@@ -74,6 +74,9 @@ public class GameManager {
         // Force UI update while keeping cards hidden
         gui.updateGameState(player, dealer, false, true); // gameOver=false, isPaused=true
     }
+    public boolean isPaused() {
+        return isPaused;
+    }
 
     public void resumeGame() {
         isPaused = false;
