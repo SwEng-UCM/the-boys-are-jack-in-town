@@ -295,6 +295,7 @@ public class Texts {
         "اللعبة متوقفة", 
         "Jeu en Pause"
     };
+        public static final String[] VOLUME = {"Volume", "Volumen", "Volume"};
 
     
 
