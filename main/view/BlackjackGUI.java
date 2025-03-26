@@ -100,7 +100,7 @@ public class BlackjackGUI extends JFrame {
     
         dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
         dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0"); 
-        
+    
         // Use GridLayout for dealerScorePanel
         dealerScorePanel = new JPanel(new GridLayout(2, 1));
         dealerScorePanel.setOpaque(false);
@@ -125,14 +125,14 @@ public class BlackjackGUI extends JFrame {
         pauseButton.setContentAreaFilled(false);
         pauseButton.setOpaque(true);
         pauseButton.setFocusPainted(false);
-        
+    
         // Hover effects
         pauseButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 pauseButton.setBackground(new Color(255, 140, 0));
             }
-            
+    
             @Override
             public void mouseExited(MouseEvent e) {
                 pauseButton.setBackground(new Color(255, 165, 0));
@@ -148,22 +148,22 @@ public class BlackjackGUI extends JFrame {
         JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
         JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
         JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
-        
+    
         // Style menu items
         Font menuFont = new Font("Arial", Font.BOLD, 18);
         resumeItem.setFont(menuFont);
         mainMenuItem.setFont(menuFont);
         exitItem.setFont(menuFont);
-        
+    
         // Volume control panel (will be added last)
         JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
         volumePanel.setBackground(new Color(50, 50, 50));
         volumePanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        
+    
         JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
         volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
         volumeLabel.setForeground(Color.WHITE);
-        
+    
         JSlider volumeSlider = new JSlider(0, 100, 50);
         volumeSlider.setMajorTickSpacing(25);
         volumeSlider.setMinorTickSpacing(5);
@@ -171,13 +171,13 @@ public class BlackjackGUI extends JFrame {
         volumeSlider.setPaintLabels(true);
         volumeSlider.setForeground(Color.WHITE);
         volumeSlider.setBackground(new Color(50, 50, 50));
-        
+    
         volumeSlider.addChangeListener(e -> {
             int volume = volumeSlider.getValue();
             float volumeValue = volume / 100f;
             AudioManager.getInstance().setVolume(volumeValue);
         });
-        
+    
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
         volumePanel.add(volumeSlider, BorderLayout.CENTER);
     
@@ -193,7 +193,7 @@ public class BlackjackGUI extends JFrame {
         // Add rows to dealerScorePanel
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
-        
+    
         playerScorePanel = new JPanel();
         playerScorePanel.setOpaque(false);
         playerScorePanel.add(playerScoreLabel);
