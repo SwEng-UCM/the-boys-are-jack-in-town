@@ -23,6 +23,8 @@ import javax.swing.SwingUtilities;
 public class GameManager {
     private static GameManager instance;
 
+        private final int INITIAL_BET = 1000;
+
         private ArrayList<Player> players;
         private Player dealer;
         private Deck deck;
@@ -33,12 +35,14 @@ public class GameManager {
     
         private GameManager() {
             this.players = new ArrayList<>();
-            this.dealer = new Player("Dealer", 1000);
+            this.dealer = new Player("Dealer", INITIAL_BET);
             this.deck = new Deck();
             this.gameOver = false;
-            this.bettingManager = new BettingManager(players, 1000, 1000); // Initial balance
+            this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // Initial balance
             this.currentPlayerIndex=0;
-            players.add(new Player("Player 1", 1000)); // At least one player
+            players.add(new Player("Player 1", INITIAL_BET)); // At least one player
+            players.add(new Player("Player 2", INITIAL_BET)); // At least one player
+
         }
     
         // Public method to provide access to the singleton instance

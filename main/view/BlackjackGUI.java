@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import static main.view.BlackJackMenu.language;
 
 public class BlackjackGUI extends JFrame {
-    private int gameWidth = 800;
-    private int gameHeight = 600;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private int gameHeight = (int) screenSize.getHeight();
+    private int gameWidth = (int)screenSize.getWidth();
     private int buttonWidth = (int) (gameWidth * 0.15);
     private int buttonHeight = (int) (gameHeight * 0.08);
     private int buttonFontSize = gameWidth / 60;
@@ -29,13 +30,14 @@ public class BlackjackGUI extends JFrame {
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
         setTitle("Blackjack Game");
-        setSize(gameWidth, gameHeight);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        //setSize(gameWidth, gameHeight);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         
-        gameManager.setGui(this); // Add this line
-       
+        gameManager.setGui(this);
 
         // Initialize panels and components
         initializeComponents();
@@ -82,26 +84,35 @@ public class BlackjackGUI extends JFrame {
         // Create bet panel
         betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betPanel.setOpaque(false);
+        betPanel.setBackground(new Color(34, 139, 34));
         betPanel.add(enterBetLabel);
         betPanel.add(betField);
         betPanel.add(placeBetButton);
 
+
         // Button panel
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setOpaque(false);
+        buttonPanel.setBackground(new Color(34, 139, 34));
+
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
+
+
 
         // Add all components to mainPanel
         mainPanel.add(gameMessageLabel, BorderLayout.NORTH);
         mainPanel.add(dealerPanel, BorderLayout.CENTER);
 
         JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.setBackground(new Color(34, 139, 34)); // ADD THIS LINE
         southContainer.add(playersPanel, BorderLayout.NORTH);
         southContainer.add(buttonPanel, BorderLayout.CENTER);
         southContainer.add(betPanel, BorderLayout.SOUTH);
         mainPanel.add(southContainer, BorderLayout.SOUTH);
+        
+
 
         add(mainPanel);
         
@@ -180,26 +191,18 @@ public class BlackjackGUI extends JFrame {
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(null));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
-    
-        System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance(null) + 
-                           ", Dealer Balance: " + gameManager.getDealerBalance() + 
-                           ", Dealer Bet: " + gameManager.getDealerBet());
 
-            // Force UI refresh
-    balanceLabel.revalidate();
-    balanceLabel.repaint();
-    dealerBalanceLabel.revalidate();
-    dealerBalanceLabel.repaint();
-    dealerBetLabel.revalidate();
-    dealerBetLabel.repaint();
+        // Force UI refresh
+        balanceLabel.revalidate();
+        balanceLabel.repaint();
+        dealerBalanceLabel.revalidate();
+        dealerBalanceLabel.repaint();
+        dealerBetLabel.revalidate();
+        dealerBetLabel.repaint();
 
-    // Refresh the entire main panel
-    mainPanel.revalidate();
-    mainPanel.repaint();
-
-    System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance(null) + 
-                       ", Dealer Balance: " + gameManager.getDealerBalance() + 
-                       ", Dealer Bet: " + gameManager.getDealerBet());
+        // Refresh the entire main panel
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver) {
