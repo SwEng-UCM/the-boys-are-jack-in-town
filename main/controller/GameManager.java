@@ -58,7 +58,7 @@ public class GameManager {
         if (!gameOver && !isPaused) {
             dealerTurn();
             determineWinner();
-            gui.updateGameState(player, dealer, gameOver);
+            gui.updateGameState(player, dealer, gameOver, false);;
         }
     }
     public void resetBettingManager(int playerBalance, int dealerBalance) {
@@ -67,26 +67,24 @@ public class GameManager {
 
     public void pauseGame() {
         isPaused = true;
-        
-        // Pause any game timers if you have them
         if (gameTimer != null && gameTimer.isRunning()) {
             gameTimer.stop();
         }
-        
         gui.updateGameMessage(Texts.GAME_PAUSED[language]);
-        gui.updateGameState(player, dealer, true); // Treat as game over for UI purposes
+        // Force UI update while keeping cards hidden
+        gui.updateGameState(player, dealer, false, true); // gameOver=false, isPaused=true
     }
 
     public void resumeGame() {
         isPaused = false;
         
-        // Resume any game timers if you have them
         if (gameTimer != null) {
             gameTimer.start();
         }
         
         gui.updateGameMessage(Texts.gameManagerGameOn[language]);
-        gui.updateGameState(player, dealer, gameOver); // Restore actual game state
+        // Restore the actual game state (hidden card if game isn't over)
+        gui.updateGameState(player, dealer, gameOver, false); // gameOver=actual state, isPaused=false;
     }
 
     public boolean isGamePaused() {
@@ -140,7 +138,7 @@ public class GameManager {
             gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         }
 
-        gui.updateGameState(player, dealer, gameOver);
+        gui.updateGameState(player, dealer, gameOver, false);
 
     }
     
@@ -164,7 +162,7 @@ public class GameManager {
         if (!gameOver && !isPaused && player.calculateScore() <= 21) {
             player.receiveCard(handleSpecialCard(deck.dealCard(), player));
             checkPlayerBust();
-            gui.updateGameState(player, dealer, gameOver);
+            gui.updateGameState(player, dealer, gameOver, false);;
         }
     }
     public boolean canPlaceBet() {
@@ -227,7 +225,7 @@ public class GameManager {
     
             SwingUtilities.invokeLater(() -> {
                 gui.enableBetting();
-                gui.updateGameState(player, dealer, true);
+                gui.updateGameState(player, dealer, gameOver, false);
             });
         }
     }

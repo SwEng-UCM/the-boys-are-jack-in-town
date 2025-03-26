@@ -440,65 +440,55 @@ public class BlackjackGUI extends JFrame {
                        ", Dealer Bet: " + gameManager.getDealerBet());
     }
 
-    public void updateGameState(Player player, Player dealer, boolean gameOver) {
+    public void updateGameState(Player player, Player dealer, boolean gameOver, boolean isPaused) {
         playerPanel.removeAll();
         dealerPanel.removeAll();
-
-        //updateSpecialMessage("- - - ");
-
-
-        // Show player's cards and check for special cards
+    
+        // Show player's cards
         for (Card card : player.getHand()) {
             playerPanel.add(createCardPanel(card));
-            //checkForSpecialCard(card);
         }
-
-        // Show dealer's cards
-        if (gameOver) {
+    
+        // Show dealer's cards - only show first card unless game is over or paused
+         if (gameOver) {  // Changed this condition
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
-                //checkForSpecialCard(card);
             }
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
         } else {
             dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
-            dealerPanel.add(createHiddenCardPanel());
+            dealerPanel.add(createHiddenCardPanel(isPaused));
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
         }
-
+    
+        // Rest of your method remains the same...
         playerScoreLabel.setText(Texts.guiPlayerScore[language] + " : " + player.calculateScore());
-
-        // Update balances and bets
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
         dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.dealerBet[language] + " $" + gameManager.getDealerBet());
-
-
-
-        // Refresh UI
+    
         playerPanel.revalidate();
         playerPanel.repaint();
         dealerPanel.revalidate();
-        dealerPanel.repaint();
+        dealerPanel.repaint(); 
     }
 
-    private JPanel createHiddenCardPanel() {
+    private JPanel createHiddenCardPanel(boolean isPaused) {
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-
-        JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
+    
+        JLabel hiddenLabel = new JLabel(isPaused ? "⏸" : "?", SwingConstants.CENTER);
         hiddenLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
         hiddenLabel.setForeground(Color.WHITE);
-
+    
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(hiddenLabel, BorderLayout.CENTER);
-
-        // Location of custom background
+    
         ImageIcon cardBackground = new ImageIcon("img/card-background2.jpeg");
         hiddenLabel.setIcon(cardBackground);
-
+    
         return cardPanel;
     }
 
