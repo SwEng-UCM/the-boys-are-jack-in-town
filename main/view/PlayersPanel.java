@@ -21,7 +21,7 @@ class PlayersPanel extends JPanel {
     private int cardFontSize = gameWidth / 60;
 
     public PlayersPanel() {
-        setOpaque(false);
+        setOpaque(true);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(34, 139, 34));
@@ -68,8 +68,10 @@ class PlayersPanel extends JPanel {
         
         // Add total score at bottom
         JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.CENTER);
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalLabel.setOpaque(true);
+        totalLabel.setBackground(new Color(34, 139, 34));
         totalLabel.setForeground(Color.WHITE);
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
         
         handPanel.add(cardsPanel, BorderLayout.CENTER);
         handPanel.add(totalLabel, BorderLayout.SOUTH);
@@ -81,7 +83,12 @@ class PlayersPanel extends JPanel {
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        JScrollBar hScroll = scrollPane.getHorizontalScrollBar();
+        hScroll.setBackground(new Color(34, 139, 34));
+        hScroll.setForeground(Color.WHITE);
         
         return scrollPane;
     }
