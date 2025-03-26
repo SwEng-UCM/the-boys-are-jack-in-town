@@ -5,8 +5,6 @@ import main.controller.GameManager;
 import javax.swing.*;
 import java.awt.*;
 
-import static main.view.Languages.*;
-
 public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton, optionsButton;
     private JLabel imageLabel, mainTitleLabel;

@@ -1,5 +1,8 @@
 package main.model;
 
+import java.util.ArrayList;
+
+
 /**
  * The Dealer class represents the dealer in the Blackjack game.
  * It is responsible for managing the deck of cards, dealing cards to players,
@@ -7,7 +10,7 @@ package main.model;
  */
 public class Dealer {
     private Deck deck; // The deck of cards used in the game
-    private final Player dealer; // The dealer (AI opponent)
+    private final Player dealer; // The dealer 
     private Card hiddenCard; // Stores the dealer's hidden card
 
     public Dealer() {
@@ -15,14 +18,12 @@ public class Dealer {
         this.dealer = new Player("Dealer", 1000); // Assuming dealer has a name and balance
     }
 
-    /**
-     * Starts a new game by dealing two initial cards to both the player and dealer.
-     * 
-     * @param player The player to whom cards are dealt
-     */
-    public void startNewGame(Player player) {
+    
+    public void startNewGame(ArrayList<Player> players) {
+        for (Player player : players) {
+            dealInitialCards(player, false); // Player receives two visible cards
+        }
         dealInitialCards(dealer, true); // Dealer receives one hidden card
-        dealInitialCards(player, false); // Player receives two visible cards
     }
 
     /**
@@ -67,14 +68,6 @@ public class Dealer {
      * @param targetPlayer The player whose hand is displayed
      * @param hideSecondCard Whether to hide the second card
      */
-    public void showHand(Player targetPlayer, boolean hideSecondCard) {
-        if (targetPlayer == dealer && hideSecondCard) {
-            System.out.println("\nDealer's Hand:");
-            System.out.println(dealer.getHand().get(0) + " [Hidden]"); // Show the first card and hide the second
-        } else {
-            targetPlayer.showHand();
-        }
-    }
 
     /**
      * Reveals the dealer's full hand and updates the view.
@@ -84,9 +77,7 @@ public class Dealer {
             dealer.receiveCard(hiddenCard); // Add hidden card back to the hand
             hiddenCard = null; // Remove reference to avoid duplicate addition
         }
-        System.out.println("\nDealer reveals their full hand:");
-        showHand(dealer, false); // Show the full hand without hiding any cards
-    }
+       }
 
     /**
      * Returns the hidden card for the dealer.
@@ -111,8 +102,10 @@ public class Dealer {
      * 
      * @param player The player whose hand is reset
      */
-    public void resetGame(Player player) {
-        player.reset(); // Reset player’s hand
+    public void resetGame(ArrayList<Player> players) {
+        for (Player player : players) {
+            dealInitialCards(player, false); // Player receives two visible cards
+        }
         dealer.reset(); // Reset dealer’s hand
         this.deck = new Deck(); // Reinitialize the deck
     }
