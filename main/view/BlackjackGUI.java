@@ -115,10 +115,13 @@ public class BlackjackGUI extends JFrame {
     balanceBetRow.setOpaque(false);
     balanceBetRow.add(dealerBalanceLabel);
     balanceBetRow.add(dealerBetLabel);
-    // Create pause button
-    pauseButton = new JButton("☰"); // Hamburger icon
-    pauseButton.setFont(new Font("Arial", Font.BOLD, 36));
-    pauseButton.setForeground(Color.WHITE);
+    
+    // Create pause/play button
+    pauseButton = new JButton();
+    pauseButton.setPreferredSize(new Dimension(50, 50));
+    ImageIcon pauseIcon = new ImageIcon("img/pause.png"); // Ensure the file path is correct
+    Image scaledPauseIcon = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+    pauseButton.setIcon(new ImageIcon(scaledPauseIcon)); // Set the scaled icon
     pauseButton.setBackground(new Color(255, 165, 0)); // Keep your orange color
     pauseButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15)); // Add padding
     pauseButton.setContentAreaFilled(false);
