@@ -19,15 +19,12 @@ public class BlackjackGUI extends JFrame {
     private int cardWidth = (int) (gameWidth * 0.10);
     private int cardHeight = (int) (gameHeight * 0.22);
     private int cardFontSize = gameWidth / 60;
-    private JPanel mainPanel, dealerPanel, playersPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
+    private JPanel mainPanel, dealerPanel, buttonPanel, betPanel;
     private JButton hitButton, standButton, newGameButton, placeBetButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
+    private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
-    private ArrayList<JPanel> playerPanels = new ArrayList<>();
-    private ArrayList<JLabel> playerScoreLabels = new ArrayList<>();
-    private ArrayList<JLabel> playerBalanceLabels = new ArrayList<>();
-    private ArrayList<JLabel> playerBetLabels = new ArrayList<>();
+    private PlayersPanel playersPanel;
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -36,10 +33,12 @@ public class BlackjackGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        
+        gameManager.setGui(this); // Add this line
+       
 
         // Initialize panels and components
         initializeComponents();
-
         setVisible(true);
     }
 
@@ -63,8 +62,7 @@ public class BlackjackGUI extends JFrame {
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         dealerPanel.setOpaque(false);
 
-        playersPanel = new JPanel(new GridLayout(0, 1));
-        playersPanel.setOpaque(false);
+        playersPanel = new PlayersPanel(); 
 
         // Initialize labels for dealer and players
         dealerScoreLabel = createStyledLabel("Dealer Score: 0");
@@ -72,7 +70,6 @@ public class BlackjackGUI extends JFrame {
         dealerBetLabel = createStyledLabel("Dealer Bet: $0");
         
         // Player score and balance panels
-        playerScoreLabel = createStyledLabel("Player Score: 0");
         balanceLabel = createStyledLabel("Balance: $1000");
         betLabel = createStyledLabel("Bet: $0");
         
@@ -99,9 +96,12 @@ public class BlackjackGUI extends JFrame {
         // Add all components to mainPanel
         mainPanel.add(gameMessageLabel, BorderLayout.NORTH);
         mainPanel.add(dealerPanel, BorderLayout.CENTER);
-        mainPanel.add(playersPanel, BorderLayout.SOUTH);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        mainPanel.add(betPanel, BorderLayout.SOUTH);
+
+        JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.add(playersPanel, BorderLayout.NORTH);
+        southContainer.add(buttonPanel, BorderLayout.CENTER);
+        southContainer.add(betPanel, BorderLayout.SOUTH);
+        mainPanel.add(southContainer, BorderLayout.SOUTH);
 
         add(mainPanel);
         
@@ -206,34 +206,17 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.removeAll();
         dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
     
-        // Update player panels
-        for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            playerPanels.get(i).removeAll();
-    
-            // Ensure the player's hand is not empty before adding cards
-            if (!player.getHand().isEmpty()) {
-                for (Card card : player.getHand()) {
-                    playerPanels.get(i).add(createCardPanel(card));
-                }
-            } 
-    
-            playerScoreLabels.get(i).setText(player.getName() + ": " + Texts.guiPlayerScore[language] + " : " + player.calculateScore());
-            playerBalanceLabels.get(i).setText(Texts.balance[language] + " $" + player.getBalance());
-            playerBetLabels.get(i).setText(Texts.bet[language] + " $" +  player.getCurrentBet());
-        }
+        playersPanel.updatePanel(players); 
     
         // Update dealer panel
         if (gameOver) {
-            // Ensure the dealer's hand is not empty before adding cards
-            if (!dealer.getHand().isEmpty()) {
-                for (Card card : dealer.getHand()) {
-                    dealerPanel.add(createCardPanel(card));
-                }
-                dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
-            }   
-         else {
-            // Dealer has one card face-up and one hidden card
+            // Show all dealer's cards
+            for (Card card : dealer.getHand()) {
+                dealerPanel.add(createCardPanel(card));
+            }
+            dealerScoreLabel.setText("Dealer Score: " + dealer.calculateScore());
+        } else {
+            // Show one card face-up and a hidden card
             if (!dealer.getHand().isEmpty()) {
                 dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
                 dealerPanel.add(createHiddenCardPanel());
@@ -246,17 +229,17 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
-}
+
 
     private void nextTurn() {
+
         if (gameManager.hasNextPlayer()) {
-            gameManager.hasNextPlayer();
+            gameManager.startNextPlayerTurn();
             updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
         } else {
             gameManager.dealerTurn();
         }
-    }
-    
+    }    
     
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
@@ -315,7 +298,6 @@ public class BlackjackGUI extends JFrame {
     }
 
     private JPanel createCardPanel(Card card) {
-        
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
@@ -368,7 +350,7 @@ public class BlackjackGUI extends JFrame {
         }
         return wildValue;
     }
-
+/*
     private void checkForSpecialCard(Card card) {
         if (card.isJokerWild()) {
             updateGameMessage(Texts.jokerWildMessage[language]);
@@ -380,7 +362,7 @@ public class BlackjackGUI extends JFrame {
             updateSpecialMessage("...");
         }
     }
-
+ */
     public void promptPlayerAction(Player player) {
         // Display a prompt for the player to choose an action
         String[] options = {Texts.guiHit[language], Texts.guiStand[language], Texts.guiNewGame[language]}; // Include Double Down option if applicable

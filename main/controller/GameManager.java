@@ -38,6 +38,7 @@ public class GameManager {
             this.gameOver = false;
             this.bettingManager = new BettingManager(players, 1000, 1000); // Initial balance
             this.currentPlayerIndex=0;
+            players.add(new Player("Player 1", 1000)); // At least one player
         }
     
         // Public method to provide access to the singleton instance
@@ -56,7 +57,7 @@ public class GameManager {
             players.add(new Player(name, initialBalance));
         }
     
-        private void startNextPlayerTurn() {
+        public void startNextPlayerTurn() {
             if (currentPlayerIndex < players.size()) {
                 gui.promptPlayerAction(players.get(currentPlayerIndex));
             } else {
