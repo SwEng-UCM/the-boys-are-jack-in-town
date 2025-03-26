@@ -13,12 +13,9 @@ class PlayersPanel extends JPanel {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int gameHeight = (int) screenSize.getHeight();
     private int gameWidth = (int)screenSize.getWidth();
-    private int buttonWidth = (int) (gameWidth * 0.15);
-    private int buttonHeight = (int) (gameHeight * 0.08);
-    private int buttonFontSize = gameWidth / 60;
     private int cardWidth = (int) (gameWidth * 0.05);
     private int cardHeight = (int) (gameHeight * 0.11);
-    private int cardFontSize = gameWidth / 60;
+    private int cardFontSize = gameWidth / 100;
 
     public PlayersPanel() {
         setOpaque(true);
@@ -89,7 +86,7 @@ class PlayersPanel extends JPanel {
         JScrollBar hScroll = scrollPane.getHorizontalScrollBar();
         hScroll.setBackground(new Color(34, 139, 34));
         hScroll.setForeground(Color.WHITE);
-        
+
         return scrollPane;
     }
     
@@ -103,10 +100,10 @@ class PlayersPanel extends JPanel {
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
         JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        rankLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
 
         JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        suitLabel.setFont(new Font("Arial", Font.PLAIN, cardFontSize));
 
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(rankLabel, BorderLayout.CENTER);
