@@ -48,6 +48,7 @@ public class BettingManager {
             dealerBalance -= betAmount;
             dealerBet = betAmount;
         }
+
     }
 
     /**
