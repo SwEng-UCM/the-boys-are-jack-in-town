@@ -4,21 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Blackjack player, managing their hand and score calculations.
+ * Represents a Blackjack player, managing their hand, bets, and balance.
  */
 public class Player {
+    private final String name; // Player's name
     private final List<Card> hand; // Stores the player's current hand
-    private double scoreMultiplier; // Multiplier for the player's score (default 1.0)
+    private double scoreMultiplier; // Multiplier for score calculations (default 1.0)
+    private int balance; // Player's balance (chips/money)
+    private int currentBet; // Player's current bet
 
-    public Player() {
+    public Player(String name, int initialBalance) {
+        this.name = name;
         this.hand = new ArrayList<>();
         this.scoreMultiplier = 1.0;
+        this.balance = initialBalance;
+        this.currentBet = 0;
     }
 
     /** Adds a card to the player's hand. */
     public void receiveCard(Card card) {
         hand.add(card);
-        // When a Split Ace wildcard is drawn, set the multiplier to 0.5
+        // If the card is a SPLIT_ACE, adjust the multiplier
         if (card.getType() == Card.CardType.SPLIT_ACE) {
             scoreMultiplier = 0.5;
         }
@@ -26,7 +32,7 @@ public class Player {
 
     /** Displays the player's hand in the console. */
     public void showHand() {
-        System.out.println("Hand:");
+        System.out.println(name + "'s Hand:");
         for (Card card : hand) {
             System.out.println(card);
         }
@@ -58,18 +64,61 @@ public class Player {
             score -= 10;
             aceCount--;
         }
-        // Apply the score multiplier (if a Split Ace wildcard was drawn, this will be 0.5)
-        return (int)(score * scoreMultiplier);
+
+        return (int) (score * scoreMultiplier);
     }
 
+    /** Checks if the player has Blackjack (an Ace + 10-value card). */
     public boolean hasBlackjack() {
-        // Check if player has exactly two cards and their (possibly halved) score equals 21
         return hand.size() == 2 && calculateScore() == 21;
     }
 
-    /** Clears the player's hand and resets the score multiplier for a new round. */
+    /** Places a bet, subtracting from the player's balance. */
+    public boolean placeBet(int amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            currentBet = amount;
+            return true;
+        }
+        return false;
+    }
+
+    /** Returns the bet amount. */
+    public int getCurrentBet() {
+        return currentBet;
+    }
+
+    /** Awards winnings to the player. */
+    public void winBet(int winnings) {
+        balance += currentBet + winnings;
+        currentBet = 0;
+    }
+
+    /** Loses the bet, keeping the balance reduced. */
+    public void loseBet() {
+        currentBet = 0; // The bet is already deducted when placed
+    }
+
+    /** Refunds the player's bet in case of a tie. */
+    public void tieBet() {
+        balance += currentBet; // Return the bet amount
+        currentBet = 0;
+    }
+
+    /** Returns the player's balance. */
+    public int getBalance() {
+        return balance;
+    }
+
+    /** Resets the player's hand and score multiplier for a new round. */
     public void reset() {
         hand.clear();
         scoreMultiplier = 1.0;
+        currentBet = 0;
+    }
+
+    /** Returns the player's name. */
+    public String getName() {
+        return name;
     }
 }
