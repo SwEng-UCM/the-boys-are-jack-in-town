@@ -30,14 +30,6 @@ public class Player {
         }
     }
 
-    /** Displays the player's hand in the console. */
-    public void showHand() {
-        System.out.println(name + "'s Hand:");
-        for (Card card : hand) {
-            System.out.println(card);
-        }
-    }
-
     /** Returns the list of cards in the player's hand. */
     public List<Card> getHand() {
         return hand;

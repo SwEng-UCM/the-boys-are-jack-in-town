@@ -19,7 +19,7 @@ class PlayersPanel extends JPanel {
 
     public PlayersPanel() {
         setOpaque(true);
-        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Change to FlowLayout for side-by-side layout
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(34, 139, 34));
 
@@ -28,13 +28,28 @@ class PlayersPanel extends JPanel {
     public void updatePanel(List<Player> players) {
         removeAll();
         players.forEach(player -> {
-            JPanel panel = new JPanel(new BorderLayout(5, 5));
-            panel.setBackground(new Color(34, 139, 34)); // Set green background
-            //panel.setPreferredSize(new Dimension(250, 200)); // Adjust size for proper layout
+            // Player container setup
+            JPanel playerContainer = new JPanel(new BorderLayout(5, 5));
+            playerContainer.setBackground(new Color(34, 139, 34));
+            playerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+            // Player info section
+            JPanel infoPanel = new JPanel();
+            infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+            infoPanel.add(createPlayerLabel(player));
+            infoPanel.setBackground(new Color(34, 139, 34));
 
-            panel.add(createPlayerLabel(player), BorderLayout.NORTH);
-            panel.add(createHandArea(player), BorderLayout.CENTER);
-            add(panel);
+    
+            // Cards display using createHandArea
+            JComponent handArea = createHandArea(player);
+    
+            // Assemble components
+            playerContainer.add(infoPanel, BorderLayout.NORTH);
+            playerContainer.add(handArea, BorderLayout.CENTER);
+    
+            // Add spacing between players
+            add(playerContainer);
+            add(Box.createHorizontalStrut(20));
         });
         revalidate();
         repaint();
@@ -48,36 +63,42 @@ class PlayersPanel extends JPanel {
             player.getCurrentBet()
         ));
         label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setBackground(new Color(34, 139, 34));
+
         return label;
     }
 
     private JComponent createHandArea(Player player) {
         JPanel handPanel = new JPanel(new BorderLayout());
-        handPanel.setOpaque(true); // Ensure it is not transparent
-        handPanel.setBackground(new Color(34, 139, 34));
+        handPanel.setOpaque(false);
     
+        // Cards panel setup
         JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         cardsPanel.setOpaque(false);
     
+        // Add cards to panel
         for (Card card : player.getHand()) {
-            cardsPanel.add(createCardPanel(card));
+            JPanel cardPanel = createCardPanel(card);
+            cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
+            cardsPanel.add(cardPanel);
         }
     
+        // Total score label
         JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.LEFT);
-        totalLabel.setOpaque(true);
-        totalLabel.setBackground(new Color(34, 139, 34));
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
     
+        // Assemble hand panel
         handPanel.add(cardsPanel, BorderLayout.CENTER);
         handPanel.add(totalLabel, BorderLayout.SOUTH);
     
+        // Scroll pane configuration
         JScrollPane scrollPane = new JScrollPane(handPanel);
-        scrollPane.setOpaque(true); // Ensure it's not transparent
-        scrollPane.setBackground(new Color(34, 139, 34));
-        scrollPane.getViewport().setOpaque(true);
-        scrollPane.getViewport().setBackground(new Color(34, 139, 34));
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setPreferredSize(new Dimension(gameWidth/2, cardHeight + 50));
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     
         return scrollPane;
