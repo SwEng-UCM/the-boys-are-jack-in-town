@@ -13,13 +13,13 @@ class PlayersPanel extends JPanel {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int gameHeight = (int) screenSize.getHeight();
     private int gameWidth = (int)screenSize.getWidth();
-    private int cardWidth = (int) (gameWidth * 0.05);
-    private int cardHeight = (int) (gameHeight * 0.11);
-    private int cardFontSize = gameWidth / 100;
+    private int cardWidth = (int) (gameWidth * 0.07);
+    private int cardHeight = (int) (gameHeight * 0.16);
+    private int cardFontSize = gameWidth / 95;
 
     public PlayersPanel() {
         setOpaque(true);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Change to FlowLayout for side-by-side layout
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(34, 139, 34));
 
@@ -29,6 +29,9 @@ class PlayersPanel extends JPanel {
         removeAll();
         players.forEach(player -> {
             JPanel panel = new JPanel(new BorderLayout(5, 5));
+            panel.setBackground(new Color(34, 139, 34)); // Set green background
+            //panel.setPreferredSize(new Dimension(250, 200)); // Adjust size for proper layout
+
             panel.add(createPlayerLabel(player), BorderLayout.NORTH);
             panel.add(createHandArea(player), BorderLayout.CENTER);
             add(panel);
@@ -50,48 +53,35 @@ class PlayersPanel extends JPanel {
 
     private JComponent createHandArea(Player player) {
         JPanel handPanel = new JPanel(new BorderLayout());
-
-        
-        // Panel to hold the cards
+        handPanel.setOpaque(true); // Ensure it is not transparent
+        handPanel.setBackground(new Color(34, 139, 34));
+    
         JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         cardsPanel.setOpaque(false);
-
-        
-        // Add individual card panels
+    
         for (Card card : player.getHand()) {
             cardsPanel.add(createCardPanel(card));
-
         }
-        
-        // Add total score at bottom
-        JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.CENTER);
+    
+        JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.LEFT);
         totalLabel.setOpaque(true);
         totalLabel.setBackground(new Color(34, 139, 34));
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        
+    
         handPanel.add(cardsPanel, BorderLayout.CENTER);
         handPanel.add(totalLabel, BorderLayout.SOUTH);
-        handPanel.setOpaque(false);
     
-        // Wrap in scroll pane for many cards
         JScrollPane scrollPane = new JScrollPane(handPanel);
+        scrollPane.setOpaque(true); // Ensure it's not transparent
         scrollPane.setBackground(new Color(34, 139, 34));
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(null);
+        scrollPane.getViewport().setOpaque(true);
+        scrollPane.getViewport().setBackground(new Color(34, 139, 34));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        
-        JScrollBar hScroll = scrollPane.getHorizontalScrollBar();
-        hScroll.setBackground(new Color(34, 139, 34));
-        hScroll.setForeground(Color.WHITE);
-
+    
         return scrollPane;
     }
-    
-    // Remove the formatHand() method since we're not using it anymore
-
 
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel();

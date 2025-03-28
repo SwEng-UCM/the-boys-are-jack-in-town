@@ -366,11 +366,13 @@ public class BlackjackGUI extends JFrame {
         }
     }
  */
+
+ 
     public void promptPlayerAction(Player player) {
         // Display a prompt for the player to choose an action
-        String[] options = {Texts.guiHit[language], Texts.guiStand[language], Texts.guiNewGame[language]}; // Include Double Down option if applicable
+        //String[] options = {Texts.guiHit[language], Texts.guiStand[language], Texts.guiNewGame[language]}; // Include Double Down option if applicable
     
-        int choice = JOptionPane.showOptionDialog(
+        /*int choice = JOptionPane.showOptionDialog(
             this,                        // Parent component
             "Please choose an option:",   // Message to display
             "Choose Option",              // Title of the dialog
@@ -402,7 +404,8 @@ public class BlackjackGUI extends JFrame {
                 break;
             default: // If no valid option is chosen, nothing happens
                 break;
-        }
+                */
+        
     
         // After the player's action, check if the round should continue to the next player or the dealer
         if (!gameManager.isCurrentPlayerStillInRound()) {
