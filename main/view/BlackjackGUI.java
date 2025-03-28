@@ -3,8 +3,15 @@ package main.view;
 import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
+import main.controller.AudioManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -20,112 +27,292 @@ public class BlackjackGUI extends JFrame {
     private int cardWidth = (int) (gameWidth * 0.10);
     private int cardHeight = (int) (gameHeight * 0.22);
     private int cardFontSize = gameWidth / 60;
-    private JPanel mainPanel, dealerPanel, buttonPanel, betPanel;
+    private JPanel mainPanel, dealerPanel, dealerScorePanel, buttonPanel, betPanel;
     private JButton hitButton, standButton, newGameButton, placeBetButton;
     private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
+    private JButton pauseButton;
+    private JPopupMenu pauseMenu;
     private PlayersPanel playersPanel;
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
-        setTitle("Blackjack Game");
+        setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        //setSize(gameWidth, gameHeight);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         
         gameManager.setGui(this);
+    
+        ImageIcon icon = new ImageIcon("img/black.png");
+        setIconImage(icon.getImage());
+    
+        // Correct initialization sequence
+        initializeComponents();  // Create ALL components first
+        layoutComponents();      // THEN arrange components
+        attachEventListeners();  // FINALLY setup interactions
+        
+        setVisible(true);        // Make visible LAST
+        specialMessageLabel.setText("...");
+    }
 
-        // Initialize panels and components
-        initializeComponents();
-        setVisible(true);
+    private void layoutComponents() {
+        mainPanel.removeAll();
+        mainPanel.setLayout(new BorderLayout());
+    
+        // Top section (dealer area + pause button)
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBackground(new Color(34, 139, 34));
+
+    
+        JPanel dealerArea = new JPanel(new BorderLayout());
+        dealerArea.setOpaque(false);
+        dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
+        dealerArea.add(dealerPanel, BorderLayout.CENTER);
+        dealerArea.setBackground(new Color(34, 139, 34));
+
+    
+        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topRightPanel.setOpaque(false);
+        topRightPanel.add(pauseButton);
+        topRightPanel.setBackground(new Color(34, 139, 34));
+
+    
+        topPanel.add(dealerArea, BorderLayout.CENTER);
+        topPanel.add(topRightPanel, BorderLayout.EAST);
+    
+        // Center section (messages + buttons)
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
+        centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
+        centerPanel.add(buttonPanel, BorderLayout.CENTER);
+        centerPanel.setBackground(new Color(34, 139, 34));
+
+    
+        // Bottom section (players + bet panel)
+        JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.setBackground(new Color(34, 139, 34));
+    
+        JPanel playersContainer = new JPanel(new BorderLayout());
+        playersContainer.setPreferredSize(new Dimension(
+            Toolkit.getDefaultToolkit().getScreenSize().width, 
+            300
+        ));
+        playersContainer.add(playersPanel, BorderLayout.CENTER);
+        playersContainer.setBackground(new Color(34, 139, 34));
+        betPanel.setBackground(new Color(34, 139, 34));
+
+    
+        southContainer.add(playersContainer, BorderLayout.CENTER);
+        southContainer.add(betPanel, BorderLayout.SOUTH);
+    
+        // Assemble main panel
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(southContainer, BorderLayout.SOUTH);
+    
+        add(mainPanel);
+        gameManager.startNewGame();
     }
 
     private void initializeComponents() {
-        // Initialize buttons
-        hitButton = createStyledButton("Hit");
-        standButton = createStyledButton("Stand");
-        newGameButton = createStyledButton("New Game");
-        placeBetButton = createStyledButton("Place Bet");
-
-        // Game message label
-        gameMessageLabel = new JLabel("Welcome to Blackjack!", SwingConstants.CENTER);
-        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        gameMessageLabel.setForeground(Color.WHITE);
-
-        // Layout setup
-        mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(34, 139, 34));
-
-        // Create the panels for dealer and players
+        // Initialize CORE containers first
+        mainPanel = new JPanel();
+        playersPanel = new PlayersPanel();
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        betPanel = new JPanel();
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+    
+        // Set properties for main components
+        mainPanel.setBackground(new Color(34, 139, 34));
+        playersPanel.setBackground(new Color(34, 139, 34));
+        dealerPanel.setBackground(new Color(34, 139, 34));
+        betPanel.setBackground(new Color(34, 139, 34));
+        buttonPanel.setBackground(new Color(34, 139, 34));
+
+
         dealerPanel.setOpaque(false);
+        buttonPanel.setOpaque(false);
+    
+        // Get screen dimensions
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+    
+        // Calculate sizes
+        buttonWidth = (int) (screenWidth * 0.15);
+        buttonHeight = (int) (screenHeight * 0.08);
+        buttonFontSize = screenWidth / 60;
+        cardWidth = (int) (screenWidth * 0.10);
+        cardHeight = (int) (screenHeight * 0.22);
+        cardFontSize = screenWidth / 60;
+    
+        // Initialize buttons
+        hitButton = createStyledButton(Texts.guiHit[language]);
+        standButton = createStyledButton(Texts.guiStand[language]);
+        newGameButton = createStyledButton(Texts.guiNewGame[language]);
+        placeBetButton = createStyledButton(Texts.placeBet[language]);
+    
+        // Initialize labels
+        gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
+        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        gameMessageLabel.setForeground(Color.WHITE);
+    
+        specialMessageLabel = new JLabel("", SwingConstants.CENTER);
+        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        specialMessageLabel.setForeground(Color.WHITE);
+    
+        // Dealer score panel
+        dealerScorePanel = new JPanel(new GridLayout(2, 1));
+        dealerScorePanel.setOpaque(false);
+        dealerScorePanel.setBackground(new Color(34, 139, 34));
 
-        playersPanel = new PlayersPanel(); 
+        
+        // Dealer labels
+        dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
+        dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
+        dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0");
+    
+        // Assemble dealer score panel
+        JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        scoreRow.add(dealerScoreLabel);
+        scoreRow.setBackground(new Color(34, 139, 34));
 
-        // Initialize labels for dealer and players
-        dealerScoreLabel = createStyledLabel("Dealer Score: 0");
-        dealerBalanceLabel = createStyledLabel("Dealer Balance: $1000");
-        dealerBetLabel = createStyledLabel("Dealer Bet: $0");
+        JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        balanceBetRow.add(dealerBalanceLabel);
+        balanceBetRow.add(dealerBetLabel);
+        balanceBetRow.setBackground(new Color(34, 139, 34));
+
+        dealerScorePanel.add(scoreRow);
+        dealerScorePanel.add(balanceBetRow);
+    
+        // Pause button setup
+        pauseButton = new JButton("☰");
+        pauseButton.setFont(new Font("Arial", Font.BOLD, 36));
+        pauseButton.setForeground(Color.WHITE);
+        pauseButton.setBackground(new Color(255, 165, 0));
+        pauseButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setOpaque(true);
+        pauseButton.setFocusPainted(false);
+    
+        // Pause button hover effects
+        pauseButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                pauseButton.setBackground(new Color(255, 140, 0));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                pauseButton.setBackground(new Color(255, 165, 0));
+            }
+        });
+    
+        // Pause menu setup
+        pauseMenu = new JPopupMenu();
+        pauseMenu.setBackground(new Color(50, 50, 50));
+        pauseMenu.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 2));
+    
+        // Menu items
+        JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
+        JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
+        JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
         
-        // Player score and balance panels
-        balanceLabel = createStyledLabel("Balance: $1000");
-        betLabel = createStyledLabel("Bet: $0");
+        Font menuFont = new Font("Arial", Font.BOLD, 18);
+        resumeItem.setFont(menuFont);
+        mainMenuItem.setFont(menuFont);
+        exitItem.setFont(menuFont);
+    
+        // Volume control
+        JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
+        volumePanel.setBackground(new Color(50, 50, 50));
+        volumePanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
         
+        JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
+        volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        volumeLabel.setForeground(Color.WHITE);
+        
+        JSlider volumeSlider = new JSlider(0, 100, 50);
+        volumeSlider.setMajorTickSpacing(25);
+        volumeSlider.setMinorTickSpacing(5);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true);
+        volumeSlider.setForeground(Color.WHITE);
+        volumeSlider.setBackground(new Color(50, 50, 50));
+        
+        volumeSlider.addChangeListener(e -> {
+            int volume = volumeSlider.getValue();
+            AudioManager.getInstance().setVolume(volume / 100f);
+        });
+        
+        volumePanel.add(volumeLabel, BorderLayout.NORTH);
+        volumePanel.add(volumeSlider, BorderLayout.CENTER);
+    
+        // Assemble pause menu
+        pauseMenu.add(resumeItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(mainMenuItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(exitItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(volumePanel);
+    
         // Bet panel components
         betField = new JTextField(10);
+        betField.setPreferredSize(new Dimension(200, 50));
         enterBetLabel = new JLabel("Enter Bet");
         enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
         enterBetLabel.setForeground(Color.WHITE);
-
-        // Create bet panel
-        betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        betPanel.setOpaque(false);
-        betPanel.setBackground(new Color(34, 139, 34));
+    
+        // Assemble bet panel
+        betPanel.setLayout(new BoxLayout(betPanel, BoxLayout.X_AXIS));
+        betPanel.add(Box.createHorizontalGlue());
         betPanel.add(enterBetLabel);
         betPanel.add(betField);
         betPanel.add(placeBetButton);
-
-
-        // Button panel
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        buttonPanel.setOpaque(false);
-        buttonPanel.setBackground(new Color(34, 139, 34));
-
+        betPanel.add(Box.createHorizontalGlue());
+    
+        // Assemble button panel
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
-
-
-
-        // Add all components to mainPanel
-        mainPanel.add(gameMessageLabel, BorderLayout.NORTH);
-        mainPanel.add(dealerPanel, BorderLayout.CENTER);
-
-        JPanel southContainer = new JPanel(new BorderLayout());
-        southContainer.setBackground(new Color(34, 139, 34)); // ADD THIS LINE
-        southContainer.add(playersPanel, BorderLayout.NORTH);
-        southContainer.add(buttonPanel, BorderLayout.CENTER);
-        southContainer.add(betPanel, BorderLayout.SOUTH);
-        mainPanel.add(southContainer, BorderLayout.SOUTH);
-        
-
-
-        add(mainPanel);
-        
-        // Attach event listeners
-        attachEventListeners();
     }
-
    
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
+    
+        pauseButton.addActionListener(e -> showPauseMenu());
+ 
+        // Pause menu listeners
+        for (Component component : pauseMenu.getComponents()) {
+            if (component instanceof JMenuItem) {
+                JMenuItem menuItem = (JMenuItem) component;
+                if (menuItem.getText().equals(Texts.RESUME[language])) {
+                    menuItem.addActionListener(e -> {
+                        resumeGame();
+                        pauseMenu.setVisible(false);
+                    });
+                } else if (menuItem.getText().equals(Texts.guiBackToMain[language])) {
+                    menuItem.addActionListener(e -> {
+                        returnToMainMenu();
+                        pauseMenu.setVisible(false);
+                    });
+                } else if (menuItem.getText().equals(Texts.exitGame[language])) {
+                    menuItem.addActionListener(e -> {
+                        pauseMenu.setVisible(false);
+                        System.exit(0);
+                    });
+                }
+            }
+        }
     }
 
     private void placeBet(Player player) {
@@ -175,15 +362,64 @@ public class BlackjackGUI extends JFrame {
             System.exit(0);
         }
     }
+    
+    private void showPauseMenu() {
+        gameManager.pauseGame();
+        setGameButtonsEnabled(false);
+
+        pauseMenu.setFocusable(true);
+        pauseMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // Only resume if not selecting an option
+                if (!e.getSource().equals(pauseMenu)) {
+                    resumeGame();
+                }
+            }
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                popupMenuWillBecomeInvisible(e);
+            }
+        });
+
+        pauseMenu.show(pauseButton, 0, pauseButton.getHeight());
+    }
+
+    private void resumeGame() {
+        gameManager.resumeGame();
+        setGameButtonsEnabled(true);
+    }
+
+    private void returnToMainMenu() {
+        new BlackJackMenu().setVisible(true);
+        dispose();
+    }
+
+    private void setGameButtonsEnabled(boolean enabled) {
+        // Disable all game buttons when paused
+        boolean buttonsEnabled = enabled && !gameManager.isPaused();
+
+        hitButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        newGameButton.setEnabled(buttonsEnabled); // Disable when paused
+        pauseButton.setEnabled(true); // Always enabled
+
+        // Enable betting only when game is over or hasn't started AND not paused
+        boolean bettingEnabled = (gameManager.isGameOver() || 
+                               (
+                                gameManager.getDealerBalance() > 0)) && 
+                                !gameManager.isPaused();
+
+        betField.setEnabled(bettingEnabled);
+        placeBetButton.setEnabled(bettingEnabled);
+    }
 
 
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
-        System.out.println("enableBetting called");
-        System.out.println("Player Balance: " + gameManager.getPlayerBalance(null));
-        System.out.println("Dealer Balance: " + gameManager.getDealerBalance());
-        System.out.println("Dealer Bet: " + gameManager.getDealerBet());
-    
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
@@ -250,7 +486,7 @@ public class BlackjackGUI extends JFrame {
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
-        JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
+        JLabel hiddenLabel = new JLabel(gameManager.isPaused() ? "⏸" : "?", SwingConstants.CENTER);
         hiddenLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
         hiddenLabel.setForeground(Color.WHITE);
 
@@ -301,8 +537,11 @@ public class BlackjackGUI extends JFrame {
     }
 
     private JPanel createCardPanel(Card card) {
-        JPanel cardPanel = new JPanel();
+        JPanel cardPanel = new JPanel(new BorderLayout());
+
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
+        cardPanel.setMinimumSize(new Dimension(cardWidth, cardHeight));
+        cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
@@ -371,6 +610,12 @@ public class BlackjackGUI extends JFrame {
     public void promptPlayerAction(Player player) {
         if (!gameManager.isCurrentPlayerStillInRound()) {
             nextTurn();
+        
+        }
+        else {
+            gameManager.dealerTurn();
+            hitButton.setEnabled(false);
+            standButton.setEnabled(false);
         }
     }
     
