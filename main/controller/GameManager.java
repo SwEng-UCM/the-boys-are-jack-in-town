@@ -62,25 +62,13 @@ public class GameManager {
         this.gui = gui;
     }
 
-    public void handlePlayerStand() {
-        if (!gameOver && !isPaused) {
-            dealerTurn();
-            determineWinner();
-            gui.updateGameState(player, dealer, gameOver, false);;
-        }
-    }
-    public void resetBettingManager(int playerBalance, int dealerBalance) {
-        this.bettingManager = new BettingManager(playerBalance, dealerBalance);
-    }
-
     public void pauseGame() {
         isPaused = true;
         if (gameTimer != null && gameTimer.isRunning()) {
             gameTimer.stop();
         }
         gui.updateGameMessage(Texts.GAME_PAUSED[language]);
-        // Force UI update while keeping cards hidden
-        gui.updateGameState(player, dealer, false, true); // gameOver=false, isPaused=true
+        gui.updateGameState(players, dealer, false, true); // gameOver=false, isPaused=true
     }
     public boolean isPaused() {
         return isPaused;
@@ -95,35 +83,32 @@ public class GameManager {
         
         gui.updateGameMessage(Texts.gameManagerGameOn[language]);
         // Restore the actual game state (hidden card if game isn't over)
-        gui.updateGameState(player, dealer, gameOver, false); // gameOver=actual state, isPaused=false;
+        gui.updateGameState(players, dealer, gameOver, false); // gameOver=actual state, isPaused=false;
     }
 
     public boolean isGamePaused() {
         return isPaused;
     }
     
-        public void setGui(BlackjackGUI gui) {
-            this.gui = gui;
-        }
+        
+    public void addPlayer(String name, int initialBalance) {
+        players.add(new Player(name, initialBalance));
+    }
     
-        public void addPlayer(String name, int initialBalance) {
-            players.add(new Player(name, initialBalance));
+    public void startNextPlayerTurn() {
+        if (currentPlayerIndex < players.size()) {
+            gui.promptPlayerAction(players.get(currentPlayerIndex));
+        } else {
+            dealerTurn();
         }
-    
-        public void startNextPlayerTurn() {
-            if (currentPlayerIndex < players.size()) {
-                gui.promptPlayerAction(players.get(currentPlayerIndex));
-            } else {
-                dealerTurn();
-            }
-        }
+    }
     
         public void handlePlayerHit() {
-            if (!gameOver) {
+            if (!gameOver && !isPaused) {
                 Player currentPlayer = players.get(currentPlayerIndex);
                 currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
                 checkPlayerBust();
-                gui.updateGameState(players, dealer, gameOver);
+                gui.updateGameState(players, dealer, gameOver, false);
             }
         }
     
@@ -188,7 +173,7 @@ public class GameManager {
     
                 gameOver = true;
                 checkGameOver();
-                SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true));
+                SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
             }
         }
     
@@ -223,73 +208,26 @@ public class GameManager {
          * Betting system.
          */
         public boolean placeBet(Player player, int betAmount) {
+            gui.updateGameState(players, dealer, gameOver, false);
             return player.placeBet(betAmount);
-        }
-        gui.updateGameState(player, dealer, gameOver, false);
 
-    }
-    
-        public int getPlayerBalance(Player player) {
-            return player.getBalance();
         }
+
     
-        public int getDealerBalance() {
-            return bettingManager.getDealerBalance();
-        }
     
-        public int getDealerBet() {
-            return bettingManager.getDealerBet();
-        checkDealerBust();
+    public int getPlayerBalance(Player player) {
+        return player.getBalance();
     }
 
-    public void handlePlayerHit() {
-        if (!gameOver && !isPaused && player.calculateScore() <= 21) {
-            player.receiveCard(handleSpecialCard(deck.dealCard(), player));
-            checkPlayerBust();
-            gui.updateGameState(player, dealer, gameOver, false);;
-        }
-    }
-    public boolean canPlaceBet() {
+   
+    public boolean canPlaceBet(Player currentPlayer) {
         return isGameOver() && 
                !isPaused && 
-               getPlayerBalance() > 0 && 
+               currentPlayer.getBalance() > 0 && 
                getDealerBalance() > 0;
     }
     public boolean isGameRunning() {
         return !isGameOver(); // Or whatever logic determines if game is running
-    }
-
-    public void checkPlayerBust() {
-        if (player.calculateScore() > 21) {
-            gameOver = true;
-            gui.updateGameMessage(Texts.playerBusts[language]);
-            bettingManager.dealerWins(); // Player busts, dealer wins
-        }
-    
-        /**
-         * Handles special cards when drawn.
-    //     */
-    
-    private Card handleSpecialCard(Card card, Player recipient) {
-        if (recipient != dealer) { // Special cards only affect players
-            switch (card.getType()) {
-                case BLACKJACK_BOMB:
-                    gui.updateSpecialMessage("💣 Blackjack Bomb! " + recipient.getName() + " wins instantly!");
-                    gameOver = true;
-                    break;
-                case SPLIT_ACE:
-                    gui.updateSpecialMessage("♠ Split Ace! Your score is halved.");
-                    break;
-                case JOKER_WILD:
-                    int wildValue = gui.promptJokerWildValue();
-                    card.setWildValue(wildValue);
-                    gui.updateSpecialMessage("🤡 Joker Wild! set to " + wildValue);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return card;
     }
     
         public boolean hasNextPlayer() {
@@ -305,7 +243,7 @@ public class GameManager {
         }
         
     
-        public Object startNewGame() {
+        public void startNewGame() {
             // Reset all players' hands and balances
             for (Player player : players) {
                 player.reset();
@@ -329,19 +267,19 @@ public class GameManager {
             
             // Update GUI with the new game state
             gui.updateGameMessage("Starting a new game!");
-            gui.updateGameState(players, dealer, gameOver);
+            gui.updateGameState(players, dealer, gameOver, false);
         
             // Start the first player's turn
             startNextPlayerTurn();
         
-            return null; // Placeholder return type
             // 🔍 Check if the game is over due to balance depletion
             checkGameOver();
     
             SwingUtilities.invokeLater(() -> {
                 gui.enableBetting();
-                gui.updateGameState(player, dealer, gameOver, false);
+                gui.updateGameState(players, dealer, gameOver, false);
             });
+                return;
         }
         
     
@@ -351,17 +289,11 @@ public class GameManager {
                 return false; // If no player is available
             }
             return currentPlayer.calculateScore() <= 21; // Player is still in the round if they haven't busted
-
+        }
     /*
      * Betting system.
      */
-    public boolean placeBet(int betAmount) {
-        return bettingManager.placeBet(betAmount);
-    }
 
-    public int getPlayerBalance() {
-        return bettingManager.getPlayerBalance();
-    }
     public boolean isGameOver() {
         return gameOver;
     }
@@ -378,12 +310,12 @@ public class GameManager {
         return dealer.calculateScore();
     }
 
-    public int getPlayerScore () {
-        return player.calculateScore();
+    public int getPlayerScore (Player currentPlayer) {
+        return currentPlayer.calculateScore();
     }
 
-    public int getPlayerBet (){
-        return bettingManager.getPlayerBet();
+    public int getPlayerBet (Player currentPlayer){
+        return currentPlayer.getCurrentBet();
     }
 
     
@@ -392,7 +324,7 @@ public class GameManager {
 //     */
 
 private Card handleSpecialCard(Card card, Player recipient) {
-    if (recipient == player) { // Display special messages only when the player draws them
+    if (recipient != dealer) { // Display special messages only when the player draws them
         switch (card.getType()) {
             case BLACKJACK_BOMB:
                 gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
@@ -409,7 +341,11 @@ private Card handleSpecialCard(Card card, Player recipient) {
                 break;
             default:
                 break;
+        
         }
+    }
+    return card;
+}
     
         public ArrayList<Player> getPlayers(){
             return this.players;

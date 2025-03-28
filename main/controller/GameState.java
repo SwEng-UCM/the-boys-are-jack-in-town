@@ -5,6 +5,7 @@ import java.util.List;
 
 import main.model.Card;
 import main.model.Deck;
+import main.model.Player;
 
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -34,24 +35,24 @@ public class GameState implements Serializable {
         return manager.getDealerBet();
     }
 
-    private int getPlayerScore (){
-        return manager.getPlayerScore();
+    private int getPlayerScore (Player player){
+        return player.calculateScore();
     }
 
-    private int getPlayerBalance (){
-        return manager.getPlayerBalance();
+    private int getPlayerBalance (Player player){
+        return player.getBalance();
     }
 
-    private int getPlayerBet (){
-        return manager.getPlayerBet();
+    private int getPlayerBet (Player player){
+        return player.getCurrentBet();
     }
 
-    private String getPlayerHand(){
-        return manager.getPlayerHand();
+    private List<Card> getPlayerHand(Player player){
+        return player.getHand();
     }
 
-    private String getDealerHand (){
-        return manager.getDealerHand();
+    private List<Card> getDealerHand (Player dealer){
+        return dealer.getHand();
     }
 
 

@@ -19,7 +19,7 @@ class PlayersPanel extends JPanel {
 
     public PlayersPanel() {
         setOpaque(true);
-        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Change to FlowLayout for side-by-side layout
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(34, 139, 34));
 
