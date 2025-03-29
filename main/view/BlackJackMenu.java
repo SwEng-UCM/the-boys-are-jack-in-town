@@ -237,5 +237,9 @@ public class BlackJackMenu extends JFrame {
             g2d.fillRect(0, 0, getWidth(), getHeight());
         }
     }
+    public static void main(String[] args) {
+        new BlackJackMenu().setVisible(true);
+    }
+    
 
 }
