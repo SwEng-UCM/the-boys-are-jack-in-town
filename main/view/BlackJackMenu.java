@@ -57,9 +57,18 @@ public class BlackJackMenu extends JFrame {
 
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
+        startButton.setIcon(loadIcon("img/icons/start.png", 32, 32));
+
         instructionsButton = createStyledButton(Texts.instructions[language]);
-        exitButton = createStyledButton(Texts.exit[language]);
+        instructionsButton.setIcon(loadIcon("img/icons/instructions.png", 32, 32));
+
         optionsButton = createStyledButton(Texts.options[language]);
+        optionsButton.setIcon(loadIcon("img/icons/options.png", 32, 32));
+
+        exitButton = createStyledButton(Texts.exit[language]);
+        exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
+
+
 
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
@@ -215,9 +224,30 @@ public class BlackJackMenu extends JFrame {
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(320, 80));
         button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
+        button.setHorizontalTextPosition(SwingConstants.RIGHT);
+        button.setIconTextGap(15); // space between icon and text
+
     
         return button;
     }
+
+    private ImageIcon loadIcon(String path, int width, int height) {
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+            if (is != null) {
+                BufferedImage iconImage = ImageIO.read(is);
+                Image scaledImage = iconImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            } else {
+                System.err.println("Icon not found: " + path);
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading icon: " + path + " -> " + e.getMessage());
+        }
+        return null;
+    }
+    
     
 
     public void refreshMenu() {
@@ -248,34 +278,58 @@ public class BlackJackMenu extends JFrame {
         });
         titleTimer.start();
     }
+    
     private class BackgroundPanel extends JPanel {
+        private int xOffset = 0;
+        private Timer animationTimer;
+    
         public BackgroundPanel(LayoutManager layout) {
             super(layout);
             setOpaque(false);
+            startAnimation();
+        }
+    
+        private void startAnimation() {
+            animationTimer = new Timer(30, e -> {
+                xOffset -= 1; // adjust speed here
+                if (Math.abs(xOffset) >= getWidth()) {
+                    xOffset = 0;
+                }
+                repaint();
+            });
+            animationTimer.start();
         }
     
         @Override
         protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D)g;
-            
-            // Draw background image with better quality
-            if (backgroundLoaded) {
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
-                                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+    
+            if (backgroundLoaded && backgroundImage != null) {
+                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    
+                // ✅ Draw the image twice
+                g2d.drawImage(backgroundImage, xOffset, 0, getWidth(), getHeight(), this);
+                g2d.drawImage(backgroundImage, xOffset + getWidth(), 0, getWidth(), getHeight(), this);
             } else {
-                // Create a nice gradient fallback
+                // fallback gradient
                 GradientPaint gp = new GradientPaint(0, 0, new Color(0, 100, 0),
-                              getWidth(), getHeight(), new Color(0, 60, 0));
+                        getWidth(), getHeight(), new Color(0, 60, 0));
                 g2d.setPaint(gp);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
-            
-            // Add dark overlay for better text visibility
+    
+            // overlay
             g2d.setColor(new Color(0, 0, 0, 100));
             g2d.fillRect(0, 0, getWidth(), getHeight());
+    
+            g2d.dispose();
         }
     }
+    
+    
+
+
     public static void main(String[] args) {
         new BlackJackMenu().setVisible(true);
     }
