@@ -23,7 +23,7 @@ public class AudioManager {
     public void playBackgroundMusic() {
         try {
             // Load your background music file
-            URL url = getClass().getResource("/sounds/background.wav");
+            URL url = getClass().getResource("/audio/background_sound.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioIn);
