@@ -4,6 +4,8 @@ import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
+import main.controller.BettingManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -41,6 +43,7 @@ public class BlackjackGUI extends JFrame {
     private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
+    private BettingManager bettingManager;
     private JButton pauseButton;
     private JPopupMenu pauseMenu;
     private PlayersPanel playersPanel;
@@ -53,6 +56,7 @@ public class BlackjackGUI extends JFrame {
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.bettingManager = gameManager.getBettingManager();
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -367,6 +371,7 @@ public class BlackjackGUI extends JFrame {
         try {
             int betAmount = Integer.parseInt(betField.getText());
             if (betAmount > 0 && player.placeBet(betAmount)) {
+                gameManager.getBettingManager().getPlayerBalance(player.getName());
                 setGameButtonsEnabled(true);
                 betLabel.setText("Bet: $" + betAmount);
                 balanceLabel.setText("Balance: $" + player.getBalance());
@@ -374,6 +379,8 @@ public class BlackjackGUI extends JFrame {
                 placeBetButton.setEnabled(false);
                 JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
+                dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
+                dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());            
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
