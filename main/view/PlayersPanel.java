@@ -18,9 +18,9 @@ class PlayersPanel extends JPanel {
     private int cardFontSize = gameWidth / 95;
 
     public PlayersPanel() {
-        setOpaque(true);
+        setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        //setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(34, 139, 34));
 
     }
@@ -49,7 +49,7 @@ class PlayersPanel extends JPanel {
     
             // Add spacing between players
             add(playerContainer);
-            add(Box.createHorizontalStrut(20));
+            add(Box.createHorizontalStrut(10));
         });
         revalidate();
         repaint();
@@ -63,8 +63,7 @@ class PlayersPanel extends JPanel {
             player.getCurrentBet()
         ));
         label.setFont(new Font("Arial", Font.BOLD, 14));
-        label.setBackground(new Color(34, 139, 34));
-
+        label.setForeground(Color.WHITE);
         return label;
     }
 
