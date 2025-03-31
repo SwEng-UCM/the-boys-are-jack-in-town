@@ -284,11 +284,13 @@ public class BlackjackGUI extends JFrame {
     
         // Bet panel components
         betField = new JTextField(5);
-        betField.setPreferredSize(new Dimension(300, 30));
+        betField.setPreferredSize(new Dimension(350, 40));
         betField.setMaximumSize(new Dimension(300, 30));
+        betField.setFont(new Font("Arial", Font.PLAIN, 24));
         enterBetLabel = new JLabel("Enter Bet");
-        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
         enterBetLabel.setForeground(Color.WHITE);
+        betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
     
         // Assemble bet panel
         betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10)); 
@@ -436,7 +438,7 @@ public class BlackjackGUI extends JFrame {
         pauseButton.setEnabled(true); // Always enabled
         betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
         placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
-        
+
         pauseButton.setEnabled(true);
     }
 
