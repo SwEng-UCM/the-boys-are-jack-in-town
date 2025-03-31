@@ -274,8 +274,9 @@ public class BlackjackGUI extends JFrame {
         volumeSlider.setBackground(new Color(50, 50, 50));
         
         volumeSlider.addChangeListener(e -> {
-            int volume = volumeSlider.getValue();
-            AudioManager.getInstance().setVolume(volume / 100f);
+            JSlider source = (JSlider) e.getSource();
+            float volume = source.getValue() / 100f;
+            AudioManager.getInstance().setVolume(volume);
         });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
