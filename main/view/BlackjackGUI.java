@@ -45,6 +45,8 @@ public class BlackjackGUI extends JFrame {
     private PlayersPanel playersPanel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
+    private JScrollPane scrollPane;
+
 
 
     public BlackjackGUI(GameManager gameManager) {
@@ -84,6 +86,7 @@ public class BlackjackGUI extends JFrame {
 
         // Top section (dealer area + pause button)
         JPanel topPanel = new JPanel(new BorderLayout());
+
         topPanel.setOpaque(false);
 
         JPanel dealerArea = new JPanel(new BorderLayout());
@@ -108,7 +111,8 @@ public class BlackjackGUI extends JFrame {
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
         southContainer.setPreferredSize(new Dimension(gameWidth, 300)); // Limit height
-        southContainer.setBackground(new Color(34, 139, 34));
+        southContainer.setBackground(new Color(0, 0, 0, 0)); // Transparent
+
         southContainer.setOpaque(false);
 
 
@@ -118,7 +122,8 @@ public class BlackjackGUI extends JFrame {
             300
         ));
         playersContainer.setOpaque(false);
-        playersContainer.add(playersPanel, BorderLayout.CENTER);
+        playersContainer.add(scrollPane, BorderLayout.CENTER);
+
         betPanel.setOpaque(false);
 
         southContainer.add(playersContainer, BorderLayout.CENTER);
@@ -138,16 +143,30 @@ public class BlackjackGUI extends JFrame {
         mainPanel.setLayout(new BorderLayout());
 
         playersPanel = new PlayersPanel();
+        scrollPane = new JScrollPane(playersPanel);
+
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null); // optional, removes white border
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0)); // ✅ add this
+        scrollPane.setBackground(new Color(0, 0, 0, 0));
+
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betPanel = new JPanel();
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
     
         // Set properties for main components
-        mainPanel.setBackground(new Color(34, 139, 34));
-        playersPanel.setBackground(new Color(34, 139, 34));
-        dealerPanel.setBackground(new Color(34, 139, 34));
-        betPanel.setBackground(new Color(34, 139, 34));
-        buttonPanel.setBackground(new Color(34, 139, 34));
+        mainPanel.setBackground(new Color(0, 0, 0, 0));
+        mainPanel.setOpaque(false);
+
+        playersPanel.setBackground(new Color(0, 0, 0, 0)); // ✅ Fully transparent
+
+        dealerPanel.setBackground(new Color(0, 0, 0, 0));
+        betPanel.setBackground(new Color(0, 0, 0, 0));
+        buttonPanel.setBackground(new Color(0, 0, 0, 0));
+
 
         playersPanel.setOpaque(false);
         dealerPanel.setOpaque(false);
@@ -184,7 +203,8 @@ public class BlackjackGUI extends JFrame {
         // Dealer score panel
         dealerScorePanel = new JPanel(new GridLayout(2, 1));
         dealerScorePanel.setOpaque(false);
-        dealerScorePanel.setBackground(new Color(34, 139, 34));
+        playersPanel.setBackground(new Color(0, 0, 0, 0)); // Fully transparent
+
 
         
         // Dealer labels
@@ -195,12 +215,12 @@ public class BlackjackGUI extends JFrame {
         // Assemble dealer score panel
         JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
         scoreRow.add(dealerScoreLabel);
-        scoreRow.setBackground(new Color(34, 139, 34));
+        scoreRow.setBackground(new Color(0, 0, 0, 0));
 
         JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         balanceBetRow.add(dealerBalanceLabel);
         balanceBetRow.add(dealerBetLabel);
-        balanceBetRow.setBackground(new Color(34, 139, 34));
+        balanceBetRow.setBackground(new Color(0, 0, 0, 0));
 
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
@@ -353,6 +373,8 @@ public class BlackjackGUI extends JFrame {
         playersPanel.removeAll();
         for (Player player : players) {
             JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);  // ✅ Make inner panel transparent
+
             JLabel scoreLabel = new JLabel(player.getName() + ": " + "Score: 0");
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Bet: $0");
@@ -639,10 +661,18 @@ public class BlackjackGUI extends JFrame {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayers()) {
             JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);  // ✅ Transparent player panel
+            panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg
+    
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
-            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet()); // Directly use current bet
-            
+            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());
+    
+            // ✅ White text for visibility
+            scoreLabel.setForeground(Color.WHITE);
+            balanceLabel.setForeground(Color.WHITE);
+            betLabel.setForeground(Color.WHITE);
+    
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);
@@ -651,6 +681,7 @@ public class BlackjackGUI extends JFrame {
         playersPanel.revalidate();
         playersPanel.repaint();
     }
+    
 
     private class BackgroundPanel extends JPanel {
         @Override
@@ -659,7 +690,8 @@ public class BlackjackGUI extends JFrame {
             if (backgroundLoaded && backgroundImage != null) {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             } else {
-                g.setColor(new Color(34, 139, 34)); // fallback color
+                g.setColor(new Color(20, 20, 20)); // Subtle dark fallback
+
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         }

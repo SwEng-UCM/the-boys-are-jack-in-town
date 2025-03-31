@@ -20,40 +20,38 @@ class PlayersPanel extends JPanel {
     public PlayersPanel() {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        //setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(new Color(34, 139, 34));
-
+        setBackground(new Color(0, 0, 0, 0)); // ✅ Fully transparent background
     }
+    
 
     public void updatePanel(List<Player> players) {
         removeAll();
         players.forEach(player -> {
             // Player container setup
             JPanel playerContainer = new JPanel(new BorderLayout(5, 5));
-            playerContainer.setBackground(new Color(34, 139, 34));
+            playerContainer.setOpaque(false); // ✅ Transparent
             playerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     
             // Player info section
             JPanel infoPanel = new JPanel();
+            infoPanel.setOpaque(false); // ✅ Transparent
             infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
             infoPanel.add(createPlayerLabel(player));
-            infoPanel.setBackground(new Color(34, 139, 34));
-
     
-            // Cards display using createHandArea
+            // Cards display
             JComponent handArea = createHandArea(player);
     
             // Assemble components
             playerContainer.add(infoPanel, BorderLayout.NORTH);
             playerContainer.add(handArea, BorderLayout.CENTER);
     
-            // Add spacing between players
             add(playerContainer);
             add(Box.createHorizontalStrut(10));
         });
         revalidate();
         repaint();
     }
+    
 
     private JLabel createPlayerLabel(Player player) {
         JLabel label = new JLabel(String.format(
@@ -62,10 +60,13 @@ class PlayersPanel extends JPanel {
             player.getBalance(), 
             player.getCurrentBet()
         ));
-        label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setFont(new Font("Arial", Font.BOLD, 16));
         label.setForeground(Color.WHITE);
+        label.setOpaque(false); // ✅ Just in case
         return label;
     }
+    
+    
 
     private JComponent createHandArea(Player player) {
         JPanel handPanel = new JPanel(new BorderLayout());
