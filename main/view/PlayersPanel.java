@@ -55,14 +55,15 @@ class PlayersPanel extends JPanel {
 
     private JLabel createPlayerLabel(Player player) {
         JLabel label = new JLabel(String.format(
-            "%s - $%d (Bet: $%d)", 
+            "%s - $%d (BET: $%d)", 
             player.getName(), 
             player.getBalance(), 
             player.getCurrentBet()
-        ));
-        label.setFont(new Font("Arial", Font.BOLD, 16));
+        ), SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(Color.WHITE);
         label.setOpaque(false); // ✅ Just in case
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
     
@@ -73,7 +74,7 @@ class PlayersPanel extends JPanel {
         handPanel.setOpaque(false);
     
         // Cards panel setup
-        JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         cardsPanel.setOpaque(false);
     
         // Add cards to panel
@@ -84,9 +85,9 @@ class PlayersPanel extends JPanel {
         }
     
         // Total score label
-        JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.LEFT);
+        JLabel totalLabel = new JLabel("TOTAL: " + player.calculateScore(), SwingConstants.CENTER);
         totalLabel.setForeground(Color.WHITE);
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 28));
 
     
         // Assemble hand panel
@@ -114,7 +115,7 @@ class PlayersPanel extends JPanel {
         rankLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
 
         JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, cardFontSize));
+        suitLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
 
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(rankLabel, BorderLayout.CENTER);
