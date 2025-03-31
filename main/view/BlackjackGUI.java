@@ -55,7 +55,7 @@ public class BlackjackGUI extends JFrame {
         attachEventListeners();  // FINALLY setup interactions
         
         setVisible(true);        // Make visible LAST
-        specialMessageLabel.setText("...");
+        //specialMessageLabel.setText("...");
     }
 
     private void layoutComponents() {
@@ -95,6 +95,8 @@ public class BlackjackGUI extends JFrame {
     
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.setPreferredSize(new Dimension(gameWidth, 300)); // Limit height
+
         southContainer.setBackground(new Color(34, 139, 34));
     
         JPanel playersContainer = new JPanel(new BorderLayout());
@@ -134,7 +136,7 @@ public class BlackjackGUI extends JFrame {
         betPanel.setBackground(new Color(34, 139, 34));
         buttonPanel.setBackground(new Color(34, 139, 34));
 
-
+        playersPanel.setOpaque(false);
         dealerPanel.setOpaque(false);
         buttonPanel.setOpaque(false);
     
@@ -147,8 +149,8 @@ public class BlackjackGUI extends JFrame {
         buttonWidth = (int) (screenWidth * 0.15);
         buttonHeight = (int) (screenHeight * 0.08);
         buttonFontSize = screenWidth / 60;
-        cardWidth = (int) (screenWidth * 0.10);
-        cardHeight = (int) (screenHeight * 0.22);
+        cardWidth = (int) (screenWidth * 0.09);
+        cardHeight = (int) (screenHeight * 0.19);
         cardFontSize = screenWidth / 60;
     
         // Initialize buttons
@@ -263,15 +265,16 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.add(volumePanel);
     
         // Bet panel components
-        betField = new JTextField(10);
-        betField.setPreferredSize(new Dimension(200, 50));
+        betField = new JTextField(5);
+        betField.setPreferredSize(new Dimension(300, 30));
+        betField.setMaximumSize(new Dimension(300, 30));
         enterBetLabel = new JLabel("Enter Bet");
         enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
         enterBetLabel.setForeground(Color.WHITE);
     
         // Assemble bet panel
-        betPanel.setLayout(new BoxLayout(betPanel, BoxLayout.X_AXIS));
-        betPanel.add(Box.createHorizontalGlue());
+        betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10)); 
+        //betPanel.add(Box.createHorizontalGlue());
         betPanel.add(enterBetLabel);
         betPanel.add(betField);
         betPanel.add(placeBetButton);
@@ -319,6 +322,7 @@ public class BlackjackGUI extends JFrame {
         try {
             int betAmount = Integer.parseInt(betField.getText());
             if (betAmount > 0 && player.placeBet(betAmount)) {
+                setGameButtonsEnabled(true);
                 betLabel.setText("Bet: $" + betAmount);
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
@@ -352,6 +356,10 @@ public class BlackjackGUI extends JFrame {
         gameManager.startNewGame();
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
+        setGameButtonsEnabled(true);
+        gameManager.setGameOver(false);  // Add this line
+        gameManager.resumeGame();
+
     }
 
     public void showGameOverMessage(String message) {
@@ -398,23 +406,16 @@ public class BlackjackGUI extends JFrame {
         dispose();
     }
 
-    private void setGameButtonsEnabled(boolean enabled) {
-        // Disable all game buttons when paused
-        boolean buttonsEnabled = enabled && !gameManager.isPaused();
+    public void setGameButtonsEnabled(boolean enabled) {
+        boolean gameActive = !gameManager.isGameOver() && 
+                        gameManager.getCurrentPlayer() != null &&
+                        gameManager.isCurrentPlayerStillInRound();
 
-        hitButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
-        standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
-        newGameButton.setEnabled(buttonsEnabled); // Disable when paused
-        pauseButton.setEnabled(true); // Always enabled
+        hitButton.setEnabled(enabled && gameActive);
+        standButton.setEnabled(enabled && gameActive);
+        newGameButton.setEnabled(true); // Always enabled
 
-        // Enable betting only when game is over or hasn't started AND not paused
-        boolean bettingEnabled = (gameManager.isGameOver() || 
-                               (
-                                gameManager.getDealerBalance() > 0)) && 
-                                !gameManager.isPaused();
-
-        betField.setEnabled(bettingEnabled);
-        placeBetButton.setEnabled(bettingEnabled);
+        pauseButton.setEnabled(true);
     }
 
 
@@ -610,12 +611,12 @@ public class BlackjackGUI extends JFrame {
     public void promptPlayerAction(Player player) {
         if (!gameManager.isCurrentPlayerStillInRound()) {
             nextTurn();
+            gameManager.dealerTurn();
         
         }
         else {
-            gameManager.dealerTurn();
-            hitButton.setEnabled(false);
-            standButton.setEnabled(false);
+            setGameButtonsEnabled(true); // Force refresh
+            updateGameMessage(player.getName() + "'s turn");
         }
     }
     

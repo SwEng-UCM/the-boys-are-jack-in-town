@@ -77,6 +77,7 @@ public class GameManager {
 
     public void resumeGame() {
         isPaused = false;
+        gui.setGameButtonsEnabled(true);
 
         if (gameTimer != null) {
             gameTimer.start();
@@ -236,40 +237,40 @@ public class GameManager {
     }
 
     public void startNewGame() {
+        gameOver = false; // Mark that the game is no longer over
+        isPaused = false;
+        resumeGame();
+        currentPlayerIndex = 0; // Start with the first player
+        deck.shuffle(); // Shuffle the deck for the new game
+
         // Reset all players' hands and balances
         for (Player player : players) {
             player.reset();
+            player.receiveCard(deck.dealCard());
+            player.receiveCard(deck.dealCard());
         }
+
         dealer.reset(); // Reset dealer's hand
-        deck.shuffle(); // Shuffle the deck for the new game
         bettingManager.resetAllBets(); // Reset the bets
 
-        currentPlayerIndex = 0; // Start with the first player
-        gameOver = false; // Mark that the game is no longer over
-
-        // Deal new cards to players and dealer
-        for (Player player : players) {
-            player.receiveCard(deck.dealCard());
-            player.receiveCard(deck.dealCard());
-        }
-
+        //resumeGame();
+    
         // Dealer receives one face-up and one face-down card
         dealer.receiveCard(deck.dealCard()); // Visible card
-        gui.updateGameMessage("Dealer has a hidden card.");
+        //gui.updateGameMessage("Dealer has a hidden card.");
 
         // Update GUI with the new game state
         gui.updateGameMessage("Starting a new game!");
-        gui.updateGameState(players, dealer, gameOver, false);
+        gui.updateGameState(players, dealer, false, false);
 
-        // Start the first player's turn
-        startNextPlayerTurn();
 
         // 🔍 Check if the game is over due to balance depletion
-        checkGameOver();
+        //checkGameOver();
 
         SwingUtilities.invokeLater(() -> {
             gui.enableBetting();
-            gui.updateGameState(players, dealer, gameOver, false);
+            gui.setGameButtonsEnabled(true);
+            startNextPlayerTurn(); // Start the first player's turn
         });
         return;
     }
@@ -340,6 +341,10 @@ public class GameManager {
 
     public ArrayList<Player> getPlayers() {
         return this.players;
+    }
+
+    public void setGameOver(boolean b) {
+        this.gameOver = b;
     }
 
 }
