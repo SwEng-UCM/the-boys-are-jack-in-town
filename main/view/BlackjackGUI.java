@@ -434,7 +434,9 @@ public class BlackjackGUI extends JFrame {
         standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
         newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
-
+        betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        
         pauseButton.setEnabled(true);
     }
 
