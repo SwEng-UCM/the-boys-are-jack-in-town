@@ -75,7 +75,7 @@ public class BlackjackGUI extends JFrame {
         attachEventListeners();  // FINALLY setup interactions
         
         setVisible(true);        // Make visible LAST
-        //specialMessageLabel.setText("...");
+        AudioManager.getInstance().playBackgroundMusic();
     }
 
     private void layoutComponents() {

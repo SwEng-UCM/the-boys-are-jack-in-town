@@ -7,7 +7,7 @@ import java.net.URL;
 public class AudioManager {
     private static AudioManager instance;
     private Clip backgroundMusic;
-    private float currentVolume = 0.5f; // Default volume (50%)
+    private float currentVolume = 0.1f; // Default volume (10%)
     
     private AudioManager() {
         // Private constructor for singleton
