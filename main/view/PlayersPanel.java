@@ -10,6 +10,18 @@ import java.util.List;
 
                           
 class PlayersPanel extends JPanel {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Always call super first
+        Graphics2D g2d = (Graphics2D) g.create();
+        Color transparent = new Color(0, 0, 0, 0);
+        Color darkGreen = new Color(0, 100, 0, 180);
+        GradientPaint gp = new GradientPaint(0, 0, darkGreen, getWidth(), getHeight(), transparent);
+        g2d.setPaint(gp);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
+    }
+
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int gameHeight = (int) screenSize.getHeight();
     private int gameWidth = (int)screenSize.getWidth();
@@ -54,17 +66,18 @@ class PlayersPanel extends JPanel {
     
 
     private JLabel createPlayerLabel(Player player) {
-        JLabel label = new JLabel(String.format(
-            "%s - $%d (Bet: $%d)", 
-            player.getName(), 
-            player.getBalance(), 
-            player.getCurrentBet()
-        ));
-        label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setForeground(Color.WHITE);
-        label.setOpaque(false); // ✅ Just in case
+        JLabel label = new JLabel(
+            String.format("%s - $%d (Bet: $%d)", player.getName(), player.getBalance(), player.getCurrentBet())
+        );
+        label.setFont(new Font("Arial", Font.BOLD, 24)); 
+        label.setForeground(Color.WHITE);                
+        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        label.setOpaque(false);                          
         return label;
     }
+    
+    
+    
     
     
 
