@@ -22,6 +22,7 @@ import javax.swing.event.PopupMenuEvent;
  import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static main.view.BlackJackMenu.language;
 
@@ -45,6 +46,9 @@ public class BlackjackGUI extends JFrame {
     private PlayersPanel playersPanel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
+
+    private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
+    private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
 
 
     public BlackjackGUI(GameManager gameManager) {
@@ -340,6 +344,25 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
+    public void updatePlayerBalanceAndBet(Player player) {
+        JLabel balanceLabel = playerBalanceLabels.get(player);
+        JLabel betLabel = playerBetLabels.get(player);
+    
+        if (balanceLabel != null) {
+            balanceLabel.setText("Balance: $" + player.getBalance());
+            balanceLabel.revalidate();
+            balanceLabel.repaint();
+        }
+    
+        if (betLabel != null) {
+            betLabel.setText("Bet: $" + player.getCurrentBet());
+            betLabel.revalidate();
+            betLabel.repaint();
+        }
+    }
+    
+    
+
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
@@ -350,6 +373,8 @@ public class BlackjackGUI extends JFrame {
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
                 JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
+                placeBetButton.setEnabled(false);
+                playersPanel.updatePanel(gameManager.getPlayers());            
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -360,11 +385,15 @@ public class BlackjackGUI extends JFrame {
 
     public void setPlayers(ArrayList<Player> players) {
         playersPanel.removeAll();
+        
         for (Player player : players) {
             JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);
             JLabel scoreLabel = new JLabel(player.getName() + ": " + "Score: 0");
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Bet: $0");
+            playerBalanceLabels.put(player, balanceLabel);
+playerBetLabels.put(player, betLabel);
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);
@@ -445,7 +474,6 @@ public class BlackjackGUI extends JFrame {
 
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
-        System.out.println("enableBetting() called");
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
@@ -497,7 +525,6 @@ public class BlackjackGUI extends JFrame {
 
 
     private void nextTurn() {
-        System.out.println("nextTurn() called");
         if (gameManager.hasNextPlayer()) {
             gameManager.startNextPlayerTurn();
             updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
