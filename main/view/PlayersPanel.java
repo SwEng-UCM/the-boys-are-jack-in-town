@@ -72,10 +72,10 @@ class PlayersPanel extends JPanel {
             player.getBalance(), 
             player.getCurrentBet()
         ), SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 30));
+        label.setFont(new Font("Arial", Font.BOLD, 26));
         label.setForeground(Color.WHITE);
         label.setOpaque(false); // ✅ Just in case
-        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
@@ -98,7 +98,7 @@ class PlayersPanel extends JPanel {
         // Total score label
         JLabel totalLabel = new JLabel("TOTAL: " + player.calculateScore(), SwingConstants.CENTER);
         totalLabel.setForeground(Color.WHITE);
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 26));
 
     
         // Assemble hand panel
@@ -107,7 +107,7 @@ class PlayersPanel extends JPanel {
     
         // Scroll pane configuration
         JScrollPane scrollPane = new JScrollPane(handPanel);
-        scrollPane.setPreferredSize(new Dimension(gameWidth/2, cardHeight + 50));
+        scrollPane.setPreferredSize(new Dimension(gameWidth/2, cardHeight + 60));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
