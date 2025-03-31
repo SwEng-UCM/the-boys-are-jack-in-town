@@ -94,7 +94,6 @@ public class BlackjackGUI extends JFrame {
 
         // Top section (dealer area + pause button)
         JPanel topPanel = new JPanel(new BorderLayout());
-
         topPanel.setOpaque(false);
 
         JPanel dealerArea = new JPanel(new BorderLayout());
@@ -231,7 +230,7 @@ public class BlackjackGUI extends JFrame {
         JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         balanceBetRow.add(dealerBalanceLabel);
         balanceBetRow.add(dealerBetLabel);
-        balanceBetRow.setBackground(new Color(0, 0, 0, 0));
+        balanceBetRow.setOpaque(false);
 
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
@@ -730,7 +729,6 @@ playerBetLabels.put(player, betLabel);
         playersPanel.revalidate();
         playersPanel.repaint();
     }
-    
 
     private class BackgroundPanel extends JPanel {
         @Override
