@@ -45,8 +45,8 @@ public class GameManager {
         this.gameOver = false;
         this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // Initial balance
         this.currentPlayerIndex = 0;
-        players.add(new Player("Player 1", INITIAL_BET)); // At least one player
-        players.add(new Player("Player 2", INITIAL_BET)); // At least one player
+        players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
+        players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
 
     }
 

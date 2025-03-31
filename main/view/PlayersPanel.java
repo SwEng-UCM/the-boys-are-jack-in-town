@@ -10,6 +10,18 @@ import java.util.List;
 
                           
 class PlayersPanel extends JPanel {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Always call super first
+        Graphics2D g2d = (Graphics2D) g.create();
+        Color transparent = new Color(0, 0, 0, 0);
+        Color darkGreen = new Color(0, 100, 0, 180);
+        GradientPaint gp = new GradientPaint(0, 0, darkGreen, getWidth(), getHeight(), transparent);
+        g2d.setPaint(gp);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
+    }
+
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int gameHeight = (int) screenSize.getHeight();
     private int gameWidth = (int)screenSize.getWidth();
@@ -20,50 +32,51 @@ class PlayersPanel extends JPanel {
     public PlayersPanel() {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        //setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(new Color(34, 139, 34));
-
+        setBackground(new Color(0, 0, 0, 0)); // ✅ Fully transparent background
     }
+    
 
     public void updatePanel(List<Player> players) {
         removeAll();
         players.forEach(player -> {
             // Player container setup
             JPanel playerContainer = new JPanel(new BorderLayout(5, 5));
-            playerContainer.setBackground(new Color(34, 139, 34));
+            playerContainer.setOpaque(false); // ✅ Transparent
             playerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     
             // Player info section
             JPanel infoPanel = new JPanel();
+            infoPanel.setOpaque(false); // ✅ Transparent
             infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
             infoPanel.add(createPlayerLabel(player));
-            infoPanel.setBackground(new Color(34, 139, 34));
-
     
-            // Cards display using createHandArea
+            // Cards display
             JComponent handArea = createHandArea(player);
     
             // Assemble components
             playerContainer.add(infoPanel, BorderLayout.NORTH);
             playerContainer.add(handArea, BorderLayout.CENTER);
     
-            // Add spacing between players
             add(playerContainer);
             add(Box.createHorizontalStrut(10));
         });
         revalidate();
         repaint();
     }
+    
 
     private JLabel createPlayerLabel(Player player) {
         JLabel label = new JLabel(String.format(
-            "%s - $%d (Bet: $%d)", 
+            "%s - $%d (BET: $%d)", 
             player.getName(), 
             player.getBalance(), 
             player.getCurrentBet()
-        ));
-        label.setFont(new Font("Arial", Font.BOLD, 14));
+        ), SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 26));
         label.setForeground(Color.WHITE);
+        label.setOpaque(false); // ✅ Just in case
+        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
 
@@ -72,7 +85,7 @@ class PlayersPanel extends JPanel {
         handPanel.setOpaque(false);
     
         // Cards panel setup
-        JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         cardsPanel.setOpaque(false);
     
         // Add cards to panel
@@ -83,9 +96,9 @@ class PlayersPanel extends JPanel {
         }
     
         // Total score label
-        JLabel totalLabel = new JLabel("Total: " + player.calculateScore(), SwingConstants.LEFT);
+        JLabel totalLabel = new JLabel("TOTAL: " + player.calculateScore(), SwingConstants.CENTER);
         totalLabel.setForeground(Color.WHITE);
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 26));
 
     
         // Assemble hand panel
@@ -94,7 +107,7 @@ class PlayersPanel extends JPanel {
     
         // Scroll pane configuration
         JScrollPane scrollPane = new JScrollPane(handPanel);
-        scrollPane.setPreferredSize(new Dimension(gameWidth/2, cardHeight + 50));
+        scrollPane.setPreferredSize(new Dimension(gameWidth/2, cardHeight + 60));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
@@ -113,7 +126,7 @@ class PlayersPanel extends JPanel {
         rankLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
 
         JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, cardFontSize));
+        suitLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
 
         cardPanel.setLayout(new BorderLayout());
         cardPanel.add(rankLabel, BorderLayout.CENTER);
