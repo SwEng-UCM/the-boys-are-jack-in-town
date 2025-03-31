@@ -54,17 +54,18 @@ class PlayersPanel extends JPanel {
     
 
     private JLabel createPlayerLabel(Player player) {
-        JLabel label = new JLabel(String.format(
-            "%s - $%d (Bet: $%d)", 
-            player.getName(), 
-            player.getBalance(), 
-            player.getCurrentBet()
-        ));
-        label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setForeground(Color.WHITE);
-        label.setOpaque(false); // ✅ Just in case
+        JLabel label = new JLabel(
+            String.format("%s - $%d (Bet: $%d)", player.getName(), player.getBalance(), player.getCurrentBet())
+        );
+        label.setFont(new Font("Arial", Font.BOLD, 24)); 
+        label.setForeground(Color.WHITE);                
+        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        label.setOpaque(false);                          
         return label;
     }
+    
+    
+    
     
     
 
