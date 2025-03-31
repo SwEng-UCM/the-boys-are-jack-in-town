@@ -4,6 +4,8 @@ import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
+import main.controller.BettingManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -22,6 +24,7 @@ import javax.swing.event.PopupMenuEvent;
  import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static main.view.BlackJackMenu.language;
 
@@ -40,6 +43,7 @@ public class BlackjackGUI extends JFrame {
     private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
+    private BettingManager bettingManager;
     private JButton pauseButton;
     private JPopupMenu pauseMenu;
     private PlayersPanel playersPanel;
@@ -48,9 +52,13 @@ public class BlackjackGUI extends JFrame {
     private JScrollPane scrollPane;
 
 
+    private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
+    private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
+
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.bettingManager = gameManager.getBettingManager();
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +85,7 @@ public class BlackjackGUI extends JFrame {
         attachEventListeners();  // FINALLY setup interactions
         
         setVisible(true);        // Make visible LAST
-        //specialMessageLabel.setText("...");
+        AudioManager.getInstance().playBackgroundMusic();
     }
 
     private void layoutComponents() {
@@ -86,7 +94,6 @@ public class BlackjackGUI extends JFrame {
 
         // Top section (dealer area + pause button)
         JPanel topPanel = new JPanel(new BorderLayout());
-
         topPanel.setOpaque(false);
 
         JPanel dealerArea = new JPanel(new BorderLayout());
@@ -110,7 +117,7 @@ public class BlackjackGUI extends JFrame {
 
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
-        southContainer.setPreferredSize(new Dimension(gameWidth, 300)); // Limit height
+        southContainer.setPreferredSize(new Dimension(gameWidth, 350)); // Limit height
         southContainer.setBackground(new Color(0, 0, 0, 0)); // Transparent
 
         southContainer.setOpaque(false);
@@ -156,7 +163,10 @@ public class BlackjackGUI extends JFrame {
         dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betPanel = new JPanel();
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-    
+        betLabel = createStyledLabel(Texts.bet[language] + " $0");
+        balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        
+
         // Set properties for main components
         mainPanel.setBackground(new Color(0, 0, 0, 0));
         mainPanel.setOpaque(false);
@@ -220,15 +230,17 @@ public class BlackjackGUI extends JFrame {
         JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         balanceBetRow.add(dealerBalanceLabel);
         balanceBetRow.add(dealerBetLabel);
-        balanceBetRow.setBackground(new Color(0, 0, 0, 0));
+        balanceBetRow.setOpaque(false);
 
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
     
         // Pause button setup
-        pauseButton = new JButton("☰");
-        pauseButton.setFont(new Font("Arial", Font.BOLD, 36));
-        pauseButton.setForeground(Color.WHITE);
+        pauseButton = new JButton();
+        pauseButton.setPreferredSize(new Dimension(50, 50));
+        ImageIcon pauseIcon = new ImageIcon("img/icons/pause.png"); // Ensure the file path is correct
+        Image scaledPauseIcon = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+        pauseButton.setIcon(new ImageIcon(scaledPauseIcon)); // Set the scaled icon
         pauseButton.setBackground(new Color(255, 165, 0));
         pauseButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         pauseButton.setContentAreaFilled(false);
@@ -281,8 +293,9 @@ public class BlackjackGUI extends JFrame {
         volumeSlider.setBackground(new Color(50, 50, 50));
         
         volumeSlider.addChangeListener(e -> {
-            int volume = volumeSlider.getValue();
-            AudioManager.getInstance().setVolume(volume / 100f);
+            JSlider source = (JSlider) e.getSource();
+            float volume = source.getValue() / 100f;
+            AudioManager.getInstance().setVolume(volume);
         });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
@@ -299,11 +312,13 @@ public class BlackjackGUI extends JFrame {
     
         // Bet panel components
         betField = new JTextField(5);
-        betField.setPreferredSize(new Dimension(300, 30));
+        betField.setPreferredSize(new Dimension(350, 40));
         betField.setMaximumSize(new Dimension(300, 30));
+        betField.setFont(new Font("Arial", Font.PLAIN, 24));
         enterBetLabel = new JLabel("Enter Bet");
-        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
         enterBetLabel.setForeground(Color.WHITE);
+        betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
     
         // Assemble bet panel
         betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10)); 
@@ -312,6 +327,8 @@ public class BlackjackGUI extends JFrame {
         betPanel.add(betField);
         betPanel.add(placeBetButton);
         betPanel.add(Box.createHorizontalGlue());
+        betPanel.add(betLabel);
+        betPanel.add(balanceLabel);
     
         // Assemble button panel
         buttonPanel.add(hitButton);
@@ -351,16 +368,40 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
+    public void updatePlayerBalanceAndBet(Player player) {
+        JLabel balanceLabel = playerBalanceLabels.get(player);
+        JLabel betLabel = playerBetLabels.get(player);
+    
+        if (balanceLabel != null) {
+            balanceLabel.setText("Balance: $" + player.getBalance());
+            balanceLabel.revalidate();
+            balanceLabel.repaint();
+        }
+    
+        if (betLabel != null) {
+            betLabel.setText("Bet: $" + player.getCurrentBet());
+            betLabel.revalidate();
+            betLabel.repaint();
+        }
+    }
+    
+    
+
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
             if (betAmount > 0 && player.placeBet(betAmount)) {
+                gameManager.getBettingManager().getPlayerBalance(player.getName());
                 setGameButtonsEnabled(true);
                 betLabel.setText("Bet: $" + betAmount);
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
                 JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
+                placeBetButton.setEnabled(false);
+                dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
+                dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
+                playersPanel.updatePanel(gameManager.getPlayers());            
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -371,13 +412,15 @@ public class BlackjackGUI extends JFrame {
 
     public void setPlayers(ArrayList<Player> players) {
         playersPanel.removeAll();
+        
         for (Player player : players) {
             JPanel panel = new JPanel(new BorderLayout());
-            panel.setOpaque(false);  // ✅ Make inner panel transparent
-
+            panel.setOpaque(false);
             JLabel scoreLabel = new JLabel(player.getName() + ": " + "Score: 0");
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Bet: $0");
+            playerBalanceLabels.put(player, balanceLabel);
+playerBetLabels.put(player, betLabel);
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);
@@ -449,6 +492,8 @@ public class BlackjackGUI extends JFrame {
         standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
         newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
+        betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
 
         pauseButton.setEnabled(true);
     }
@@ -460,7 +505,7 @@ public class BlackjackGUI extends JFrame {
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
         betLabel.setText(Texts.bet[language] + " $0");
-        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(null));
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
 
@@ -507,10 +552,10 @@ public class BlackjackGUI extends JFrame {
 
 
     private void nextTurn() {
-
         if (gameManager.hasNextPlayer()) {
             gameManager.startNextPlayerTurn();
             updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
+            enableBetting();
         } else {
             gameManager.dealerTurn();
         }
@@ -645,13 +690,16 @@ public class BlackjackGUI extends JFrame {
  
     public void promptPlayerAction(Player player) {
         if (!gameManager.isCurrentPlayerStillInRound()) {
-            nextTurn();
-            gameManager.dealerTurn();
-        
+            if (gameManager.hasNextPlayer()) {
+                nextTurn();  // Triggers betting for next player
+            } else {
+                gameManager.dealerTurn();  // Only run dealer turn if no players left
+            }
         }
         else {
             setGameButtonsEnabled(true); // Force refresh
             updateGameMessage(player.getName() + "'s turn");
+            enableBetting();
         }
     }
 
@@ -681,7 +729,6 @@ public class BlackjackGUI extends JFrame {
         playersPanel.revalidate();
         playersPanel.repaint();
     }
-    
 
     private class BackgroundPanel extends JPanel {
         @Override

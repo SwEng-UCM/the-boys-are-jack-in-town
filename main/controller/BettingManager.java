@@ -60,14 +60,14 @@ public class BettingManager {
         playerBalances.put(playerName, playerBalances.get(playerName) + bet + dealerBet);
         resetPlayerBet(playerName);
     }
-
+    
     /**
      * Dealer wins, so the dealer collects the player's bets.
      * @param playerName The losing player's name.
      */
     public void dealerWins(String playerName) {
         int bet = playerBets.getOrDefault(playerName, 0);
-        dealerBalance += dealerBet + bet;
+        dealerBalance += bet;
         resetPlayerBet(playerName);
     }
 

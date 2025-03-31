@@ -58,6 +58,11 @@ public class GameManager {
         return instance;
     }
 
+    public BettingManager getBettingManager() {
+        return bettingManager;
+    }
+    
+
     public void setGui(BlackjackGUI gui) {
         this.gui = gui;
     }
@@ -99,6 +104,10 @@ public class GameManager {
     public void startNextPlayerTurn() {
         if (currentPlayerIndex < players.size()) {
             gui.promptPlayerAction(players.get(currentPlayerIndex));
+        if (currentPlayerIndex == 0) {
+            int dealerBet = bettingManager.getDealerBalance() / 10;
+            bettingManager.placeDealerBet(dealerBet);
+        }
         } else {
             dealerTurn();
         }
@@ -165,6 +174,7 @@ public class GameManager {
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
+                    bettingManager.dealerWins(player.getName());
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();

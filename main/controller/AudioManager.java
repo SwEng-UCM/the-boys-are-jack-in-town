@@ -7,7 +7,7 @@ import java.net.URL;
 public class AudioManager {
     private static AudioManager instance;
     private Clip backgroundMusic;
-    private float currentVolume = 0.5f; // Default volume (50%)
+    private float currentVolume = 0.1f; // Default volume (10%)
     
     private AudioManager() {
         // Private constructor for singleton
@@ -22,8 +22,12 @@ public class AudioManager {
     
     public void playBackgroundMusic() {
         try {
+            if (backgroundMusic != null && backgroundMusic.isActive()) {
+                // Already playing, don't restart
+                return;
+            }
             // Load your background music file
-            URL url = getClass().getResource("/sounds/background.wav");
+            URL url = getClass().getResource("/sounds/videoplayback.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioIn);
