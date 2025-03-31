@@ -619,6 +619,23 @@ public class BlackjackGUI extends JFrame {
             updateGameMessage(player.getName() + "'s turn");
         }
     }
+
+    public void updatePlayerPanels() {
+        playersPanel.removeAll();
+        for (Player player : gameManager.getPlayers()) {
+            JPanel panel = new JPanel(new BorderLayout());
+            JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
+            JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
+            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet()); // Directly use current bet
+            
+            panel.add(scoreLabel, BorderLayout.NORTH);
+            panel.add(balanceLabel, BorderLayout.CENTER);
+            panel.add(betLabel, BorderLayout.SOUTH);
+            playersPanel.add(panel);
+        }
+        playersPanel.revalidate();
+        playersPanel.repaint();
+    }
     
     
 }

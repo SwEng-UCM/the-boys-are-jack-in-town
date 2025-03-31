@@ -169,8 +169,9 @@ public class GameManager {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();
                 }
-            }
 
+            }
+            gui.updatePlayerPanels();
             gameOver = true;
             checkGameOver();
             SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
