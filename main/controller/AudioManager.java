@@ -22,6 +22,10 @@ public class AudioManager {
     
     public void playBackgroundMusic() {
         try {
+            if (backgroundMusic != null && backgroundMusic.isActive()) {
+                // Already playing, don't restart
+                return;
+            }
             // Load your background music file
             URL url = getClass().getResource("/sounds/videoplayback.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
