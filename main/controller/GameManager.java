@@ -12,8 +12,6 @@ import static main.view.BlackJackMenu.language;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
-import java.io.File;
-import java.util.List;
 
 /*
  * Singleton class.
@@ -38,10 +36,7 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
-    private GameStateManager gameStateManager = new GameStateManager();
-    private GameState gameState;
     private int currentPlayerIndex;
-
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -66,7 +61,7 @@ public class GameManager {
     public BettingManager getBettingManager() {
         return bettingManager;
     }
-    
+
 
     public void setGui(BlackjackGUI gui) {
         this.gui = gui;
@@ -85,32 +80,9 @@ public class GameManager {
         return isPaused;
     }
 
-    public void startNewGame() {
-        // check if a file has been provided
-        if(gameState != null){
-            System.out.println(">>>>>>>>>>>>>>>>>"+gameState.toString());
-        }
-
-        // 🔍 Check if player or dealer has a balance of 0 or less
-        if (bettingManager.getPlayerBalance() <= 0) {
-            gui.showGameOverMessage("Game Over! You ran out of money! 😢");
-            return;
-        }
-        if (bettingManager.getDealerBalance() <= 0) {
-            gui.showGameOverMessage("Congratulations! The dealer ran out of money! 🎉");
-            return;
-        }
-    
-        // Reset hands and deck for a new game
-        player.reset();
-        dealer.reset();
-        deck = new Deck();
-        gameOver = false;
-
     public void resumeGame() {
         isPaused = false;
         gui.setGameButtonsEnabled(true);
-
 
         if (gameTimer != null) {
             gameTimer.start();
@@ -132,10 +104,10 @@ public class GameManager {
     public void startNextPlayerTurn() {
         if (currentPlayerIndex < players.size()) {
             gui.promptPlayerAction(players.get(currentPlayerIndex));
-        if (currentPlayerIndex == 0) {
-            int dealerBet = bettingManager.getDealerBalance() / 10;
-            bettingManager.placeDealerBet(dealerBet);
-        }
+            if (currentPlayerIndex == 0) {
+                int dealerBet = bettingManager.getDealerBalance() / 10;
+                bettingManager.placeDealerBet(dealerBet);
+            }
         } else {
             dealerTurn();
         }
@@ -293,7 +265,7 @@ public class GameManager {
         bettingManager.resetAllBets(); // Reset the bets
 
         //resumeGame();
-    
+
         // Dealer receives one face-up and one face-down card
         dealer.receiveCard(deck.dealCard()); // Visible card
         //gui.updateGameMessage("Dealer has a hidden card.");
@@ -349,17 +321,6 @@ public class GameManager {
         return currentPlayer.getCurrentBet();
     }
 
-    public List<Card> getPlayerHandList(){
-        return player.getHand();
-    }
-
-    public List<Card> getDealerHandList(){
-        return dealer.getHand();
-    }
-
-    public Deck getDeck() {
-        return deck;
-    }
 
 
     /**
@@ -396,6 +357,14 @@ public class GameManager {
     }
 
     public void setGameOver(boolean b) {
-        this.gameOver = b;
+        this.gameOver=b;
+    }
+
+    public Deck getDeck() {
+        return this.deck;
+    }
+
+    public Player getDealer() {
+        return this.dealer;
     }
 }
