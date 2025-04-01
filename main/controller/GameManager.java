@@ -171,10 +171,16 @@ public class GameManager {
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
                     gui.updateGameMessage(player.getName() + " wins! 🎉");
                     player.winBet(player.getCurrentBet() * 2);
+                    AchievementManager.getInstance().resetDealerWinStreak();
+                    AchievementManager.getInstance().trackPlayerWin(player);
+                    if (player.getCurrentBet() * 2 >= 1000) {
+                        AchievementManager.getInstance().trackBigWin(player, player.getCurrentBet() * 2);
+                    }
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
+                    AchievementManager.getInstance().trackDealerWin();
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();
@@ -185,6 +191,7 @@ public class GameManager {
             gameOver = true;
             checkGameOver();
             SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
+            AchievementManager am = AchievementManager.getInstance();
         }
     }
 
@@ -269,6 +276,8 @@ public class GameManager {
         // Dealer receives one face-up and one face-down card
         dealer.receiveCard(deck.dealCard()); // Visible card
         //gui.updateGameMessage("Dealer has a hidden card.");
+
+        AchievementManager.getInstance().trackMultiplayerGame(players);
 
         // Update GUI with the new game state
         gui.updateGameMessage("Starting a new game!");

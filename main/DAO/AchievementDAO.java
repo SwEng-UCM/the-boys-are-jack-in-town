@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+// WARNING!! We aren't using it rn - the logic is in the A.Manager but can integrate with a database later
+
+
 /*
  * DAO class is fetching the data from the database and returning it to the controller.
  * It is also responsible for updating the database with the data from the controller.

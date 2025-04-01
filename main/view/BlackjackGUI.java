@@ -111,11 +111,11 @@ public class BlackjackGUI extends JFrame {
 
         // Load your icon
         ImageIcon achievementIcon = new ImageIcon("img/icons/achievement.png");
-        Image scaledIcon = achievementIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        Image scaledIcon = achievementIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         achievementButton.setIcon(new ImageIcon(scaledIcon));
 
         achievementButton.addActionListener(e -> {
-            new AchievementsWindow(1).setVisible(true); // Replace 1 with dynamic userId later
+            new AchievementsWindow().setVisible(true);
         });
 
         topLeftPanel.add(achievementButton);
