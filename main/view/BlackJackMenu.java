@@ -116,7 +116,6 @@ public class BlackJackMenu extends JFrame {
 
         optionsButton.addActionListener(e -> {
             new OptionsPanel(this).setVisible(true);
-            // add option logic
         });
 
         loadGameButton.addActionListener(e -> {

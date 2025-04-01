@@ -68,7 +68,9 @@ public class GameManager {
 
     public void startNewGame() {
         // check if a file has been provided
-
+        if(gameState != null){
+            System.out.println(">>>>>>>>>>>>>>>>>"+gameState.toString());
+        }
 
         // 🔍 Check if player or dealer has a balance of 0 or less
         if (bettingManager.getPlayerBalance() <= 0) {
