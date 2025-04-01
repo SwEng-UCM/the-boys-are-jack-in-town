@@ -10,6 +10,7 @@ public class Card {
 
     private final String suit;
     private final String rank;
+    @SuppressWarnings("unused")
     private final boolean hidden;
     private final CardType type;
     private int wildValue; // Dynamic value for Joker Wild

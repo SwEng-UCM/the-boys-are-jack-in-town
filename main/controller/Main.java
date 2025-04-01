@@ -2,6 +2,7 @@ package main.controller;
 
 import main.view.BlackJackMenu;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -12,6 +13,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             BlackJackMenu menu = new BlackJackMenu();
             menu.setVisible(true);
+            AudioManager.getInstance().playBackgroundMusic();
         });
     }
 }

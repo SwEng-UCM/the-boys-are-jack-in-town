@@ -1,368 +1,574 @@
 package main.view;
 
-import main.controller.BettingManager;
 import main.controller.GameManager;
 import main.model.Card;
 import main.model.Player;
+import main.controller.AudioManager;
+import main.controller.BettingManager;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static main.view.BlackJackMenu.language;
 
-/**
- * The BlackjackGUI class represents the graphical user interface for the Blackjack game.
- * It displays the game state, player actions, and messages to the user.
- */
 public class BlackjackGUI extends JFrame {
-    private JPanel mainPanel, dealerPanel, playerPanel, buttonPanel, dealerScorePanel, playerScorePanel, betPanel;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private int gameHeight = (int) screenSize.getHeight();
+    private int gameWidth = (int)screenSize.getWidth();
+    private int buttonWidth = (int) (gameWidth * 0.15);
+    private int buttonHeight = (int) (gameHeight * 0.08);
+    private int buttonFontSize = gameWidth / 60;
+    private int cardWidth = (int) (gameWidth * 0.10);
+    private int cardHeight = (int) (gameHeight * 0.22);
+    private int cardFontSize = gameWidth / 60;
+    private JPanel mainPanel, dealerPanel, dealerScorePanel, buttonPanel, betPanel;
     private JButton hitButton, standButton, newGameButton, placeBetButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, playerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
+    private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
     private GameManager gameManager;
+    private BettingManager bettingManager;
+    private JButton pauseButton;
+    private JPopupMenu pauseMenu;
+    private PlayersPanel playersPanel;
+    private BufferedImage backgroundImage;
+    private boolean backgroundLoaded = false;
+    private JScrollPane scrollPane;
 
-    private int buttonHeight, buttonWidth, buttonFontSize, cardHeight, cardWidth, cardFontSize;
+
+    private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
+    private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
+
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
-        gameManager.setGui(this);
-
+        this.bettingManager = gameManager.getBettingManager();
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setLayout(new BorderLayout());
 
-        // Custom image icon
+
+        try {
+            backgroundImage = ImageIO.read(getClass().getResource("/img/backgroundimage.png"));
+            backgroundLoaded = true;
+        } catch (IOException e) {
+            System.err.println("Error loading background image: " + e.getMessage());
+            backgroundLoaded = false;
+        }
+        
+        gameManager.setGui(this);
+    
         ImageIcon icon = new ImageIcon("img/black.png");
         setIconImage(icon.getImage());
-
-        initializeComponents();
-        layoutComponents();
-        attachEventListeners();
-
-        specialMessageLabel.setText("...");
-    }
-
-    private void initializeComponents() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = screenSize.width;
-        int screenHeight = screenSize.height;
-
-        buttonWidth = (int) (screenWidth * 0.15);
-        buttonHeight = (int) (screenHeight * 0.08);
-        buttonFontSize = screenWidth / 60;
-
-        cardWidth = (int) (screenWidth * 0.10);
-        cardHeight = (int) (screenHeight * 0.22);
-        cardFontSize = screenWidth / 60;
-
-
-        mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(34, 139, 34)); // Casino table green
-
-        hitButton = createStyledButton(Texts.guiHit[language]);
-        standButton = createStyledButton(Texts.guiStand[language]);
-        newGameButton = createStyledButton(Texts.guiNewGame[language]);
-        placeBetButton = createStyledButton(Texts.placeBet[language]);
-
-        gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
-        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 26));
-        gameMessageLabel.setForeground(Color.WHITE);
-
-        specialMessageLabel = new JLabel("", SwingConstants.CENTER);
-        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 32));
-        specialMessageLabel.setForeground(Color.WHITE);
-
-        dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
-        playerScoreLabel = createStyledLabel(Texts.guiPlayerScore[language]);
-        balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
-        betLabel = createStyledLabel(Texts.bet[language] + " $0");
-
-        betField = new JTextField(10);
-        betField.setPreferredSize(new Dimension(200, 50));
-
-        // Initialize Panels
-        dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        dealerPanel.setOpaque(false);
-
-        playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        playerPanel.setOpaque(false);
-
-        dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
-        dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0"); 
-        
-        // Use GridLayout for dealerScorePanel to place score on the first line and balance/bet on the second line
-        dealerScorePanel = new JPanel(new GridLayout(2, 1)); // 2 rows, 1 column
-        dealerScorePanel.setOpaque(false);
-
-            // First row: Dealer score
-    JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    scoreRow.setOpaque(false);
-    scoreRow.add(dealerScoreLabel);
-
-    // Second row: Dealer balance and bet
-    JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0)); // 20px horizontal gap
-    balanceBetRow.setOpaque(false);
-    balanceBetRow.add(dealerBalanceLabel);
-    balanceBetRow.add(dealerBetLabel);
-
-    // Add rows to dealerScorePanel
-    dealerScorePanel.add(scoreRow);
-    dealerScorePanel.add(balanceBetRow);
     
-        playerScorePanel = new JPanel();
-        playerScorePanel.setOpaque(false);
-        playerScorePanel.add(playerScoreLabel);
-
-        playerScorePanel = new JPanel();
-        playerScorePanel.setOpaque(false);
-        playerScorePanel.add(playerScoreLabel);
-
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        buttonPanel.setOpaque(false);
-        buttonPanel.add(hitButton);
-        buttonPanel.add(standButton);
-        buttonPanel.add(newGameButton);
-
-        betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        enterBetLabel = new JLabel(Texts.enterBet[language]);
-        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 22));
-        enterBetLabel.setForeground(Color.WHITE);
-
-        betPanel.setOpaque(false);
-        betPanel.add(enterBetLabel);
-        betPanel.add(betField);
-        betPanel.add(placeBetButton);
-        betPanel.add(balanceLabel);
-        betPanel.add(betLabel);
-
-//        betPanel.setPreferredSize(new Dimension(200, 55));
+        // Correct initialization sequence
+        initializeComponents();  // Create ALL components first
+        layoutComponents();      // THEN arrange components
+        attachEventListeners();  // FINALLY setup interactions
+        
+        setVisible(true);        // Make visible LAST
+        AudioManager.getInstance().playBackgroundMusic();
     }
-
 
     private void layoutComponents() {
+        mainPanel = new BackgroundPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        // Dealer Section (Top)
-        JPanel dealerArea = new JPanel(new BorderLayout());
-        dealerArea.setOpaque(false);
-        dealerArea.add(dealerScorePanel, BorderLayout.NORTH); // Dealer balance and bet at the top
-        dealerArea.add(dealerPanel, BorderLayout.CENTER); // Dealer's cards below
-
-        // Back Button Panel (Top-Left)
-        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton backButton = createStyledButton(Texts.guiBackToMain[language]);
-        backButtonPanel.setOpaque(false);
-        backButtonPanel.add(backButton);
-
-        // Add action to back button
-        backButton.addActionListener(e -> {
-            new BlackJackMenu().setVisible(true);
-            dispose(); // Close the game window
-        });
-
-        // Create a new top panel to hold back button and dealer area
+        // Top section (dealer area + pause button)
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.add(backButtonPanel, BorderLayout.WEST); // Back button at the top-left
-        topPanel.add(dealerArea, BorderLayout.CENTER); // Dealer area next to it
 
-        // Player Section (Bottom)
-        JPanel playerContainer = new JPanel(new BorderLayout());
-        playerContainer.setOpaque(false);
-        playerContainer.add(playerPanel, BorderLayout.CENTER);
-        playerContainer.add(playerScorePanel, BorderLayout.NORTH);
+        JPanel dealerArea = new JPanel(new BorderLayout());
+        dealerArea.setOpaque(false);
+        dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
+        dealerArea.add(dealerPanel, BorderLayout.CENTER);
 
-        // Center Section (Buttons and Messages)
+        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topRightPanel.setOpaque(false);
+        topRightPanel.add(pauseButton);
+
+        topPanel.add(dealerArea, BorderLayout.CENTER);
+        topPanel.add(topRightPanel, BorderLayout.EAST);
+
+        // Center section (messages + buttons)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
         centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        // Bottom Section (Player and Bet Panel)
-        JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.setOpaque(false);
-        southPanel.add(playerContainer, BorderLayout.CENTER);
-        southPanel.add(betPanel, BorderLayout.SOUTH);
+        // Bottom section (players + bet panel)
+        JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.setPreferredSize(new Dimension(gameWidth, (int) (gameHeight/2.4))); // Limit height
+        southContainer.setBackground(new Color(0, 0, 0, 0)); // Transparent
 
-        // Add everything to the main panel
-        mainPanel.add(topPanel, BorderLayout.NORTH); // Now using topPanel to position back button correctly
+        southContainer.setOpaque(false);
+
+
+        JPanel playersContainer = new JPanel(new BorderLayout());
+        playersContainer.setPreferredSize(new Dimension(
+            Toolkit.getDefaultToolkit().getScreenSize().width,
+            300
+        ));
+        playersContainer.setOpaque(false);
+        playersContainer.add(scrollPane, BorderLayout.CENTER);
+
+        betPanel.setOpaque(false);
+
+        southContainer.add(playersContainer, BorderLayout.CENTER);
+        southContainer.add(betPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(southPanel, BorderLayout.SOUTH);
+        mainPanel.add(southContainer, BorderLayout.SOUTH);
 
         add(mainPanel);
-
         gameManager.startNewGame();
         // this is where the game is being started //
     }
 
+    private void initializeComponents() {
+        // Initialize CORE containers first
+        mainPanel = new BackgroundPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-    public void restartGame() {
-        gameManager = GameManager.getInstance(); // Get game instance
-        gameManager.setGui(this);
+        playersPanel = new PlayersPanel();
+        scrollPane = new JScrollPane(playersPanel);
+
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null); // optional, removes white border
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0)); // ✅ add this
+        scrollPane.setBackground(new Color(0, 0, 0, 0));
+
+        dealerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        betPanel = new JPanel();
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        betLabel = createStyledLabel(Texts.bet[language] + " $0");
+        balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        
+
+        // Set properties for main components
+        mainPanel.setBackground(new Color(0, 0, 0, 0));
+        mainPanel.setOpaque(false);
+
+        playersPanel.setBackground(new Color(0, 0, 0, 0)); // ✅ Fully transparent
+
+        dealerPanel.setBackground(new Color(0, 0, 0, 0));
+        betPanel.setBackground(new Color(0, 0, 0, 0));
+        buttonPanel.setBackground(new Color(0, 0, 0, 0));
+
+
+        playersPanel.setOpaque(false);
+        dealerPanel.setOpaque(false);
+        buttonPanel.setOpaque(false);
     
-        // Reset betting manager using the public method
-        gameManager.resetBettingManager(1000, 1000);
+        // Get screen dimensions
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
     
-        enableBetting(); // Enable betting input again
-        gameManager.startNewGame(); // Start a fresh game
+        // Calculate sizes
+        buttonWidth = (int) (screenWidth * 0.15);
+        buttonHeight = (int) (screenHeight * 0.08);
+        buttonFontSize = screenWidth / 60;
+        cardWidth = (int) (screenWidth * 0.09);
+        cardHeight = (int) (screenHeight * 0.19);
+        cardFontSize = screenWidth / 60;
+    
+        // Initialize buttons
+        hitButton = createStyledButton(Texts.guiHit[language]);
+        standButton = createStyledButton(Texts.guiStand[language]);
+        newGameButton = createStyledButton(Texts.guiNewGame[language]);
+        placeBetButton = createStyledButton(Texts.placeBet[language]);
+    
+        // Initialize labels
+        gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
+        gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        gameMessageLabel.setForeground(Color.WHITE);
+    
+        specialMessageLabel = new JLabel("", SwingConstants.CENTER);
+        specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        specialMessageLabel.setForeground(Color.WHITE);
+    
+        // Dealer score panel
+        dealerScorePanel = new JPanel(new GridLayout(2, 1));
+        dealerScorePanel.setOpaque(false);
+        playersPanel.setBackground(new Color(0, 0, 0, 0)); // Fully transparent
+
+
+        
+        // Dealer labels
+        dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
+        dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
+        dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0");
+    
+        // Assemble dealer score panel
+        JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        scoreRow.add(dealerScoreLabel);
+        scoreRow.setBackground(new Color(0, 0, 0, 0));
+
+        JPanel balanceBetRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        balanceBetRow.add(dealerBalanceLabel);
+        balanceBetRow.add(dealerBetLabel);
+        balanceBetRow.setOpaque(false);
+
+        dealerScorePanel.add(scoreRow);
+        dealerScorePanel.add(balanceBetRow);
+    
+        // Pause button setup
+        pauseButton = new JButton();
+        pauseButton.setPreferredSize(new Dimension(50, 50));
+        ImageIcon pauseIcon = new ImageIcon("img/icons/pause.png"); // Ensure the file path is correct
+        Image scaledPauseIcon = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+        pauseButton.setIcon(new ImageIcon(scaledPauseIcon)); // Set the scaled icon
+        pauseButton.setBackground(new Color(255, 165, 0));
+        pauseButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setOpaque(true);
+        pauseButton.setFocusPainted(false);
+    
+        // Pause button hover effects
+        pauseButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                pauseButton.setBackground(new Color(255, 140, 0));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                pauseButton.setBackground(new Color(255, 165, 0));
+            }
+        });
+    
+        // Pause menu setup
+        pauseMenu = new JPopupMenu();
+        pauseMenu.setBackground(new Color(50, 50, 50));
+        pauseMenu.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 2));
+    
+        // Menu items
+        JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
+        JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
+        JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
+        
+        Font menuFont = new Font("Arial", Font.BOLD, 18);
+        resumeItem.setFont(menuFont);
+        mainMenuItem.setFont(menuFont);
+        exitItem.setFont(menuFont);
+    
+        // Volume control
+        JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
+        volumePanel.setBackground(new Color(50, 50, 50));
+        volumePanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        
+        JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
+        volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        volumeLabel.setForeground(Color.WHITE);
+        
+        JSlider volumeSlider = new JSlider(0, 100, 50);
+        volumeSlider.setMajorTickSpacing(25);
+        volumeSlider.setMinorTickSpacing(5);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true);
+        volumeSlider.setForeground(Color.WHITE);
+        volumeSlider.setBackground(new Color(50, 50, 50));
+        
+        volumeSlider.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+            float volume = source.getValue() / 100f;
+            AudioManager.getInstance().setVolume(volume);
+        });
+        
+        volumePanel.add(volumeLabel, BorderLayout.NORTH);
+        volumePanel.add(volumeSlider, BorderLayout.CENTER);
+    
+        // Assemble pause menu
+        pauseMenu.add(resumeItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(mainMenuItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(exitItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(volumePanel);
+    
+        // Bet panel components
+        betField = new JTextField(5);
+        betField.setPreferredSize(new Dimension(350, 40));
+        betField.setMaximumSize(new Dimension(300, 30));
+        betField.setFont(new Font("Arial", Font.PLAIN, 24));
+        enterBetLabel = new JLabel("Enter Bet");
+        enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        enterBetLabel.setForeground(Color.WHITE);
+        betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+    
+        // Assemble bet panel
+        betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10)); 
+        //betPanel.add(Box.createHorizontalGlue());
+        betPanel.add(enterBetLabel);
+        betPanel.add(betField);
+        betPanel.add(placeBetButton);
+        betPanel.add(Box.createHorizontalGlue());
+        betPanel.add(betLabel);
+        betPanel.add(balanceLabel);
+    
+        // Assemble button panel
+        buttonPanel.add(hitButton);
+        buttonPanel.add(standButton);
+        buttonPanel.add(newGameButton);
     }
-
-    public void showGameOverMessage(String message) {
-        // Show a pop-up with "Game Over" message and Restart button
-        int option = JOptionPane.showOptionDialog(
-            this,
-            Texts.gameOverMessage[language],
-            Texts.gameOverMessage[language],
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.ERROR_MESSAGE,
-            null,
-            new String[]{Texts.restartGame[language], Texts.exitGame[language]}, // Buttons
-            Texts.restartGame[language]
-        );
-    
-        // If user clicks "Restart Game", reset everything
-        if (option == JOptionPane.YES_OPTION) {
-            restartGame();
-        } else {
-            System.exit(0); // Exit the game if "Exit" is selected
-        }
-    }
-    
-
+   
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
-        placeBetButton.addActionListener(e -> placeBet());
+        placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
+    
+        pauseButton.addActionListener(e -> showPauseMenu());
+ 
+        // Pause menu listeners
+        for (Component component : pauseMenu.getComponents()) {
+            if (component instanceof JMenuItem) {
+                JMenuItem menuItem = (JMenuItem) component;
+                if (menuItem.getText().equals(Texts.RESUME[language])) {
+                    menuItem.addActionListener(e -> {
+                        resumeGame();
+                        pauseMenu.setVisible(false);
+                    });
+                } else if (menuItem.getText().equals(Texts.guiBackToMain[language])) {
+                    menuItem.addActionListener(e -> {
+                        returnToMainMenu();
+                        pauseMenu.setVisible(false);
+                    });
+                } else if (menuItem.getText().equals(Texts.exitGame[language])) {
+                    menuItem.addActionListener(e -> {
+                        pauseMenu.setVisible(false);
+                        System.exit(0);
+                    });
+                }
+            }
+        }
     }
 
-    /*
-     *  Betting system logic.
-    */
-    private void placeBet() {
-       try {
-    int betAmount = Integer.parseInt(betField.getText());
-    if (betAmount > 0 && gameManager.placeBet(betAmount)) {
-        betLabel.setText(Texts.bet[language] + " $" + betAmount);
-        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
-
-        betField.setEnabled(false);
-        placeBetButton.setEnabled(false);
-
-        JOptionPane.showMessageDialog(
-            this, 
-            Texts.placeBet[language] + ": $" + betAmount, 
-            "Bet Confirmed", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    } else {
-        JOptionPane.showMessageDialog(
-            this, 
-            Texts.betError[language], 
-            Texts.error[language], 
-            JOptionPane.ERROR_MESSAGE
-        );
+    public void updatePlayerBalanceAndBet(Player player) {
+        JLabel balanceLabel = playerBalanceLabels.get(player);
+        JLabel betLabel = playerBetLabels.get(player);
+    
+        if (balanceLabel != null) {
+            balanceLabel.setText("Balance: $" + player.getBalance());
+            balanceLabel.revalidate();
+            balanceLabel.repaint();
+        }
+    
+        if (betLabel != null) {
+            betLabel.setText("Bet: $" + player.getCurrentBet());
+            betLabel.revalidate();
+            betLabel.repaint();
+        }
     }
-} catch (NumberFormatException e) { 
-    JOptionPane.showMessageDialog(
-        this, 
-        Texts.invalidInput[language], 
-        Texts.invalidInputTitle[language], 
-        JOptionPane.WARNING_MESSAGE
-    );
-}
+    
+    
 
-}
+    private void placeBet(Player player) {
+        try {
+            int betAmount = Integer.parseInt(betField.getText());
+            if (betAmount > 0 && player.placeBet(betAmount)) {
+                gameManager.getBettingManager().getPlayerBalance(player.getName());
+                setGameButtonsEnabled(true);
+                betLabel.setText("Bet: $" + betAmount);
+                balanceLabel.setText("Balance: $" + player.getBalance());
+                betField.setEnabled(false);
+                placeBetButton.setEnabled(false);
+                JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
+                placeBetButton.setEnabled(false);
+                dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
+                dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
+                playersPanel.updatePanel(gameManager.getPlayers());            
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid input. Please enter a valid bet amount.", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        playersPanel.removeAll();
+        
+        for (Player player : players) {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);
+            JLabel scoreLabel = new JLabel(player.getName() + ": " + "Score: 0");
+            JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
+            JLabel betLabel = new JLabel("Bet: $0");
+            playerBalanceLabels.put(player, balanceLabel);
+playerBetLabels.put(player, betLabel);
+            panel.add(scoreLabel, BorderLayout.NORTH);
+            panel.add(balanceLabel, BorderLayout.CENTER);
+            panel.add(betLabel, BorderLayout.SOUTH);
+            playersPanel.add(panel);
+        }
+        playersPanel.revalidate();
+        playersPanel.repaint();
+    }
+
+    public void restartGame() {
+        gameManager.startNewGame();
+        betField.setEnabled(true);
+        placeBetButton.setEnabled(true);
+        setGameButtonsEnabled(true);
+        gameManager.setGameOver(false);  // Add this line
+        gameManager.resumeGame();
+
+    }
+
+    public void showGameOverMessage(String message) {
+        int option = JOptionPane.showOptionDialog(this, message, "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
+        if (option == JOptionPane.YES_OPTION) {
+            restartGame();
+        } else {
+            System.exit(0);
+        }
+    }
+    
+    private void showPauseMenu() {
+        gameManager.pauseGame();
+        setGameButtonsEnabled(false);
+
+        pauseMenu.setFocusable(true);
+        pauseMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // Only resume if not selecting an option
+                if (!e.getSource().equals(pauseMenu)) {
+                    resumeGame();
+                }
+            }
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                popupMenuWillBecomeInvisible(e);
+            }
+        });
+
+        pauseMenu.show(pauseButton, 0, pauseButton.getHeight());
+    }
+
+    private void resumeGame() {
+        gameManager.resumeGame();
+        setGameButtonsEnabled(true);
+    }
+
+    private void returnToMainMenu() {
+        new BlackJackMenu().setVisible(true);
+        dispose();
+    }
+
+    public void setGameButtonsEnabled(boolean enabled) {
+        // Disable all game buttons when paused
+        boolean buttonsEnabled = enabled && !gameManager.isPaused();
+
+        hitButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        newGameButton.setEnabled(buttonsEnabled); // Disable when paused
+        pauseButton.setEnabled(true); // Always enabled
+        betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+
+        pauseButton.setEnabled(true);
+    }
+
 
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
-        System.out.println("enableBetting called");
-        System.out.println("Player Balance: " + gameManager.getPlayerBalance());
-        System.out.println("Dealer Balance: " + gameManager.getDealerBalance());
-        System.out.println("Dealer Bet: " + gameManager.getDealerBet());
-    
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
         betLabel.setText(Texts.bet[language] + " $0");
-        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
-    
-        System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance() + 
-                           ", Dealer Balance: " + gameManager.getDealerBalance() + 
-                           ", Dealer Bet: " + gameManager.getDealerBet());
 
-            // Force UI refresh
-    balanceLabel.revalidate();
-    balanceLabel.repaint();
-    dealerBalanceLabel.revalidate();
-    dealerBalanceLabel.repaint();
-    dealerBetLabel.revalidate();
-    dealerBetLabel.repaint();
+        // Force UI refresh
+        balanceLabel.revalidate();
+        balanceLabel.repaint();
+        dealerBalanceLabel.revalidate();
+        dealerBalanceLabel.repaint();
+        dealerBetLabel.revalidate();
+        dealerBetLabel.repaint();
 
-    // Refresh the entire main panel
-    mainPanel.revalidate();
-    mainPanel.repaint();
-
-    System.out.println("UI Updated - Player Balance: " + gameManager.getPlayerBalance() + 
-                       ", Dealer Balance: " + gameManager.getDealerBalance() + 
-                       ", Dealer Bet: " + gameManager.getDealerBet());
+        // Refresh the entire main panel
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
-    public void updateGameState(Player player, Player dealer, boolean gameOver) {
-        playerPanel.removeAll();
+    public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
-
-        //updateSpecialMessage("- - - ");
-
-
-        // Show player's cards and check for special cards
-        for (Card card : player.getHand()) {
-            playerPanel.add(createCardPanel(card));
-            //checkForSpecialCard(card);
-        }
-
-        // Show dealer's cards
+        dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
+    
+        playersPanel.updatePanel(players); 
+    
+        // Update dealer panel
         if (gameOver) {
+            // Show all dealer's cards
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
-                //checkForSpecialCard(card);
             }
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " : " + dealer.calculateScore());
+            dealerScoreLabel.setText("Dealer Score: " + dealer.calculateScore());
         } else {
-            dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
-            dealerPanel.add(createHiddenCardPanel());
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
+            // Show one card face-up and a hidden card
+            if (!dealer.getHand().isEmpty()) {
+                dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
+                dealerPanel.add(createHiddenCardPanel());
+            }
         }
-
-        playerScoreLabel.setText(Texts.guiPlayerScore[language] + " : " + player.calculateScore());
-
-        // Update balances and bets
-        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance());
-        dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + gameManager.getDealerBalance());
-        dealerBetLabel.setText(Texts.dealerBet[language] + " $" + gameManager.getDealerBet());
-
-
-
-        // Refresh UI
-        playerPanel.revalidate();
-        playerPanel.repaint();
+    
+        // Revalidate and repaint panels to update the UI
+        playersPanel.revalidate();
+        playersPanel.repaint();
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
 
+
+    private void nextTurn() {
+        if (gameManager.hasNextPlayer()) {
+            gameManager.startNextPlayerTurn();
+            updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
+            enableBetting();
+        } else {
+            gameManager.dealerTurn();
+        }
+    }    
+    
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
-        JLabel hiddenLabel = new JLabel("?", SwingConstants.CENTER);
+        JLabel hiddenLabel = new JLabel(gameManager.isPaused() ? "⏸" : "?", SwingConstants.CENTER);
         hiddenLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
         hiddenLabel.setForeground(Color.WHITE);
 
@@ -413,8 +619,11 @@ public class BlackjackGUI extends JFrame {
     }
 
     private JPanel createCardPanel(Card card) {
-        JPanel cardPanel = new JPanel();
+        JPanel cardPanel = new JPanel(new BorderLayout());
+
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
+        cardPanel.setMinimumSize(new Dimension(cardWidth, cardHeight));
+        cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
@@ -465,7 +674,7 @@ public class BlackjackGUI extends JFrame {
         }
         return wildValue;
     }
-
+/*
     private void checkForSpecialCard(Card card) {
         if (card.isJokerWild()) {
             updateGameMessage(Texts.jokerWildMessage[language]);
@@ -477,5 +686,64 @@ public class BlackjackGUI extends JFrame {
             updateSpecialMessage("...");
         }
     }
-}
+ */
 
+ 
+    public void promptPlayerAction(Player player) {
+        if (!gameManager.isCurrentPlayerStillInRound()) {
+            if (gameManager.hasNextPlayer()) {
+                nextTurn();  // Triggers betting for next player
+            } else {
+                gameManager.dealerTurn();  // Only run dealer turn if no players left
+            }
+        }
+        else {
+            setGameButtonsEnabled(true); // Force refresh
+            updateGameMessage(player.getName() + "'s turn");
+            enableBetting();
+        }
+    }
+
+    
+
+    public void updatePlayerPanels() {
+        playersPanel.removeAll();
+        for (Player player : gameManager.getPlayers()) {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);  // ✅ Transparent player panel
+            panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg
+    
+            JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
+            JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
+            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());
+    
+            // ✅ White text for visibility
+            scoreLabel.setForeground(Color.WHITE);
+            balanceLabel.setForeground(Color.WHITE);
+            betLabel.setForeground(Color.WHITE);
+    
+            panel.add(scoreLabel, BorderLayout.NORTH);
+            panel.add(balanceLabel, BorderLayout.CENTER);
+            panel.add(betLabel, BorderLayout.SOUTH);
+            playersPanel.add(panel);
+        }
+        playersPanel.revalidate();
+        playersPanel.repaint();
+    }
+
+    private class BackgroundPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundLoaded && backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            } else {
+                g.setColor(new Color(20, 20, 20)); // Subtle dark fallback
+
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        }
+    }
+    
+    
+}

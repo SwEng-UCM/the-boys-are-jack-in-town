@@ -3,8 +3,6 @@ package main.view;
 import javax.swing.*;
 import java.awt.*;
 
-import static main.view.BlackJackMenu.language;
-import main.view.Texts;
 
 public class OptionsPanel extends JDialog {
     private JComboBox<String> languageDropdown;
