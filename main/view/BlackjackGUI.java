@@ -117,7 +117,7 @@ public class BlackjackGUI extends JFrame {
 
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
-        southContainer.setPreferredSize(new Dimension(gameWidth, 350)); // Limit height
+        southContainer.setPreferredSize(new Dimension(gameWidth, (int) (gameHeight/2.4))); // Limit height
         southContainer.setBackground(new Color(0, 0, 0, 0)); // Transparent
 
         southContainer.setOpaque(false);

@@ -75,7 +75,7 @@ class PlayersPanel extends JPanel {
         label.setFont(new Font("Arial", Font.BOLD, 26));
         label.setForeground(Color.WHITE);
         label.setOpaque(false); // ✅ Just in case
-        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        //label.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
