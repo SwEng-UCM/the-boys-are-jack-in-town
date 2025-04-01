@@ -142,6 +142,7 @@ public class BlackjackGUI extends JFrame {
 
         add(mainPanel);
         gameManager.startNewGame();
+        // this is where the game is being started //
     }
 
     private void initializeComponents() {

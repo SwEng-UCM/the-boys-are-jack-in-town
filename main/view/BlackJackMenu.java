@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import static main.view.Languages.*;
 
 public class BlackJackMenu extends JFrame {
-    private JButton startButton, instructionsButton, exitButton, optionsButton;
+    private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton;
     private JLabel imageLabel, mainTitleLabel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
@@ -66,8 +66,10 @@ public class BlackJackMenu extends JFrame {
         optionsButton.setIcon(loadIcon("img/icons/options.png", 32, 32));
 
         exitButton = createStyledButton(Texts.exit[language]);
-        exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
 
+        optionsButton =  createStyledButton(Texts.options[language]);
+        loadGameButton = createStyledButton("Load Game");
+        exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
 
 
         // Load and resize the image
@@ -132,6 +134,7 @@ public class BlackJackMenu extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
         buttonPanel.add(startButton, gbc);
+        buttonPanel.add(loadGameButton, gbc);
         buttonPanel.add(instructionsButton, gbc);
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
@@ -189,7 +192,10 @@ public class BlackJackMenu extends JFrame {
 
         optionsButton.addActionListener(e -> {
             new OptionsPanel(this).setVisible(true);
-            // add option logic
+        });
+
+        loadGameButton.addActionListener(e -> {
+            new LoadGamePanel(this).setVisible(true);
         });
     }
 
