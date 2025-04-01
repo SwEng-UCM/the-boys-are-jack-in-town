@@ -10,6 +10,7 @@ import static main.view.BlackJackMenu.language;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
+import java.util.List;
 
 /*
  * Singleton class.
@@ -229,7 +230,18 @@ public class GameManager {
         return bettingManager.getPlayerBet();
     }
 
-    
+    public List<Card> getPlayerHandList(){
+        return player.getHand();
+    }
+
+    public List<Card> getDealerHandList(){
+        return dealer.getHand();
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
     /**
      * Handles special cards when drawn.
 //     */
