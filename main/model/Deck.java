@@ -31,6 +31,10 @@ public class Deck {
         // Shuffle the deck initially
         shuffle();
     }
+    public Deck(Deck other) {
+        this.cards = new ArrayList<>(other.cards); // Deep copy of the cards
+        this.random = new Random(); // Create a new Random instance
+    }
 
     public Card dealCard() {
         if (cards.isEmpty()) {

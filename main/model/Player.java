@@ -34,6 +34,13 @@ public class Player {
     public List<Card> getHand() {
         return hand;
     }
+    public Player(Player other) {
+        this.name = other.name;
+        this.balance = other.balance;
+        this.hand = new ArrayList<>(other.hand); // Deep copy of the hand
+        this.currentBet = other.currentBet;
+        // Add other fields if necessary
+    }
 
     /**
      * Calculates the player's total score, adjusting Aces from 11 to 1 if necessary,

@@ -10,6 +10,7 @@ import javax.swing.Timer;
 import static main.view.BlackJackMenu.language;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.SwingUtilities;
 
@@ -29,6 +30,9 @@ public class GameManager {
     private final int INITIAL_BET = 1000;
     private boolean isPaused = false;
     private Timer gameTimer; // If you have any timers running
+    private Stack<GameState> gameStateHistory = new Stack<>();
+    private Stack<GameState> undoStack = new Stack<>(); // For undo functionality
+    private Stack<GameState> redoStack = new Stack<>(); // For redo functionality
 
     private ArrayList<Player> players;
     private Player dealer;
@@ -115,17 +119,21 @@ public class GameManager {
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
+            saveGameState();
             Player currentPlayer = players.get(currentPlayerIndex);
             currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
             checkPlayerBust();
             gui.updateGameState(players, dealer, gameOver, false);
         }
     }
+    
 
     public void handlePlayerStand() {
         if (!gameOver) {
+            saveGameState();
             currentPlayerIndex++; // Move to the next player
             startNextPlayerTurn();
+            gui.updateGameState(players, dealer, gameOver, false);
         }
     }
 
@@ -137,10 +145,12 @@ public class GameManager {
             bettingManager.dealerWins(null); // Player busts, dealer wins
             currentPlayerIndex++;
             startNextPlayerTurn();
+            gui.updateGameState(players, dealer, gameOver, false);
         }
     }
 
     public void dealerTurn() {
+        saveGameState();
         while (dealer.calculateScore() < 17) {
             dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
         }
@@ -191,7 +201,39 @@ public class GameManager {
     public void resetBettingManager(int playerBalance, int dealerBalance) {
         this.bettingManager = new BettingManager(players, 1000, 1000);
     }
-
+    private void saveGameState() {
+        GameState currentState = new GameState(players, dealer, deck, currentPlayerIndex, gameOver);
+        undoStack.push(currentState); // Save the current state to the undo stack
+        redoStack.clear(); // Clear the redo stack since a new action invalidates the redo history
+    }
+    public void undoLastAction() {
+        if (!undoStack.isEmpty()) {
+            GameState previousState = undoStack.pop(); // Pop the last state from the undo stack
+            redoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the redo stack
+            this.players = previousState.getPlayers();
+            this.dealer = previousState.getDealer();
+            this.deck = previousState.getDeck();
+            this.currentPlayerIndex = previousState.getCurrentPlayerIndex();
+            this.gameOver = previousState.isGameOver();
+            gui.updateGameState(players, dealer, gameOver,isPaused);
+        } else {
+            gui.updateGameMessage("No actions to undo!");
+        }
+    }
+    public void redoLastAction() {
+        if (!redoStack.isEmpty()) {
+            GameState nextState = redoStack.pop(); // Pop the last state from the redo stack
+            undoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the undo stack
+            this.players = nextState.getPlayers();
+            this.dealer = nextState.getDealer();
+            this.deck = nextState.getDeck();
+            this.currentPlayerIndex = nextState.getCurrentPlayerIndex();
+            this.gameOver = nextState.isGameOver();
+            gui.updateGameState(players, dealer, gameOver,isPaused);
+        } else {
+            gui.updateGameMessage("No actions to redo!");
+        }
+    }
     private void checkGameOver() {
         for (Player player : players) {
             if (player.getBalance() <= 0) {
@@ -366,5 +408,41 @@ public class GameManager {
 
     public Player getDealer() {
         return this.dealer;
+    }
+}
+static class GameState {
+    private ArrayList<Player> players;
+    private Player dealer;
+    private Deck deck;
+    private int currentPlayerIndex;
+    private boolean gameOver;
+
+    public GameState(ArrayList<Player> players, Player dealer, Deck deck, int currentPlayerIndex, boolean gameOver) {
+        this.players = new ArrayList<>(players); // Deep copy if necessary
+        this.dealer = new Player(dealer); // Ensure Player has a copy constructor
+        this.deck = new Deck(deck); // Ensure Deck has a copy constructor
+        this.currentPlayerIndex = currentPlayerIndex;
+        this.gameOver = gameOver;
+    }
+
+    // Getter methods for private fields
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public Player getDealer() {
+        return dealer;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }
