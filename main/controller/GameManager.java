@@ -410,7 +410,7 @@ public class GameManager {
         return this.dealer;
     }
 }
-static class GameState {
+class GameState {
     private ArrayList<Player> players;
     private Player dealer;
     private Deck deck;
