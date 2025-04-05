@@ -5,6 +5,7 @@ import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
 import main.controller.BettingManager;
+import main.controller.AchievementManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,6 +51,7 @@ public class BlackjackGUI extends JFrame {
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JScrollPane scrollPane;
+    private JPanel topRightPanel;
 
 
     private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
@@ -96,15 +98,41 @@ public class BlackjackGUI extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
 
+        // Achievement panel on the LEFT
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topLeftPanel.setOpaque(false);
+
+        JButton achievementButton = new JButton();
+        achievementButton.setPreferredSize(new Dimension(50, 50));
+        achievementButton.setToolTipText("View Achievements");
+        achievementButton.setFocusPainted(false);
+        achievementButton.setContentAreaFilled(false);
+        achievementButton.setBorderPainted(false);
+        achievementButton.setOpaque(false);
+
+        // Load your icon
+        ImageIcon achievementIcon = new ImageIcon("img/icons/achievement.png");
+        Image scaledIcon = achievementIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        achievementButton.setIcon(new ImageIcon(scaledIcon));
+
+        achievementButton.addActionListener(e -> {
+            new AchievementsWindow().setVisible(true);
+        });
+
+        topLeftPanel.add(achievementButton);
+        topPanel.add(topLeftPanel, BorderLayout.WEST);
+
+        // Dealer area in the CENTER
         JPanel dealerArea = new JPanel(new BorderLayout());
         dealerArea.setOpaque(false);
         dealerArea.add(dealerScorePanel, BorderLayout.NORTH);
         dealerArea.add(dealerPanel, BorderLayout.CENTER);
 
-        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topRightPanel.setOpaque(false);
         topRightPanel.add(pauseButton);
 
+        topPanel.add(topLeftPanel, BorderLayout.WEST);
         topPanel.add(dealerArea, BorderLayout.CENTER);
         topPanel.add(topRightPanel, BorderLayout.EAST);
 
@@ -402,7 +430,8 @@ public class BlackjackGUI extends JFrame {
                 placeBetButton.setEnabled(false);
                 dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
-                playersPanel.updatePanel(gameManager.getPlayers());            
+                playersPanel.updatePanel(gameManager.getPlayers());      
+                AchievementManager.getInstance().trackFirstBet(player);
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
