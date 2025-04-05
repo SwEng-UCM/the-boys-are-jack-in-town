@@ -154,6 +154,10 @@ public class GameManager {
         checkDealerBust();
         determineWinners();
     }
+    // In GameManager.java
+    public DifficultyStrategy getDifficultyStrategy() {
+        return this.difficultyStrategy;
+    }
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
