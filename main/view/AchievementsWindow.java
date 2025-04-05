@@ -19,7 +19,7 @@ public class AchievementsWindow extends JFrame {
 
         // Create background panel
         JPanel backgroundPanel = new JPanel() {
-            private final Image bg = new ImageIcon(getClass().getResource("/img/achievement_background.jpg")).getImage();
+            private final Image bg = new ImageIcon("img/achievement_background.jpg").getImage();
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
