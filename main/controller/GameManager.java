@@ -325,6 +325,13 @@ public class GameManager {
     public boolean isGameOver() {
         return gameOver;
     }
+    public int getCurrentPlayerIndex() {
+        return this.currentPlayerIndex;
+    }
+    
+    public void setCurrentPlayerIndex(int index) {
+        this.currentPlayerIndex = index;
+    }
 
     public int getDealerBalance() {
         return bettingManager.getDealerBalance();

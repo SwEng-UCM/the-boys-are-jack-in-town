@@ -9,6 +9,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+// 🔼 Add these imports at the top
+import main.model.EasyDifficulty;
+import main.model.MediumDifficulty;
+import main.model.HardDifficulty;
+
 
 import static main.view.Languages.*;
 
@@ -17,6 +22,8 @@ public class BlackJackMenu extends JFrame {
     private JLabel imageLabel, mainTitleLabel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
+    private JComboBox<String> difficultyComboBox;
+
 
     
     private int titleX = 0;
@@ -58,20 +65,56 @@ public class BlackJackMenu extends JFrame {
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
         startButton.setIcon(loadIcon("img/icons/start.png", 32, 32));
-
+    
         instructionsButton = createStyledButton(Texts.instructions[language]);
         instructionsButton.setIcon(loadIcon("img/icons/instructions.png", 32, 32));
-
+    
         optionsButton = createStyledButton(Texts.options[language]);
         optionsButton.setIcon(loadIcon("img/icons/options.png", 32, 32));
-
-        exitButton = createStyledButton(Texts.exit[language]);
-
-        optionsButton =  createStyledButton(Texts.options[language]);
+    
         loadGameButton = createStyledButton("Load Game");
+    
+        exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
-
-
+    
+        // 🎯 Styled Difficulty Selector
+        String[] difficulties = {"Easy", "Medium", "Hard"};
+        difficultyComboBox = new JComboBox<>(difficulties);
+        difficultyComboBox.setSelectedItem("Medium");
+        difficultyComboBox.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        difficultyComboBox.setPreferredSize(new Dimension(160, 40));
+        difficultyComboBox.setBackground(new Color(255, 215, 0));
+        difficultyComboBox.setForeground(Color.BLACK);
+        difficultyComboBox.setFocusable(false);
+        difficultyComboBox.setBorder(BorderFactory.createLineBorder(new Color(240, 180, 0), 2, true));
+        difficultyComboBox.setUI(new javax.swing.plaf.basic.BasicComboBoxUI() {
+            @Override
+            protected JButton createArrowButton() {
+                JButton button = new JButton("▼");
+                button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                button.setBackground(new Color(255, 215, 0));
+                button.setForeground(Color.BLACK);
+                button.setBorder(null);
+                return button;
+            }
+        });
+    
+        difficultyComboBox.addActionListener(e -> {
+            String selected = (String) difficultyComboBox.getSelectedItem();
+            switch (selected) {
+                case "Easy":
+                    GameManager.getInstance().setDifficultyStrategy(new EasyDifficulty());
+                    break;
+                case "Medium":
+                    GameManager.getInstance().setDifficultyStrategy(new MediumDifficulty());
+                    break;
+                case "Hard":
+                    GameManager.getInstance().setDifficultyStrategy(new HardDifficulty());
+                    break;
+            }
+            System.out.println("Difficulty set to: " + selected);
+        });
+    
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
         Image originalImage = originalIcon.getImage();
@@ -80,14 +123,17 @@ public class BlackJackMenu extends JFrame {
         imageLabel = new JLabel(resizedIcon);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-
+    
         mainTitleLabel = new JLabel(Texts.mainTitle[language]);
         mainTitleLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 60));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
-
+    
         startTitleAnimation();
     }
+    
+    
+    
 
     private void layoutComponents() {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
@@ -97,56 +143,64 @@ public class BlackJackMenu extends JFrame {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
-        
-        // Image panel with proper centering
+    
+        // Image panel
         JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         imagePanel.setOpaque(false);
         imagePanel.add(imageLabel);
-        
+    
         // Title animation panel
         JPanel titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
-
-        // Use a placeholder position, actual movement is handled in the timer
-        mainTitleLabel.setBounds(0, 0, 1, 100); 
+        mainTitleLabel.setBounds(0, 0, 1, 100);
         titlePanel.add(mainTitleLabel);
-
-        // ✅ You were missing this:
+    
         contentPanel.add(titlePanel, BorderLayout.CENTER);
-
-
-        // Use a placeholder position, actual movement is handled in the timer
-        mainTitleLabel.setBounds(0, 0, 1, 100); // Initial dummy size, will be updated
-
-        titlePanel.add(mainTitleLabel);
-
-        
-        // Button panel with better spacing
+    
+        // 🎯 Difficulty selector banner panel
+        JPanel difficultyBanner = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        difficultyBanner.setOpaque(false);
+        difficultyBanner.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+    
+        JLabel difficultyLabel = new JLabel("🎯 Difficulty:");
+        difficultyLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        difficultyLabel.setForeground(Color.WHITE);
+    
+        difficultyBanner.add(difficultyLabel);
+        difficultyBanner.add(difficultyComboBox);
+    
+        // Button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
-        
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.insets = new Insets(15, 0, 15, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
+    
         buttonPanel.add(startButton, gbc);
         buttonPanel.add(loadGameButton, gbc);
         buttonPanel.add(instructionsButton, gbc);
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
-        
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-        // Glassmorphism-style semi-transparent panel to hold buttons
+    
+        // Wrap difficulty + buttons vertically
+        JPanel lowerPanel = new JPanel();
+        lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
+        lowerPanel.setOpaque(false);
+        lowerPanel.add(difficultyBanner);
+        lowerPanel.add(buttonPanel);
+    
+        // Glassmorphism-style panel
         JPanel glassPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.3f)); // 30% opacity
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.3f));
                 g2.setColor(Color.WHITE);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
                 g2.dispose();
@@ -154,16 +208,14 @@ public class BlackJackMenu extends JFrame {
         };
         glassPanel.setOpaque(false);
         glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
-
-        // Add the button panel to the glass panel
-        glassPanel.add(buttonPanel, BorderLayout.CENTER);
-
-        // Add the glass panel to the main panel
+        glassPanel.add(lowerPanel, BorderLayout.CENTER);
+    
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
         mainPanel.add(glassPanel, BorderLayout.SOUTH);
-
-        
+    
         add(mainPanel);
     }
+    
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
