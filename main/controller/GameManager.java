@@ -168,6 +168,7 @@ public class GameManager {
                 if (playerScore > 21) {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
+                    AchievementManager.getInstance().trackFirstLoss(player);
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
                     gui.updateGameMessage(player.getName() + " wins! 🎉");
                     player.winBet(player.getCurrentBet() * 2);
@@ -266,6 +267,7 @@ public class GameManager {
             player.reset();
             player.receiveCard(deck.dealCard());
             player.receiveCard(deck.dealCard());
+            AchievementManager.getInstance().trackFirstBlackjack(player);
         }
 
         dealer.reset(); // Reset dealer's hand

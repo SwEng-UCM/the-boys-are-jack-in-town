@@ -5,6 +5,7 @@ import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
 import main.controller.BettingManager;
+import main.controller.AchievementManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -429,7 +430,8 @@ public class BlackjackGUI extends JFrame {
                 placeBetButton.setEnabled(false);
                 dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
-                playersPanel.updatePanel(gameManager.getPlayers());            
+                playersPanel.updatePanel(gameManager.getPlayers());      
+                AchievementManager.getInstance().trackFirstBet(player);
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }

@@ -24,7 +24,7 @@ public class AchievementManager {
     public void trackDealerWin() {
         dealerWinStreak++;
         if (dealerWinStreak == 3) {
-            unlock("Dealer: 3-Win Streak 🏆");
+            unlock("Dealer: 3-Win Streak");
         }
     }
 
@@ -34,20 +34,26 @@ public class AchievementManager {
 
     public void trackPlayerWin(Player player) {
         updatePlayerStat(player, "wins", 1);
-        if (getPlayerStat(player, "wins") == 5) {
-            unlock(player.getName() + ": 5 Wins 🥇");
+    
+        int wins = getPlayerStat(player, "wins");
+        if (wins == 1) {
+            unlock(player.getName() + ": First Win!");
+        }
+        if (wins == 5) {
+            unlock(player.getName() + ": 5 Wins");
         }
     }
+    
 
     public void trackMultiplayerGame(List<Player> players) {
         if (players.size() >= 4) {
-            unlock("Multiplayer Madness: 4+ Players! 🧑‍🤝‍🧑");
+            unlock("Multiplayer Madness: 4+ Players!");
         }
     }
 
     public void trackBigWin(Player player, int winAmount) {
         if (winAmount >= 1000) {
-            unlock(player.getName() + ": Big Winner 💰");
+            unlock(player.getName() + ": Big Winner");
         }
     }
 
@@ -64,10 +70,29 @@ public class AchievementManager {
     private void unlock(String achievement) {
         if (!unlockedAchievements.contains(achievement)) {
             unlockedAchievements.add(achievement);
-            System.out.println("🎉 Achievement Unlocked: " + achievement);
-            // Optional: save to database via AchievementDAO
+            System.out.println("Achievement Unlocked: " + achievement);
         }
     }
+
+    public void trackFirstBet(Player player) {
+        updatePlayerStat(player, "bets", 1);
+        if (getPlayerStat(player, "bets") == 1) {
+            unlock(player.getName() + ": First Bet!");
+        }
+    }
+    
+    public void trackFirstLoss(Player player) {
+        updatePlayerStat(player, "losses", 1);
+        if (getPlayerStat(player, "losses") == 1) {
+            unlock(player.getName() + ": First Loss");
+        }
+    }
+    
+    public void trackFirstBlackjack(Player player) {
+        if (player.getHand().size() == 2 && player.calculateScore() == 21) {
+            unlock(player.getName() + ": First Blackjack!");
+        }
+    }    
 
     public List<String> getUnlockedAchievements() {
         return unlockedAchievements;
