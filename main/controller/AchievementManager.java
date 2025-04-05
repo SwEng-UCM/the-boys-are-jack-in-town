@@ -69,9 +69,7 @@ public class AchievementManager {
 
     private void unlock(String achievement) {
         if (!unlockedAchievements.contains(achievement)) {
-            unlockedAchievements.add(achievement);
-            System.out.println("Achievement Unlocked: " + achievement);
-        }
+            unlockedAchievements.add(achievement);        }
     }
 
     public void trackFirstBet(Player player) {
