@@ -108,6 +108,12 @@ public class Player {
         scoreMultiplier = 1.0;
         currentBet = 0;
     }
+    // In Player.java
+    public boolean hasAce() {
+        return hand.stream().anyMatch(card -> 
+            card.getRank().equals("Ace") && card.getType() == Card.CardType.STANDARD
+        );
+    }
 
     /** Returns the player's name. */
     public String getName() {
