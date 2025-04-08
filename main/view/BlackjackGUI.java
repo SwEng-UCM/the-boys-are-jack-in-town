@@ -718,20 +718,24 @@ playerBetLabels.put(player, betLabel);
  */
 
  
-    public void promptPlayerAction(Player player) {
-        if (!gameManager.isCurrentPlayerStillInRound()) {
-            if (gameManager.hasNextPlayer()) {
-                nextTurn();  // Triggers betting for next player
-            } else {
-                gameManager.dealerTurn();  // Only run dealer turn if no players left
-            }
+ public void promptPlayerAction(Player player) {
+    if (!gameManager.isCurrentPlayerStillInRound()) {
+        if (gameManager.hasNextPlayer()) {
+            nextTurn();
+        } else {
+            gameManager.dealerTurn();
         }
-        else {
-            setGameButtonsEnabled(true); // Force refresh
-            updateGameMessage(player.getName() + "'s turn");
+    } else {
+        setGameButtonsEnabled(true);
+        updateGameMessage(player.getName() + "'s turn");
+
+        // ✅ Only allow betting if game is not running
+        if (!gameManager.isGameRunning()) {
             enableBetting();
         }
     }
+}
+
 
     
 

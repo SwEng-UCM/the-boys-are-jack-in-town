@@ -114,46 +114,75 @@ public class GameManager {
                 int dealerBet = bettingManager.getDealerBalance() / 10;
                 bettingManager.placeDealerBet(dealerBet);
             }
-        } else {
-            dealerTurn();
         }
+        
     }
+    
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
             Player currentPlayer = players.get(currentPlayerIndex);
             currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
-            checkPlayerBust();
             gui.updateGameState(players, dealer, gameOver, false);
+    
+            if (currentPlayer.calculateScore() > 21) {
+                checkPlayerBust(); // already moves to next player
+            } else {
+                // 👇 Needed! Re-prompt the same player if still in the round
+                gui.promptPlayerAction(currentPlayer);
+            }
         }
     }
+    
 
     public void handlePlayerStand() {
         if (!gameOver) {
-            currentPlayerIndex++; // Move to the next player
-            startNextPlayerTurn();
+            currentPlayerIndex++; // move to next player
+    
+            if (currentPlayerIndex < players.size()) {
+                // prompt next player's turn
+                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            } else {
+                // all players done, now dealer plays
+                dealerTurn();
+            }
         }
     }
+    
+    
 
     public void checkPlayerBust() {
-        Player player = players.get(currentPlayerIndex); // Reference the current player
+        Player player = players.get(currentPlayerIndex);
         if (player.calculateScore() > 21) {
             gui.updateGameMessage(player.getName() + " busts! 😢");
             player.loseBet();
-            bettingManager.dealerWins(null); // Player busts, dealer wins
+            bettingManager.dealerWins(null);
             currentPlayerIndex++;
-            startNextPlayerTurn();
+    
+            if (currentPlayerIndex < players.size()) {
+                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            } else {
+                dealerTurn(); // 👈 only trigger if all players finished
+            }
         }
     }
+    
 
     public void dealerTurn() {
-        Player currentPlayer = getCurrentPlayer(); // Get active player for AI decision
-        while (difficultyStrategy.shouldDealerHit(dealer, currentPlayer)) {
+        Player referencePlayer = players.get(0); // Or choose the strongest player
+        for (Player p : players) {
+            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
+                referencePlayer = p;
+            }
+        }
+    
+        while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
             dealer.receiveCard(deck.dealCard());
         }
         checkDealerBust();
         determineWinners();
     }
+    
     // In GameManager.java
     public DifficultyStrategy getDifficultyStrategy() {
         return this.difficultyStrategy;
