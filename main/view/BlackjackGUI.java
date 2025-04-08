@@ -50,6 +50,7 @@ public class BlackjackGUI extends JFrame {
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JScrollPane scrollPane;
+    private JButton undoButton; // Add this line
 
 
     private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
@@ -267,6 +268,30 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 2));
     
         // Menu items
+           // Initialize the Undo button
+    undoButton = new JButton();
+    undoButton.setPreferredSize(new Dimension(50, 50));
+    ImageIcon undoIcon = new ImageIcon("img/icons/undo.png"); // Ensure the file path is correct
+    Image scaledUndoIcon = undoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+    undoButton.setIcon(new ImageIcon(scaledUndoIcon)); // Set the scaled icon
+    undoButton.setBackground(new Color(255, 215, 0)); // Gold background
+    undoButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+    undoButton.setContentAreaFilled(false);
+    undoButton.setOpaque(true);
+    undoButton.setFocusPainted(false);
+
+// Add hover effects for the Undo button
+    undoButton.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        undoButton.setBackground(new Color(255, 200, 0)); // Darker gold on hover
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        undoButton.setBackground(new Color(255, 215, 0)); // Original gold
+    }
+});
         JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
         JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
         JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
@@ -595,6 +620,7 @@ playerBetLabels.put(player, betLabel);
             timer.start();
         }
     }
+    undoButton.addActionListener(e -> gameManager.undoLastAction());
 
     public void resetSpecialMessage() {
         specialMessageLabel.setText("...");

@@ -104,7 +104,7 @@ public class GameManager {
     public void addPlayer(String name, int initialBalance) {
         players.add(new Player(name, initialBalance));
     }
-
+    
     public void startNextPlayerTurn() {
         if (currentPlayerIndex < players.size()) {
             gui.promptPlayerAction(players.get(currentPlayerIndex));
@@ -312,7 +312,9 @@ public class GameManager {
         dealer.receiveCard(deck.dealCard()); // Visible card
         //gui.updateGameMessage("Dealer has a hidden card.");
 
+        
         // Update GUI with the new game state
+        
         gui.updateGameMessage("Starting a new game!");
         gui.updateGameState(players, dealer, false, false);
 
@@ -410,7 +412,7 @@ public class GameManager {
         return this.dealer;
     }
 }
-static class GameState {
+    class GameState {
     private ArrayList<Player> players;
     private Player dealer;
     private Deck deck;
