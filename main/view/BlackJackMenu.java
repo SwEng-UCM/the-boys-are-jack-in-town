@@ -209,11 +209,11 @@ public class BlackJackMenu extends JFrame {
         glassPanel.setOpaque(false);
         glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
-    
-        contentPanel.add(imagePanel, BorderLayout.NORTH); // Optional: add image at the top
+
+        contentPanel.add(imagePanel, BorderLayout.NORTH); // Optional image above title
         mainPanel.add(contentPanel, BorderLayout.CENTER);
         mainPanel.add(glassPanel, BorderLayout.SOUTH);
-    
+
         add(mainPanel);
     }
     
