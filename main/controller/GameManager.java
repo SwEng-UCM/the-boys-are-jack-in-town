@@ -131,6 +131,7 @@ public class GameManager {
                 // 👇 Needed! Re-prompt the same player if still in the round
                 gui.promptPlayerAction(currentPlayer);
             }
+            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
         }
     }
     
@@ -190,7 +191,7 @@ public class GameManager {
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
-            gui.updateGameMessage("Dealer busts! 🎉");
+            gui.updateGameMessage("Dealer busts!");
             for (Player player : players) {
                 if (player.calculateScore() <= 21) {
                     int payout = (int)(player.getCurrentBet() * difficultyStrategy.getPayoutMultiplier());
@@ -212,20 +213,24 @@ public class GameManager {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
                     AchievementManager.getInstance().trackFirstLoss(player);
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
-                    String winMessage = player.getName() + " wins! 🎉 (Payout: " + payout + ")";
+                    String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
                     gui.updateGameMessage(winMessage);
+                    int originalBet = player.getCurrentBet();
                     player.winBet(payout);
                     AchievementManager.getInstance().resetDealerWinStreak();
                     AchievementManager.getInstance().trackPlayerWin(player);
-                    if (payout >= 1000) {
-                        AchievementManager.getInstance().trackBigWin(player, payout);
+                    if (originalBet * 2 >= 1000) {
+                        AchievementManager.getInstance().trackBigWin(player, originalBet * 2);
                     }
+                    AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
                     AchievementManager.getInstance().trackDealerWin();
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();
