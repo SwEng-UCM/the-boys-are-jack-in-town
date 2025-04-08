@@ -21,6 +21,15 @@ public class Card {
         this.hidden = hidden;
         this.type = CardType.STANDARD;
     }
+    public Card(Card original) {
+        this.rank = original.rank;
+        this.suit = original.suit;
+        this.type = original.type;
+        this.wildValue = original.wildValue;
+        this.hidden = false; // or original.hidden if you want to keep it
+    }
+    
+    
 
     public Card(CardType type) {
         this.rank = switch (type) {

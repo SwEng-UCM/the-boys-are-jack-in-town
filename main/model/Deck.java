@@ -31,6 +31,16 @@ public class Deck {
         // Shuffle the deck initially
         shuffle();
     }
+    // Copy constructor
+    public Deck(Deck original) {
+        this.cards = new ArrayList<>();
+        for (Card card : original.cards) {
+            this.cards.add(new Card(card)); // Assuming Card has a copy constructor
+        }
+        this.random = new Random();
+    }
+    
+
 
     public Card dealCard() {
         if (cards.isEmpty()) {
@@ -38,6 +48,10 @@ public class Deck {
         }
         return cards.remove(cards.size() - 1);
     }
+    public List<Card> getCards() {
+        return cards;
+    }
+    
 
     public List<Card> drawMultipleRandomCards(int n) {
         List<Card> drawnCards = new ArrayList<>();
