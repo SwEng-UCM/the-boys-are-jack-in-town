@@ -119,6 +119,7 @@ public class GameManager {
             currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
             checkPlayerBust();
             gui.updateGameState(players, dealer, gameOver, false);
+            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
         }
     }
 
@@ -169,11 +170,13 @@ public class GameManager {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
                     AchievementManager.getInstance().trackFirstLoss(player);
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
                     gui.updateGameMessage(player.getName() + " wins! 🎉");
                     player.winBet(player.getCurrentBet() * 2);
                     AchievementManager.getInstance().resetDealerWinStreak();
                     AchievementManager.getInstance().trackPlayerWin(player);
+                    AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
                     if (player.getCurrentBet() * 2 >= 1000) {
                         AchievementManager.getInstance().trackBigWin(player, player.getCurrentBet() * 2);
                     }
@@ -182,6 +185,7 @@ public class GameManager {
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
                     AchievementManager.getInstance().trackDealerWin();
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();

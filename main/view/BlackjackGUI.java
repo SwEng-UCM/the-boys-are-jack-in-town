@@ -432,6 +432,7 @@ public class BlackjackGUI extends JFrame {
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
+                AudioManager.getInstance().playSoundEffect("/sounds/bet.wav");
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
