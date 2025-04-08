@@ -153,13 +153,13 @@ public class BlackJackMenu extends JFrame {
             }
         };
         glassPanel.setOpaque(false);
-        glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        glassPanel.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
         // Add the button panel to the glass panel
         glassPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Add the glass panel to the main panel
-        mainPanel.add(glassPanel, BorderLayout.SOUTH);
+        contentPanel.add(glassPanel, BorderLayout.SOUTH);
 
         
         add(mainPanel);
