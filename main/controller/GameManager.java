@@ -191,7 +191,7 @@ public class GameManager {
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
-            gui.updateGameMessage("Dealer busts! 🎉");
+            gui.updateGameMessage("Dealer busts!");
             for (Player player : players) {
                 if (player.calculateScore() <= 21) {
                     int payout = (int)(player.getCurrentBet() * difficultyStrategy.getPayoutMultiplier());
@@ -215,14 +215,16 @@ public class GameManager {
                     AchievementManager.getInstance().trackFirstLoss(player);
                     AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
-                    String winMessage = player.getName() + " wins! 🎉 (Payout: " + payout + ")";
+                    String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
                     gui.updateGameMessage(winMessage);
+                    int originalBet = player.getCurrentBet();
                     player.winBet(payout);
                     AchievementManager.getInstance().resetDealerWinStreak();
                     AchievementManager.getInstance().trackPlayerWin(player);
-                    if (player.getCurrentBet() * 2 >= 1000) {
-                        AchievementManager.getInstance().trackBigWin(player, player.getCurrentBet() * 2);
+                    if (originalBet * 2 >= 1000) {
+                        AchievementManager.getInstance().trackBigWin(player, originalBet * 2);
                     }
+                    AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
