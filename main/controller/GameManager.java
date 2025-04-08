@@ -1,5 +1,6 @@
 package main.controller;
 
+import main.model.Badge;
 import main.model.Card;
 import main.model.Deck;
 import main.model.DifficultyStrategy;
@@ -212,7 +213,7 @@ public class GameManager {
                 if (playerScore > 21) {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
-                    AchievementManager.getInstance().trackFirstLoss(player);
+                    AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
                     String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
@@ -220,15 +221,16 @@ public class GameManager {
                     int originalBet = player.getCurrentBet();
                     player.winBet(payout);
                     AchievementManager.getInstance().resetDealerWinStreak();
-                    AchievementManager.getInstance().trackPlayerWin(player);
+                    AchievementManager.getInstance().unlock(Badge.FIRST_WIN);
                     if (originalBet * 2 >= 1000) {
-                        AchievementManager.getInstance().trackBigWin(player, originalBet * 2);
+                        AchievementManager.getInstance().unlock(Badge.BIG_WIN);
                     }
                     AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
+                    AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AchievementManager.getInstance().trackDealerWin();
                     AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else {
@@ -273,9 +275,13 @@ public class GameManager {
      */
     public boolean placeBet(Player player, int betAmount) {
         gui.updateGameState(players, dealer, gameOver, false);
-        return player.placeBet(betAmount);
-
+        boolean placed = player.placeBet(betAmount);
+        if (placed) {
+            AchievementManager.getInstance().unlock(Badge.FIRST_BET);
+        }
+        return placed;
     }
+    
 
     public int getPlayerBalance(Player player) {
         return player.getBalance();

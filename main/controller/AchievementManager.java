@@ -1,5 +1,6 @@
 package main.controller;
 
+import main.model.Badge;
 import main.model.Player;
 
 import java.util.*;
@@ -8,6 +9,8 @@ public class AchievementManager {
     private static AchievementManager instance;
     private final Map<String, Integer> dealerStats = new HashMap<>();
     private final Map<Player, Map<String, Integer>> playerStats = new HashMap<>();
+    private final Set<Badge> unlockedBadges = EnumSet.noneOf(Badge.class);
+
 
     private final List<String> unlockedAchievements = new ArrayList<>();
     private int dealerWinStreak = 0;
@@ -75,24 +78,40 @@ public class AchievementManager {
     public void trackFirstBet(Player player) {
         updatePlayerStat(player, "bets", 1);
         if (getPlayerStat(player, "bets") == 1) {
-            unlock(player.getName() + ": First Bet!");
+            unlock(Badge.FIRST_BET);
         }
     }
     
     public void trackFirstLoss(Player player) {
         updatePlayerStat(player, "losses", 1);
         if (getPlayerStat(player, "losses") == 1) {
-            unlock(player.getName() + ": First Loss");
+            unlock(Badge.FIRST_LOSS);
         }
     }
     
     public void trackFirstBlackjack(Player player) {
         if (player.getHand().size() == 2 && player.calculateScore() == 21) {
-            unlock(player.getName() + ": First Blackjack!");
-        }
+            unlock(Badge.FIRST_BLACKJACK);        }
     }    
 
     public List<String> getUnlockedAchievements() {
         return unlockedAchievements;
+    }
+
+    public void unlock(Badge badge) {
+        if (unlockedBadges.add(badge)) {
+            System.out.println("Badge unlocked: " + badge.name());
+        } else {
+            System.out.println("Already unlocked or skipped: " + badge.name());
+        }
+    }
+    
+
+    public boolean isUnlocked(Badge badge) {
+        return unlockedBadges.contains(badge);
+    }
+    
+    public Set<Badge> getUnlockedBadges() {
+        return Collections.unmodifiableSet(unlockedBadges);
     }
 }

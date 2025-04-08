@@ -1,25 +1,26 @@
 package main.view;
 
 import main.controller.AchievementManager;
+import main.model.Badge;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class AchievementsWindow extends JFrame {
 
     public AchievementsWindow() {
         setTitle("Achievements");
-        setSize(900, 500);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         ImageIcon icon = new ImageIcon("img/icons/achievement_window.png");
         setIconImage(icon.getImage());
 
-        // Create background panel
+        // Background panel with image
         JPanel backgroundPanel = new JPanel() {
-            private final Image bg = new ImageIcon("img/achievement_background.jpg").getImage();
+            private final Image bg = new ImageIcon("img/ach_background.png").getImage();
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -28,58 +29,60 @@ public class AchievementsWindow extends JFrame {
         };
         backgroundPanel.setLayout(new BorderLayout());
 
-        // Title label
-        JLabel titleLabel = new JLabel("Your Achievements", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Georgia", Font.BOLD, 32));
-        titleLabel.setForeground(Color.YELLOW);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        // Badge grid panel
+        JPanel gridPanel = new JPanel(new GridLayout(0, 3, 20, 20)); // 3 badges per row
+        gridPanel.setOpaque(false);
 
-        // Achievements list panel
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setOpaque(false); // transparent background
-
-        List<String> achievements = AchievementManager.getInstance().getUnlockedAchievements();
-
-        if (achievements.isEmpty()) {
-            JLabel emptyLabel = new JLabel("No achievements yet.");
-            emptyLabel.setFont(new Font("Arial", Font.ITALIC, 22));
-            emptyLabel.setForeground(Color.LIGHT_GRAY);
-            emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            listPanel.add(emptyLabel);
-        } else {
-            for (String achievement : achievements) {
-                JPanel card = createAchievementCard(achievement);
-                listPanel.add(card);
-                listPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spacing
-            }
+        for (Badge badge : Badge.values()) {
+            boolean unlocked = AchievementManager.getInstance().isUnlocked(badge);
+            gridPanel.add(createBadgePanel(badge, unlocked));
         }
 
-        JScrollPane scrollPane = new JScrollPane(listPanel);
+        // Scroll pane
+        JScrollPane scrollPane = new JScrollPane(gridPanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        backgroundPanel.add(titleLabel, BorderLayout.NORTH);
-        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
+        // Glass-like wrapper around badge list
+        JPanel glassPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.35f));
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.dispose();
+            }
+        };
+        glassPanel.setOpaque(false);
+        glassPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        glassPanel.add(scrollPane, BorderLayout.CENTER);
+
+        backgroundPanel.add(glassPanel, BorderLayout.CENTER);
         setContentPane(backgroundPanel);
     }
 
-    private JPanel createAchievementCard(String text) {
-        JPanel card = new JPanel();
-        card.setLayout(new BorderLayout());
-        card.setBackground(new Color(255, 215, 0, 200)); // Gold with transparency
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 2),
-                BorderFactory.createEmptyBorder(10, 15, 10, 15)
-        ));
+    private JPanel createBadgePanel(Badge badge, boolean unlocked) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setForeground(Color.BLACK);
+        String imagePath = unlocked ? badge.coloredPath : badge.greyPath;
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image scaledImage = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        card.add(label, BorderLayout.CENTER);
-        return card;
+        JLabel titleLabel = new JLabel(badge.title, SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        titleLabel.setForeground(unlocked ? Color.WHITE : Color.WHITE);
+
+        panel.add(imageLabel, BorderLayout.CENTER);
+        panel.add(titleLabel, BorderLayout.SOUTH);
+        return panel;
     }
 }
