@@ -1,9 +1,17 @@
 {
   "game": {
+    "num_players": 3,
     "playerHand": [
-      { "suit": "Hearts", "rank": "King" },
-      { "suit": "Spades", "rank": "7" }
+      [{ "suit": "Hearts", "rank": "King" },
+      { "suit": "Spades", "rank": "7" }],
+
+      [{ "suit": "Diamonds", "rank": "5" },
+        { "suit": "Clubs", "rank": "2" }],
+
+      [{ "suit": "Hearts", "rank": "King" },
+        { "suit": "Spades", "rank": "7" }]
     ],
+
     "dealerHand": [
       { "suit": "Diamonds", "rank": "9" },
       { "suit": "Clubs", "rank": "Ace" }
@@ -18,6 +26,6 @@
     "dealerBalance": 5000,
     "dealerBet": 50,
     "dealerScore": 19,
-    "playerScore": 17
+    "playerScores": [13, 12, 18]
   }
 }

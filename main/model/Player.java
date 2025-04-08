@@ -12,6 +12,7 @@ public class Player {
     private double scoreMultiplier; // Multiplier for score calculations (default 1.0)
     private int balance; // Player's balance (chips/money)
     private int currentBet; // Player's current bet
+    private int currentScore;
 
     public Player(String name, int initialBalance) {
         this.name = name;
@@ -19,6 +20,7 @@ public class Player {
         this.scoreMultiplier = 1.0;
         this.balance = initialBalance;
         this.currentBet = 0;
+        this.currentScore = 0;
     }
 
     /** Adds a card to the player's hand. */
@@ -29,6 +31,8 @@ public class Player {
             scoreMultiplier = 0.5;
         }
     }
+
+
 
     /** Returns the list of cards in the player's hand. */
     public List<Card> getHand() {
@@ -112,5 +116,26 @@ public class Player {
     /** Returns the player's name. */
     public String getName() {
         return name;
+    }
+
+    public void setBalance(int inputBalance) {
+        this.balance = inputBalance;
+    }
+
+    public void setHand(List<Card> hand) {
+        this.hand.clear();
+        this.hand.addAll(hand);
+    }
+
+    public void setCurrentBet(int currentBet) {
+        this.currentBet = currentBet;
+    }
+
+    public void setScoreMultiplier(double scoreMultiplier) {
+        this.scoreMultiplier = scoreMultiplier;
+    }
+
+    public void setCurrentScore(Integer integer) {
+        this.currentScore = integer;
     }
 }

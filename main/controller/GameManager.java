@@ -9,6 +9,8 @@ import javax.swing.Timer;
 
 import static main.view.BlackJackMenu.language;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -366,5 +368,58 @@ public class GameManager {
 
     public Player getDealer() {
         return this.dealer;
+    }
+
+    /// //////////////////////////////////////////////////
+    // SAVE/LOAD
+    public void loadGame(File jsonFile) throws IOException {
+        GameState loadedState = new GameState(jsonFile);
+        applyGameState(loadedState);
+    }
+
+    private void applyGameState(GameState state) {
+        this.players = new ArrayList<>(state.getPlayers());
+        this.dealer = state.getDealer();
+        this.deck = state.getDeck();
+        this.currentPlayerIndex = determineCurrentPlayerIndex(state);
+        this.gameOver = false;  // Resume gameplay from loaded state
+
+        // Restore each player's hand and score
+        ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
+        for (int i = 0; i < loadedPlayers.size(); i++) {
+            Player player = loadedPlayers.get(i);
+            player.setHand(state.getPlayerHands().get(i));
+            player.setCurrentScore(state.getPlayerScores().get(i));
+            player.setCurrentBet(state.getCurrentBet());
+            player.setBalance(state.getPlayerBalance());
+        }
+
+        // Restore dealer's hand, score, and balance
+        this.dealer.setHand(state.getDealerHand());
+        this.dealer.setBalance(state.getDealerBalance());
+        this.dealer.setCurrentBet(state.getDealerBet());
+
+        // Restore deck
+        //this.deck.setCards(state.getDeckCards());
+
+        // Set betting manager
+        this.bettingManager = new BettingManager(players, state.getPlayerBalance(), state.getDealerBalance());
+        this.bettingManager.placeDealerBet(state.getDealerBet());
+
+        // Update GUI
+        SwingUtilities.invokeLater(() -> {
+            gui.updateGameMessage("Game loaded successfully!");
+            gui.updateGameState(players, dealer, false, false);
+            gui.setGameButtonsEnabled(true);
+            gui.enableBetting();
+            startNextPlayerTurn();
+        });
+    }
+
+
+    private int determineCurrentPlayerIndex(GameState state) {
+        // Logic to determine which player's turn it should be
+        // This depends on your game flow - you might need to track this in your JSON
+        return 0; // Default to first player
     }
 }

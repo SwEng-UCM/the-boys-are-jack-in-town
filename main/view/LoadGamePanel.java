@@ -1,13 +1,18 @@
 package main.view;
 
+import main.controller.GameState;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class LoadGamePanel extends JFrame {
     private BlackJackMenu menu;
     private JFileChooser fileChooser;
+    private GameState loadedState;
 
     public LoadGamePanel(BlackJackMenu parent) {
         super("Load Game");
@@ -23,9 +28,28 @@ public class LoadGamePanel extends JFrame {
         fileChooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
 
         int returnValue = fileChooser.showOpenDialog(this);
+
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+
+            try {
+                // Read all bytes from the file and convert to String
+                String content = new String(Files.readAllBytes(selectedFile.toPath()));
+//                System.out.println("File content:");
+//                System.out.println(content);
+
+                loadedState = new GameState(selectedFile);
+                System.out.println(loadedState);
+
+
+            } catch (IOException e) {
+                System.err.println("Error reading file: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("No file selected");
         }
 
 
