@@ -13,6 +13,8 @@ import main.model.Card;
 import main.model.Deck;
 import main.model.Player;
 
+
+// MOMENTO CLass
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
 

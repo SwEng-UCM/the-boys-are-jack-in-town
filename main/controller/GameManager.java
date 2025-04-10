@@ -49,6 +49,9 @@ public class GameManager {
         this.currentPlayerIndex = 0;
         players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
+    }
+
+    private GameManager(GameState gs){
 
     }
 
@@ -372,9 +375,8 @@ public class GameManager {
 
     /// //////////////////////////////////////////////////
     // SAVE/LOAD
-    public void loadGame(File jsonFile) throws IOException {
-        GameState loadedState = new GameState(jsonFile);
-        applyGameState(loadedState);
+    public void loadGame(GameState gs) throws IOException {
+        applyGameState(gs);
     }
 
     private void applyGameState(GameState state) {
@@ -414,6 +416,9 @@ public class GameManager {
             gui.enableBetting();
             startNextPlayerTurn();
         });
+
+
+
     }
 
 

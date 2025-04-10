@@ -26,6 +26,7 @@
     "dealerBalance": 5000,
     "dealerBet": 50,
     "dealerScore": 19,
-    "playerScores": [13, 12, 18]
+    "playerScores": [13, 12, 18],
+    "Players": ["Finn", "Hanna"]
   }
 }

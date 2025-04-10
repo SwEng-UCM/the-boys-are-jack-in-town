@@ -1,5 +1,6 @@
 package main.view;
 
+import main.controller.GameManager;
 import main.controller.GameState;
 
 import javax.swing.*;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+// CARE TAKER Class
 public class LoadGamePanel extends JFrame {
     private BlackJackMenu menu;
     private JFileChooser fileChooser;
@@ -34,15 +36,12 @@ public class LoadGamePanel extends JFrame {
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 
             try {
-                // Read all bytes from the file and convert to String
-                String content = new String(Files.readAllBytes(selectedFile.toPath()));
-//                System.out.println("File content:");
-//                System.out.println(content);
-
                 loadedState = new GameState(selectedFile);
                 System.out.println(loadedState);
+                GameManager manager = GameManager.getInstance();
+                manager.loadGame(loadedState);
 
-
+                setVisible(false);
             } catch (IOException e) {
                 System.err.println("Error reading file: " + e.getMessage());
                 JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage(),
