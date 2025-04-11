@@ -18,12 +18,10 @@ import main.model.Player;
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private GameState newGameState;
-    private GameState loadedGameState;
-
     private List<Player> players;
     private Player dealer;
     private Deck deck;
+    private int currentPlayerIndex;
     private int numPlayers;
     private int playerBalance;
     private int currentBet;
@@ -41,6 +39,14 @@ public class GameState implements Serializable {
         Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
         Map<String, Object> gameData = (Map<String, Object>) jsonData.get("game");
 
+
+        this.players = ((List<?>) gameData.get("players")).stream()
+                .map(p -> mapper.convertValue(p, Player.class))
+                .collect(Collectors.toList());
+        this.dealer = mapper.convertValue(gameData.get("dealer"), Player.class);
+        this.deck = mapper.convertValue(gameData.get("deck"), Deck.class);
+
+        this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
         this.numPlayers = (int) gameData.get("num_players");
         this.playerBalance = (int) gameData.get("playerBalance");
         this.currentBet = (int) gameData.get("currentBet");
@@ -50,6 +56,9 @@ public class GameState implements Serializable {
         this.playerScores = (List<Integer>) gameData.get("playerScores");
 
         // Convert JSON card data to Card objects
+        Object rawPlayerHand = gameData.get("playerHand");
+        System.out.println(rawPlayerHand.getClass()); // will show you exactly what's inside
+
         this.playerHands = convertJsonToCardLists((List<List<Map<String, String>>>) gameData.get("playerHand"));
         this.dealerHand = convertJsonToCards((List<Map<String, String>>) gameData.get("dealerHand"));
         this.deckCards = convertJsonToCards((List<Map<String, String>>) gameData.get("deck"));
@@ -101,6 +110,9 @@ public class GameState implements Serializable {
     }
     public List<Card> getDeckCards() {
         return deckCards;
+    }
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
     }
 
     @Override

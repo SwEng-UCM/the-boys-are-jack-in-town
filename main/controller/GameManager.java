@@ -25,6 +25,8 @@ import javax.swing.SwingUtilities;
  * actions,
  * dealer actions, and determine the game outcome.
  */
+
+// ORIGINATOR Class
 public class GameManager {
     private static GameManager instance;
 
@@ -51,6 +53,7 @@ public class GameManager {
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
     }
 
+    // Given a gameState create an instance of the game with the provided information.
     private GameManager(GameState gs){
 
     }
@@ -373,13 +376,15 @@ public class GameManager {
         return this.dealer;
     }
 
-    /// //////////////////////////////////////////////////
+
     // SAVE/LOAD
     public void loadGame(GameState gs) throws IOException {
         applyGameState(gs);
     }
 
+    // this method should apply the game state changes
     private void applyGameState(GameState state) {
+        System.out.println("Applying game state");
         this.players = new ArrayList<>(state.getPlayers());
         this.dealer = state.getDealer();
         this.deck = state.getDeck();
@@ -420,7 +425,6 @@ public class GameManager {
 
 
     }
-
 
     private int determineCurrentPlayerIndex(GameState state) {
         // Logic to determine which player's turn it should be

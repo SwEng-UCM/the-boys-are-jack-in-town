@@ -1,5 +1,8 @@
 package main.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,8 @@ public class Player {
     private int currentBet; // Player's current bet
     private int currentScore;
 
-    public Player(String name, int initialBalance) {
+    @JsonCreator
+    public Player(@JsonProperty("name") String name, @JsonProperty("initialBalance")int initialBalance) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.scoreMultiplier = 1.0;

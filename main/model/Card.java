@@ -1,5 +1,8 @@
 package main.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a playing card with a rank and a suit, including special cards that modify Blackjack rules.
  */
@@ -15,7 +18,8 @@ public class Card {
     private final CardType type;
     private int wildValue; // Dynamic value for Joker Wild
 
-    public Card(String rank, String suit, boolean hidden) {
+    @JsonCreator
+    public Card(@JsonProperty("rank") String rank, @JsonProperty("suit") String suit, @JsonProperty("hidden") boolean hidden) {
         this.rank = rank;
         this.suit = suit;
         this.hidden = hidden;

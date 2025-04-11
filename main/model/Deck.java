@@ -1,5 +1,8 @@
 package main.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.*;
 
 /**
@@ -8,6 +11,7 @@ import java.util.*;
 public class Deck {
     private final List<Card> cards;
     private final Random random;
+
 
     public Deck() {
         cards = new ArrayList<>();
@@ -29,6 +33,21 @@ public class Deck {
         cards.add(new Card(Card.CardType.JOKER_WILD));
 
         // Shuffle the deck initially
+        shuffle();
+    }
+    @JsonCreator
+    public Deck(@JsonProperty("cards") List<Card> cards) {
+        random = new Random();
+
+        List<Card> newCards = new ArrayList<>();
+        for (Card c : cards) {
+            newCards.add(new Card(c.getRank(), c.getSuit(), false));
+        }
+        newCards.add(new Card(Card.CardType.BLACKJACK_BOMB));
+        newCards.add(new Card(Card.CardType.SPLIT_ACE));
+        newCards.add(new Card(Card.CardType.JOKER_WILD));
+
+        this.cards = newCards;
         shuffle();
     }
 

@@ -1,0 +1,42 @@
+{
+  "game": {
+    "INITIAL_BET": 1000,
+    "isPaused": false,
+    "num_players": 3,
+    "playerBalance": 1000,
+    "currentBet": 50,
+    "dealerBalance": 5000,
+    "dealerBet": 50,
+    "dealerScore": 19,
+    "playerScores": [13, 12, 18],
+
+    "players": [   {"name":"Player 1", "initialBalance": 1000},
+      {"name":"Player 2",
+        "initialBalance": 4000},
+      {"name":"Player 3",
+        "initialBalance": 10}
+    ],
+
+    "dealer":{"name":"Dealer", "initialBalance": 69},
+    "currentPlayerIndex": 0,
+
+    "playerHand": [
+      [{ "suit": "Hearts", "rank": "King" , "hidden":  false}, { "suit": "Spades", "rank": "7", "hidden":  false }],
+      [{ "suit": "Diamonds", "rank": "5", "hidden":  false }, { "suit": "Clubs", "rank": "2" , "hidden":  false}],
+      [{ "suit": "Hearts", "rank": "King", "hidden":  false }, { "suit": "Spades", "rank": "7" , "hidden":  false}]
+    ],
+
+    "dealerHand": [
+      { "suit": "Diamonds", "rank": "9","hidden":  false},
+      { "suit": "Clubs", "rank": "Ace","hidden":  false }
+    ],
+
+    "deck": {
+      "cards": [
+        { "suit": "Hearts", "rank": "2" , "hidden":  false},
+        { "suit": "Clubs", "rank": "5", "hidden":  false },
+        { "suit": "Spades", "rank": "Queen", "hidden":  false }
+      ]
+    }
+  }
+}

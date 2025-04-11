@@ -24,7 +24,7 @@ public class LoadGamePanel extends JFrame {
         setLayout(new BorderLayout());
 
         // Initialize the file chooser
-        fileChooser = new JFileChooser();
+        fileChooser = new JFileChooser(new File("main"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
@@ -38,6 +38,7 @@ public class LoadGamePanel extends JFrame {
             try {
                 loadedState = new GameState(selectedFile);
                 System.out.println(loadedState);
+
                 GameManager manager = GameManager.getInstance();
                 manager.loadGame(loadedState);
 
@@ -50,6 +51,8 @@ public class LoadGamePanel extends JFrame {
         } else {
             System.out.println("No file selected");
         }
+
+
 
 
     }
