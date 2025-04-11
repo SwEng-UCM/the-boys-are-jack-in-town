@@ -390,6 +390,7 @@ public class GameManager {
         this.deck = state.getDeck();
         this.currentPlayerIndex = determineCurrentPlayerIndex(state);
         this.gameOver = false;  // Resume gameplay from loaded state
+        this.gui = new BlackjackGUI(this);
 
         // Restore each player's hand and score
         ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
@@ -421,9 +422,6 @@ public class GameManager {
             gui.enableBetting();
             startNextPlayerTurn();
         });
-
-
-
     }
 
     private int determineCurrentPlayerIndex(GameState state) {

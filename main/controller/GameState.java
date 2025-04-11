@@ -55,22 +55,28 @@ public class GameState implements Serializable {
         this.dealerScore = (int) gameData.get("dealerScore");
         this.playerScores = (List<Integer>) gameData.get("playerScores");
 
-        // Convert JSON card data to Card objects
-        Object rawPlayerHand = gameData.get("playerHand");
-        System.out.println(rawPlayerHand.getClass()); // will show you exactly what's inside
+        List<List<Map<String, Object>>> rawPlayerHands = mapper.convertValue(gameData.get("playerHand"), List.class);
+        this.playerHands = convertJsonToCardLists(rawPlayerHands);
 
-        this.playerHands = convertJsonToCardLists((List<List<Map<String, String>>>) gameData.get("playerHand"));
-        this.dealerHand = convertJsonToCards((List<Map<String, String>>) gameData.get("dealerHand"));
-        this.deckCards = convertJsonToCards((List<Map<String, String>>) gameData.get("deck"));
+        List<Map<String, Object>> rawDealerHand = mapper.convertValue(gameData.get("dealerHand"), List.class);
+        this.dealerHand = convertJsonToCards(rawDealerHand);
+
+        Map<String, Object> deckMap = (Map<String, Object>) gameData.get("deck");
+        List<Map<String, Object>> cards = (List<Map<String, Object>>) deckMap.get("cards");
+        this.deckCards = convertJsonToCards(cards);
     }
 
-    private List<Card> convertJsonToCards(List<Map<String, String>> jsonCards) {
+    private List<Card> convertJsonToCards(List<Map<String, Object>> jsonCards) {
         return jsonCards.stream()
-                .map(cardMap -> new Card(cardMap.get("suit"), cardMap.get("rank"), false))
+                .map(cardMap -> new Card(
+                        (String) cardMap.get("suit"),
+                        (String) cardMap.get("rank"),
+                        cardMap.get("hidden") != null && (boolean) cardMap.get("hidden")
+                ))
                 .collect(Collectors.toList());
     }
 
-    private List<List<Card>> convertJsonToCardLists(List<List<Map<String, String>>> jsonCardLists) {
+    private List<List<Card>> convertJsonToCardLists(List<List<Map<String, Object>>> jsonCardLists) {
         return jsonCardLists.stream()
                 .map(this::convertJsonToCards)
                 .collect(Collectors.toList());
