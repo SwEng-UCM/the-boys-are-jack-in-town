@@ -77,44 +77,6 @@ public class BlackJackMenu extends JFrame {
         exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
     
-        // 🎯 Styled Difficulty Selector
-        String[] difficulties = {"Easy", "Medium", "Hard"};
-        difficultyComboBox = new JComboBox<>(difficulties);
-        difficultyComboBox.setSelectedItem("Medium");
-        difficultyComboBox.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        difficultyComboBox.setPreferredSize(new Dimension(160, 40));
-        difficultyComboBox.setBackground(new Color(255, 215, 0));
-        difficultyComboBox.setForeground(Color.BLACK);
-        difficultyComboBox.setFocusable(false);
-        difficultyComboBox.setBorder(BorderFactory.createLineBorder(new Color(240, 180, 0), 2, true));
-        difficultyComboBox.setUI(new javax.swing.plaf.basic.BasicComboBoxUI() {
-            @Override
-            protected JButton createArrowButton() {
-                JButton button = new JButton("▼");
-                button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                button.setBackground(new Color(255, 215, 0));
-                button.setForeground(Color.BLACK);
-                button.setBorder(null);
-                return button;
-            }
-        });
-    
-        difficultyComboBox.addActionListener(e -> {
-            String selected = (String) difficultyComboBox.getSelectedItem();
-            switch (selected) {
-                case "Easy":
-                    GameManager.getInstance().setDifficultyStrategy(new EasyDifficulty());
-                    break;
-                case "Medium":
-                    GameManager.getInstance().setDifficultyStrategy(new MediumDifficulty());
-                    break;
-                case "Hard":
-                    GameManager.getInstance().setDifficultyStrategy(new HardDifficulty());
-                    break;
-            }
-            System.out.println("Difficulty set to: " + selected);
-        });
-    
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
         Image originalImage = originalIcon.getImage();
@@ -131,6 +93,7 @@ public class BlackJackMenu extends JFrame {
     
         startTitleAnimation();
     }
+    
     
     
     
@@ -158,18 +121,6 @@ public class BlackJackMenu extends JFrame {
     
         contentPanel.add(titlePanel, BorderLayout.CENTER);
     
-        // 🎯 Difficulty selector banner panel
-        JPanel difficultyBanner = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        difficultyBanner.setOpaque(false);
-        difficultyBanner.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-    
-        JLabel difficultyLabel = new JLabel("🎯 Difficulty:");
-        difficultyLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        difficultyLabel.setForeground(Color.WHITE);
-    
-        difficultyBanner.add(difficultyLabel);
-        difficultyBanner.add(difficultyComboBox);
-    
         // Button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
@@ -187,11 +138,10 @@ public class BlackJackMenu extends JFrame {
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
     
-        // Wrap difficulty + buttons vertically
+        // Wrap buttons vertically
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
         lowerPanel.setOpaque(false);
-        lowerPanel.add(difficultyBanner);
         lowerPanel.add(buttonPanel);
     
         // Glassmorphism-style panel
@@ -209,13 +159,14 @@ public class BlackJackMenu extends JFrame {
         glassPanel.setOpaque(false);
         glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
-
-        contentPanel.add(imagePanel, BorderLayout.NORTH); // Optional image above title
+    
+        contentPanel.add(imagePanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
         mainPanel.add(glassPanel, BorderLayout.SOUTH);
-
+    
         add(mainPanel);
     }
+    
     
     
 
