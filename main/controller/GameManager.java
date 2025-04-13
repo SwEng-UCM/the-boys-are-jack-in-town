@@ -275,8 +275,7 @@ public class GameManager {
         //resumeGame();
 
         // Dealer receives one face-up and one face-down card
-        dealer.receiveCard(deck.dealCard()); // Visible card
-        //gui.updateGameMessage("Dealer has a hidden card.");
+        dealer.receiveCard(deck.dealCard()); // Visible card - this line is giving me guff
 
         // Update GUI with the new game state
         gui.updateGameMessage("Starting a new game!");
