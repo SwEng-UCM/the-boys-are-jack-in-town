@@ -53,10 +53,6 @@ public class GameManager {
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
     }
 
-    // Given a gameState create an instance of the game with the provided information.
-    private GameManager(GameState gs){
-
-    }
 
     // Public method to provide access to the singleton instance
     public static GameManager getInstance() {
@@ -275,7 +271,7 @@ public class GameManager {
         //resumeGame();
 
         // Dealer receives one face-up and one face-down card
-        dealer.receiveCard(deck.dealCard()); // Visible card - this line is giving me guff
+        dealer.receiveCard(deck.dealCard()); // Visible card
 
         // Update GUI with the new game state
         gui.updateGameMessage("Starting a new game!");
@@ -388,7 +384,7 @@ public class GameManager {
         this.dealer = state.getDealer();
         this.deck = state.getDeck();
         this.currentPlayerIndex = determineCurrentPlayerIndex(state);
-        this.gameOver = false;  // Resume gameplay from loaded state
+        this.gameOver = false;
         this.gui = new BlackjackGUI(this);
 
         // Restore each player's hand and score
@@ -396,9 +392,9 @@ public class GameManager {
         for (int i = 0; i < loadedPlayers.size(); i++) {
             Player player = loadedPlayers.get(i);
             player.setHand(state.getPlayerHands().get(i));
-            player.setCurrentScore(state.getPlayerScores().get(i));
-            player.setCurrentBet(state.getCurrentBet());
-            player.setBalance(state.getPlayerBalance());
+            player.setCurrentScore();
+            player.setCurrentBet(state.getCurrentBets().get(i));
+            player.setBalance(state.getPlayerBalances().get(i));
         }
 
         // Restore dealer's hand, score, and balance
@@ -410,7 +406,7 @@ public class GameManager {
         //this.deck.setCards(state.getDeckCards());
 
         // Set betting manager
-        this.bettingManager = new BettingManager(players, state.getPlayerBalance(), state.getDealerBalance());
+        this.bettingManager = new BettingManager(players, state.getPlayerBalances().get(currentPlayerIndex), state.getDealerBalance());
         this.bettingManager.placeDealerBet(state.getDealerBet());
 
         // Update GUI
@@ -424,8 +420,7 @@ public class GameManager {
     }
 
     private int determineCurrentPlayerIndex(GameState state) {
-        // Logic to determine which player's turn it should be
-        // This depends on your game flow - you might need to track this in your JSON
-        return 0; // Default to first player
+       return state.getCurrentPlayerIndex();
+
     }
 }

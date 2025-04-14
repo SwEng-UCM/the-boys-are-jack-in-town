@@ -23,8 +23,9 @@ public class GameState implements Serializable {
     private Deck deck;
     private int currentPlayerIndex;
     private int numPlayers;
-    private int playerBalance;
-    private int currentBet;
+//    private int playerBalance;
+private List<Integer> playerBalances;
+    private List<Integer> currentBets;
     private int dealerBalance;
     private int dealerBet;
     private int dealerScore;
@@ -48,8 +49,10 @@ public class GameState implements Serializable {
 
         this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
         this.numPlayers = (int) gameData.get("num_players");
-        this.playerBalance = (int) gameData.get("playerBalance");
-        this.currentBet = (int) gameData.get("currentBet");
+        //this.playerBalance = (int) gameData.get("playerBalance");
+        this.playerBalances = (List<Integer>) gameData.get("playerBalances");
+//        this.currentBet = (int) gameData.get("currentBet");
+        this.currentBets = (List<Integer>) gameData.get("currentBets");
         this.dealerBalance = (int) gameData.get("dealerBalance");
         this.dealerBet = (int) gameData.get("dealerBet");
         this.dealerScore = (int) gameData.get("dealerScore");
@@ -69,8 +72,8 @@ public class GameState implements Serializable {
     private List<Card> convertJsonToCards(List<Map<String, Object>> jsonCards) {
         return jsonCards.stream()
                 .map(cardMap -> new Card(
-                        (String) cardMap.get("suit"),
                         (String) cardMap.get("rank"),
+                        (String) cardMap.get("suit"),
                         cardMap.get("hidden") != null && (boolean) cardMap.get("hidden")
                 ))
                 .collect(Collectors.toList());
@@ -90,11 +93,11 @@ public class GameState implements Serializable {
     public int getNumPlayers() {
         return numPlayers;
     }
-    public int getPlayerBalance() {
-        return playerBalance;
+    public List<Integer> getPlayerBalances() {
+        return playerBalances;
     }
-    public int getCurrentBet() {
-        return currentBet;
+    public List<Integer> getCurrentBets() {
+        return currentBets;
     }
     public int getDealerBalance() {
         return dealerBalance;
@@ -127,8 +130,8 @@ public class GameState implements Serializable {
 
         sb.append("=== Game State ===\n");
         sb.append("Number of Players: ").append(getNumPlayers()).append("\n");
-        sb.append("Player Balance: ").append(getPlayerBalance()).append("\n");
-        sb.append("Current Bet: ").append(getCurrentBet()).append("\n");
+        sb.append("Player Balance: ").append(getPlayerBalances()).append("\n");
+        sb.append("Current Bet: ").append(getCurrentBets()).append("\n");
         sb.append("Dealer Balance: ").append(getDealerBalance()).append("\n");
         sb.append("Dealer Bet: ").append(getDealerBet()).append("\n");
         sb.append("Dealer Score: ").append(getDealerScore()).append("\n");

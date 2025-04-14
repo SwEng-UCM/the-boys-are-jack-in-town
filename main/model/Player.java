@@ -139,7 +139,7 @@ public class Player {
         this.scoreMultiplier = scoreMultiplier;
     }
 
-    public void setCurrentScore(Integer integer) {
-        this.currentScore = integer;
+    public void setCurrentScore() {
+        this.currentScore = this.calculateScore();
     }
 }

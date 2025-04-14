@@ -505,7 +505,7 @@ playerBetLabels.put(player, betLabel);
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
-        betLabel.setText(Texts.bet[language] + " $0");
+        betLabel.setText(Texts.bet[language] + " $"+gameManager.getPlayerBet(gameManager.getCurrentPlayer()));
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
@@ -674,20 +674,6 @@ playerBetLabels.put(player, betLabel);
         }
         return wildValue;
     }
-/*
-    private void checkForSpecialCard(Card card) {
-        if (card.isJokerWild()) {
-            updateGameMessage(Texts.jokerWildMessage[language]);
-        } else if (card.isSplitAce()) {
-            updateGameMessage(Texts.splitAceMessage[language]);
-        } else if (card.isBlackjackBomb()) {
-            updateGameMessage(Texts.blackjackBombMessage[language]);
-        } else {
-            updateSpecialMessage("...");
-        }
-    }
- */
-
  
     public void promptPlayerAction(Player player) {
         if (!gameManager.isCurrentPlayerStillInRound()) {
@@ -704,15 +690,13 @@ playerBetLabels.put(player, betLabel);
         }
     }
 
-    
-
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayers()) {
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);  // ✅ Transparent player panel
             panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg
-    
+
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());

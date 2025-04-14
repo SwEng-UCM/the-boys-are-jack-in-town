@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 // CARE TAKER Class
-public class LoadGamePanel extends JFrame {
+public class LoadGamePanel extends JDialog {
     private BlackJackMenu menu;
     private JFileChooser fileChooser;
     private GameState loadedState;
 
     public LoadGamePanel(BlackJackMenu parent) {
-        super("Load Game");
+        super();
         this.menu = parent;
         setSize(300, 200);
         setLocationRelativeTo(parent);
@@ -42,7 +42,7 @@ public class LoadGamePanel extends JFrame {
                 GameManager manager = GameManager.getInstance();
                 manager.loadGame(loadedState);
 
-                setVisible(false);
+                dispose();
             } catch (IOException e) {
                 System.err.println("Error reading file: " + e.getMessage());
                 JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage(),
