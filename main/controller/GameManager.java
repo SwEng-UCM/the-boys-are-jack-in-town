@@ -12,6 +12,7 @@ import static main.view.BlackJackMenu.language;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -422,5 +423,37 @@ public class GameManager {
     private int determineCurrentPlayerIndex(GameState state) {
        return state.getCurrentPlayerIndex();
 
+    }
+
+    public void save() throws IOException {
+        System.out.println("Saving game state");
+        // Save all the relevant data that is used in the .json files
+        GameState saveState = new GameState();
+        File saveFile = new File("saveFile.json");
+
+        saveState.setPlayers(this.players);
+        saveState.setDealer(this.dealer);
+        saveState.setCurrentPlayerIndex(currentPlayerIndex);
+        saveState.setDealerBalance(dealer.getBalance());
+        saveState.setDealerBet(dealer.getCurrentBet());
+
+        List<Integer> playerBalances = new ArrayList<>();
+        List<Integer> playerScores = new ArrayList<>();
+        List<Integer> playerBets = new ArrayList<>();
+        for(Player p : this.players) {
+            playerBalances.add(p.getBalance());
+            playerScores.add(p.calculateScore());
+            playerBets.add(p.getCurrentBet());
+        }
+        saveState.setPlayerBalances(playerBalances);
+        saveState.setPlayerScores(playerScores);
+        saveState.setCurrentBets(playerBets);
+        saveState.setNumPlayers(this.players.size());
+
+        // Method that filters the cards that are present in the hands and populates the deck with the rest of the cards
+
+
+        // Write it to a json file that can be loaded in.
+        saveState.saveToFile(saveFile);
     }
 }

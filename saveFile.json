@@ -1,0 +1,76 @@
+{
+  "players" : [ {
+    "name" : "PLAYER 1",
+    "hand" : [ {
+      "rank" : "Queen",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 10
+    }, {
+      "rank" : "2",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 2
+    } ],
+    "balance" : 956,
+    "currentBet" : 44
+  }, {
+    "name" : "PLAYER 2",
+    "hand" : [ {
+      "rank" : "3",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 3
+    }, {
+      "rank" : "7",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 7
+    } ],
+    "balance" : 967,
+    "currentBet" : 33
+  } ],
+  "dealer" : {
+    "name" : "Dealer",
+    "hand" : [ {
+      "rank" : "King",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 10
+    } ],
+    "balance" : 1000,
+    "currentBet" : 0
+  },
+  "deck" : null,
+  "currentPlayerIndex" : 1,
+  "numPlayers" : 2,
+  "playerBalances" : [ 956, 967 ],
+  "currentBets" : [ 44, 33 ],
+  "dealerBalance" : 1000,
+  "dealerBet" : 0,
+  "dealerScore" : 0,
+  "playerScores" : [ 12, 10 ],
+  "playerHands" : null,
+  "dealerHand" : null,
+  "deckCards" : null
+}

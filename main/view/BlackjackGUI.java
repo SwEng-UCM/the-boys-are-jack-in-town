@@ -270,11 +270,13 @@ public class BlackjackGUI extends JFrame {
         JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
         JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
         JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
+        JMenuItem saveItem = new JMenuItem(Texts.saveGame[language]);
         
         Font menuFont = new Font("Arial", Font.BOLD, 18);
         resumeItem.setFont(menuFont);
         mainMenuItem.setFont(menuFont);
         exitItem.setFont(menuFont);
+        saveItem.setFont(menuFont);
     
         // Volume control
         JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
@@ -298,6 +300,15 @@ public class BlackjackGUI extends JFrame {
             float volume = source.getValue() / 100f;
             AudioManager.getInstance().setVolume(volume);
         });
+
+        saveItem.addActionListener(e -> {
+            try {
+                gameManager.save();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            // GameManager.getInstance().save()
+        });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
         volumePanel.add(volumeSlider, BorderLayout.CENTER);
@@ -308,6 +319,8 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.add(mainMenuItem);
         pauseMenu.addSeparator();
         pauseMenu.add(exitItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(saveItem);
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
     

@@ -1,0 +1,108 @@
+{
+  "players" : [ {
+    "name" : "Finn",
+    "hand" : [ {
+      "rank" : "King",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 10
+    }, {
+      "rank" : "7",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 7
+    } ],
+    "balance" : 100,
+    "currentBet" : 33
+  }, {
+    "name" : "Kate",
+    "hand" : [ {
+      "rank" : "5",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 5
+    }, {
+      "rank" : "2",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 2
+    } ],
+    "balance" : 666,
+    "currentBet" : 55
+  }, {
+    "name" : "Hanna",
+    "hand" : [ {
+      "rank" : "King",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 10
+    }, {
+      "rank" : "7",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 7
+    } ],
+    "balance" : 420,
+    "currentBet" : 66
+  } ],
+  "dealer" : {
+    "name" : "Dealer",
+    "hand" : [ {
+      "rank" : "9",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 9,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 9
+    }, {
+      "rank" : "Ace",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 11,
+      "splitAce" : false,
+      "jokerWild" : false,
+      "blackjackBomb" : false,
+      "standardCardValue" : 11
+    } ],
+    "balance" : 5000,
+    "currentBet" : 50
+  },
+  "deck" : null,
+  "currentPlayerIndex" : 0,
+  "numPlayers" : 3,
+  "playerBalances" : [ 100, 666, 420 ],
+  "currentBets" : [ 33, 55, 66 ],
+  "dealerBalance" : 5000,
+  "dealerBet" : 50,
+  "dealerScore" : 0,
+  "playerScores" : [ 17, 7, 17 ],
+  "playerHands" : null,
+  "dealerHand" : null,
+  "deckCards" : null
+}

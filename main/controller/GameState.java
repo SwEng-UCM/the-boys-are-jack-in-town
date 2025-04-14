@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import main.model.Card;
 import main.model.Deck;
 import main.model.Player;
@@ -23,8 +24,7 @@ public class GameState implements Serializable {
     private Deck deck;
     private int currentPlayerIndex;
     private int numPlayers;
-//    private int playerBalance;
-private List<Integer> playerBalances;
+    private List<Integer> playerBalances;
     private List<Integer> currentBets;
     private int dealerBalance;
     private int dealerBet;
@@ -49,9 +49,7 @@ private List<Integer> playerBalances;
 
         this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
         this.numPlayers = (int) gameData.get("num_players");
-        //this.playerBalance = (int) gameData.get("playerBalance");
         this.playerBalances = (List<Integer>) gameData.get("playerBalances");
-//        this.currentBet = (int) gameData.get("currentBet");
         this.currentBets = (List<Integer>) gameData.get("currentBets");
         this.dealerBalance = (int) gameData.get("dealerBalance");
         this.dealerBet = (int) gameData.get("dealerBet");
@@ -67,6 +65,11 @@ private List<Integer> playerBalances;
         Map<String, Object> deckMap = (Map<String, Object>) gameData.get("deck");
         List<Map<String, Object>> cards = (List<Map<String, Object>>) deckMap.get("cards");
         this.deckCards = convertJsonToCards(cards);
+    }
+
+    // No arg constructor for saving.
+    public GameState(){
+
     }
 
     private List<Card> convertJsonToCards(List<Map<String, Object>> jsonCards) {
@@ -124,6 +127,70 @@ private List<Integer> playerBalances;
         return currentPlayerIndex;
     }
 
+    // Setters
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void setDealer(Player dealer) {
+        this.dealer = dealer;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
+    }
+
+    public void setPlayerBalances(List<Integer> playerBalances) {
+        this.playerBalances = playerBalances;
+    }
+
+    public void setCurrentBets(List<Integer> currentBets) {
+        this.currentBets = currentBets;
+    }
+
+    public void setDealerBalance(int dealerBalance) {
+        this.dealerBalance = dealerBalance;
+    }
+
+    public void setDealerBet(int dealerBet) {
+        this.dealerBet = dealerBet;
+    }
+
+    public void setDealerScore(int dealerScore) {
+        this.dealerScore = dealerScore;
+    }
+
+    public void setPlayerScores(List<Integer> playerScores) {
+        this.playerScores = playerScores;
+    }
+
+    public void setPlayerHands(List<List<Card>> playerHands) {
+        this.playerHands = playerHands;
+    }
+
+    public void setDealerHand(List<Card> dealerHand) {
+        this.dealerHand = dealerHand;
+    }
+
+    public void setDeckCards(List<Card> deckCards) {
+        this.deckCards = deckCards;
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    public void saveToFile(File file) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.writeValue(file, this);
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -173,6 +240,8 @@ private List<Integer> playerBalances;
 
         return sb.toString();
     }
+
+
 
 }
 
