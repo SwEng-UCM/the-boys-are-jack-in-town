@@ -455,7 +455,8 @@ public class GameManager {
             player.setHand(state.getPlayerHands().get(i));
             player.setCurrentScore();
             player.setCurrentBet(state.getCurrentBets().get(i));
-            player.setBalance(state.getPlayerBalances().get(i));
+            //player.setBalance(state.getPlayerBalances().get(i));
+            player.setBalance(player.getBalance());
         }
 
         // Restore dealer's hand, score, and balance
@@ -467,7 +468,8 @@ public class GameManager {
         //this.deck.setCards(state.getDeckCards());
 
         // Set betting manager
-        this.bettingManager = new BettingManager(players, state.getPlayerBalances().get(currentPlayerIndex), state.getDealerBalance());
+       // this.bettingManager = new BettingManager(players, state.getPlayerBalances().get(currentPlayerIndex), state.getDealerBalance());
+        this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
         this.bettingManager.placeDealerBet(state.getDealerBet());
 
         // Update GUI
@@ -490,11 +492,9 @@ public class GameManager {
     public void save() throws IOException {
         // Save all the relevant data that is used in the .json files
         GameState saveState = new GameState(this);
-        File saveFile = new File("saveFile.json");
+        File saveFile = new File("C:\\Users\\finnf\\Desktop\\College\\UCM\\the-boys-are-jack-in-town\\main\\saveFile.json");
 
         // Set all the necessary data to the save state
-
-
         saveState.setDealer(this.dealer);
         saveState.setCurrentPlayerIndex(currentPlayerIndex);
         saveState.setDealerBalance(dealer.getBalance());
@@ -512,10 +512,6 @@ public class GameManager {
         saveState.setPlayerBalances(playerBalances);
         saveState.setPlayerScores(playerScores);
         saveState.setCurrentBets(playerBets);
-        saveState.setNumPlayers(this.players.size());
-
-        // Method that filters the cards that are present in the hands and populates the deck with the rest of the cards
-
 
         // Write it to a json file that can be loaded in.
         saveState.saveToFile(saveFile);

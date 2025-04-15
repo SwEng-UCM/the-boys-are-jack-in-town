@@ -142,4 +142,9 @@ public class Player {
     public void setCurrentScore() {
         this.currentScore = this.calculateScore();
     }
+
+    @Override
+    public String toString() {
+        return this.name + " " + this.balance;
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import main.model.Card;
@@ -35,42 +36,108 @@ public class GameState implements Serializable {
     private List<Card> deckCards;
 
     // Add constructor for JSON deserialization
+    // constructor for old json format
+//    public GameState(File jsonFile) throws IOException {
+//        System.out.println("Loading");
+//        ObjectMapper mapper = new ObjectMapper();
+//        Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
+//        Map<String, Object> gameData = (Map<String, Object>) jsonData;
+//
+//
+//        this.players = ((List<?>) gameData.get("players")).stream()
+//                .map(p -> mapper.convertValue(p, Player.class))
+//                .collect(Collectors.toList());
+//        this.dealer = mapper.convertValue(gameData.get("dealer"), Player.class);
+//        this.deck = mapper.convertValue(gameData.get("deck"), Deck.class);
+//
+//        this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
+//        this.playerBalances = (List<Integer>) gameData.get("playerBalances");
+//        this.currentBets = (List<Integer>) gameData.get("currentBets");
+//        this.dealerBalance = (int) gameData.get("dealerBalance");
+//        this.dealerBet = (int) gameData.get("dealerBet");
+//        this.dealerScore = (int) gameData.get("dealerScore");
+//        this.playerScores = (List<Integer>) gameData.get("playerScores");
+//
+//        List<List<Map<String, Object>>> rawPlayerHands = mapper.convertValue(gameData.get("playerHand"), List.class);
+//        this.playerHands = convertJsonToCardLists(rawPlayerHands);
+//
+//        List<Map<String, Object>> rawDealerHand = mapper.convertValue(gameData.get("dealerHand"), List.class);
+//        this.dealerHand = convertJsonToCards(rawDealerHand);
+//
+//        Map<String, Object> deckMap = (Map<String, Object>) gameData.get("deck");
+//        List<Map<String, Object>> cards = (List<Map<String, Object>>) deckMap.get("allCards");
+//        this.deckCards = convertJsonToCards(cards);
+//    }
+
     public GameState(File jsonFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
         Map<String, Object> gameData = (Map<String, Object>) jsonData;
+        JsonNode root = mapper.readTree(new File(jsonFile.getPath()));
+
+        List<Player> players = new ArrayList<>();
+        List<List<Card>> playerHands = new ArrayList<>();
+        List<Card> deck = new ArrayList<>();
+        List<Integer> playerBets = new ArrayList<>();
+        List<Card> dealerHand = new ArrayList<>();
+
+        JsonNode playersNode = root.get("players");
+        for (JsonNode playerNode : playersNode) {
+            String name = playerNode.get("name").asText();
+            int balance = playerNode.get("balance").asInt();
+            int bet = playerNode.get("currentBet").asInt();
+            players.add(new Player(name, balance));
+            playerBets.add(bet);
+
+            JsonNode handNode = playerNode.get("hand");
+            List<Card> hand = new ArrayList<>();
+            for (JsonNode cardNode : handNode) {
+                String rank = cardNode.get("rank").asText();
+                String suit = cardNode.get("suit").asText();
+                int value = cardNode.get("value").asInt();
+
+                hand.add(new Card(rank, suit, false));
+            }
+            playerHands.add(hand);
+        }
+        JsonNode deckNode = root.get("deck");
+        JsonNode allCardsNode = deckNode.get("allCards");
+        for(JsonNode cardNode : allCardsNode) {
+            String rank = cardNode.get("rank").asText();
+            String suit = cardNode.get("suit").asText();
+            int value = cardNode.get("value").asInt();
+            Card card = new Card(rank, suit, false);
+
+            deck.add(card);
+        }
+
+        JsonNode dealerNode = root.get("dealer");
+        JsonNode dealerHandNode = dealerNode.get("hand");
+        String dealerName = dealerNode.get("name").asText();
+
+        for(JsonNode cardNode : dealerHandNode) {
+            String rank = cardNode.get("rank").asText();
+            String suit = cardNode.get("suit").asText();
+            int value = cardNode.get("value").asInt();
+            Card card = new Card(rank, suit, false);
+
+            dealerHand.add(card);
+        }
 
 
-        this.players = ((List<?>) gameData.get("players")).stream()
-                .map(p -> mapper.convertValue(p, Player.class))
-                .collect(Collectors.toList());
-        this.dealer = mapper.convertValue(gameData.get("dealer"), Player.class);
-        this.deck = mapper.convertValue(gameData.get("deck"), Deck.class);
+        this.players = players;
+        this.playerHands = playerHands;
+        this.deck = new Deck(deck);
+        this.dealer = new Player(dealerNode.get("name").toString(), dealerNode.get("balance").asInt());
+        this.dealerHand = dealerHand;
+        this.currentBets = playerBets;
 
-        this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
-        this.numPlayers = (int) gameData.get("num_players");
-        this.playerBalances = (List<Integer>) gameData.get("playerBalances");
-        this.currentBets = (List<Integer>) gameData.get("currentBets");
-        this.dealerBalance = (int) gameData.get("dealerBalance");
-        this.dealerBet = (int) gameData.get("dealerBet");
-        this.dealerScore = (int) gameData.get("dealerScore");
-        this.playerScores = (List<Integer>) gameData.get("playerScores");
-
-        List<List<Map<String, Object>>> rawPlayerHands = mapper.convertValue(gameData.get("playerHand"), List.class);
-        this.playerHands = convertJsonToCardLists(rawPlayerHands);
-
-        List<Map<String, Object>> rawDealerHand = mapper.convertValue(gameData.get("dealerHand"), List.class);
-        this.dealerHand = convertJsonToCards(rawDealerHand);
-
-        Map<String, Object> deckMap = (Map<String, Object>) gameData.get("deck");
-        List<Map<String, Object>> cards = (List<Map<String, Object>>) deckMap.get("cards");
-        this.deckCards = convertJsonToCards(cards);
+        toString();
     }
 
     // No arg constructor for saving.
     public GameState(GameManager gm){
-    System.out.println("No arg saving");
-        this.numPlayers = gm.getPlayers().size();
+    System.out.println("Saving");
         this.currentPlayerIndex = gm.getCurrentPlayerIndex();
         this.playerBalances = gm.getPlayerBalances();
         this.playerScores = gm.getPlayerScores();
@@ -84,8 +151,6 @@ public class GameState implements Serializable {
         this.playerHands = gm.getPlayerHands();
         this.dealerHand = gm.getDealerHand();
         this.deckCards = gm.getFilteredDeck();
-
-
     }
 
     private List<Card> convertJsonToCards(List<Map<String, Object>> jsonCards) {

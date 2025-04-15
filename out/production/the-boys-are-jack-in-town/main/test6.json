@@ -1,6 +1,5 @@
 {
     "isPaused": false,
-    "num_players": 3,
     "playerBalances": [100, 666, 420],
     "currentBets": [33, 55, 66],
     "dealerBalance": 5000,
@@ -29,7 +28,7 @@
     ],
 
     "deck": {
-      "cards": [
+      "allCards": [
         { "suit": "Hearts", "rank": "2", "hidden": false },
         { "suit": "Hearts", "rank": "3", "hidden": false },
         { "suit": "Hearts", "rank": "4", "hidden": false },

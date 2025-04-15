@@ -37,7 +37,7 @@ public class LoadGamePanel extends JDialog {
 
             try {
                 loadedState = new GameState(selectedFile);
-                System.out.println(loadedState);
+               // System.out.println(loadedState);
 
                 GameManager manager = GameManager.getInstance();
                 manager.loadGame(loadedState);

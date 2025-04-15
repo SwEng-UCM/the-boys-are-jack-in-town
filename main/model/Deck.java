@@ -13,6 +13,7 @@ public class Deck {
     private final Random random;
 
 
+    @JsonCreator
     public Deck() {
         cards = new ArrayList<>();
         random = new Random();
@@ -36,7 +37,7 @@ public class Deck {
         shuffle();
     }
     @JsonCreator
-    public Deck(@JsonProperty("cards") List<Card> cards) {
+    public Deck(@JsonProperty("allCards") List<Card> cards) {
         random = new Random();
 
         List<Card> newCards = new ArrayList<>();

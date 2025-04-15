@@ -1,6 +1,5 @@
 {
     "isPaused": false,
-    "num_players": 4,
     "playerBalances": [
       23,
       69,
@@ -103,7 +102,7 @@
       }
     ],
     "deck": {
-      "cards": [
+      "allCards": [
         {
           "suit": "Spades",
           "rank": "7",
