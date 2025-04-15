@@ -1,12 +1,14 @@
 package main.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a playing card with a rank and a suit, including special cards that modify Blackjack rules.
  */
 public class Card {
+
     public enum CardType {
         STANDARD, BLACKJACK_BOMB, SPLIT_ACE, JOKER_WILD
     }
@@ -27,7 +29,7 @@ public class Card {
         this.type = CardType.STANDARD;
     }
 
-    public Card(CardType type) {
+    public Card( CardType type) {
         this.rank = switch (type) {
             case BLACKJACK_BOMB -> "BB";
             case SPLIT_ACE -> "SA";

@@ -213,9 +213,9 @@ public class GameManager {
         return player.getHand().toString();
     }
 
-    public String getDealerHand() {
-        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
-    }
+//    public String getDealerHand() {
+//        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
+//    }
 
     /*
      * Betting system.
@@ -325,7 +325,67 @@ public class GameManager {
         return currentPlayer.getCurrentBet();
     }
 
+    public List<Integer> getPlayerScores() {
+        List<Integer> pScores = new ArrayList<>();
+        for(Player p : players) {
+            pScores.add(p.calculateScore());
+        }
+        return pScores;
+    }
 
+    public List<Integer> getPlayerBalances(){
+        List<Integer> pBalances = new ArrayList<>();
+        for(Player p : players) {
+            pBalances.add(p.getBalance());
+        }
+        return pBalances;
+    }
+
+    public List<Integer> getPlayerBets(){
+        List<Integer> pBets = new ArrayList<>();
+        for(Player p : players) {
+            pBets.add(p.getCurrentBet());
+        }
+        return pBets;
+    }
+
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
+    }
+
+    public List<List<Card>> getPlayerHands() {
+        List<List<Card>> playerHands = new ArrayList<>();
+        for(Player p : players) {
+            List<Card> playerHand = p.getHand();
+            playerHands.add(playerHand);
+        }
+        return playerHands;
+    }
+
+    public List<Card> getDealerHand(){
+        List<Card> dealerHand = new ArrayList<>();
+        for(Card c: dealer.getHand()) {
+            dealerHand.add(c);
+        }
+        return dealerHand;
+    }
+
+    public List<Card> getFilteredDeck(){
+        List<Card> deck = new ArrayList<>();
+        List<Card> usedCards = new ArrayList<>();
+
+        for(Player p : players) {
+            usedCards.addAll(p.getHand());
+        }
+        usedCards.addAll(dealer.getHand());
+
+        for(Card c : this.deck.getAllCards()) {
+            if(!usedCards.contains(c)) {
+                deck.add(c);
+            }
+        }
+        return deck;
+    }
 
     /**
      * Handles special cards when drawn.
@@ -418,6 +478,8 @@ public class GameManager {
             gui.enableBetting();
             startNextPlayerTurn();
         });
+
+        System.out.println("Game loaded successfully!");
     }
 
     private int determineCurrentPlayerIndex(GameState state) {
@@ -426,17 +488,19 @@ public class GameManager {
     }
 
     public void save() throws IOException {
-        System.out.println("Saving game state");
         // Save all the relevant data that is used in the .json files
-        GameState saveState = new GameState();
+        GameState saveState = new GameState(this);
         File saveFile = new File("saveFile.json");
 
-        saveState.setPlayers(this.players);
+        // Set all the necessary data to the save state
+
+
         saveState.setDealer(this.dealer);
         saveState.setCurrentPlayerIndex(currentPlayerIndex);
         saveState.setDealerBalance(dealer.getBalance());
         saveState.setDealerBet(dealer.getCurrentBet());
 
+        saveState.setPlayers(this.players);
         List<Integer> playerBalances = new ArrayList<>();
         List<Integer> playerScores = new ArrayList<>();
         List<Integer> playerBets = new ArrayList<>();

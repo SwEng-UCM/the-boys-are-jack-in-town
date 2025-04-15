@@ -1,6 +1,4 @@
 {
-  "game": {
-    "INITIAL_BET": 5000,
     "isPaused": false,
     "num_players": 4,
     "playerBalances": [
@@ -344,4 +342,3 @@
       ]
     }
   }
-}

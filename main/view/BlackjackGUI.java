@@ -303,11 +303,11 @@ public class BlackjackGUI extends JFrame {
 
         saveItem.addActionListener(e -> {
             try {
-                gameManager.save();
+                //gameManager.save();
+                GameManager.getInstance().save();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            // GameManager.getInstance().save()
         });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);

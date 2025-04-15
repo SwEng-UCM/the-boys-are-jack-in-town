@@ -38,7 +38,7 @@ public class GameState implements Serializable {
     public GameState(File jsonFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
-        Map<String, Object> gameData = (Map<String, Object>) jsonData.get("game");
+        Map<String, Object> gameData = (Map<String, Object>) jsonData;
 
 
         this.players = ((List<?>) gameData.get("players")).stream()
@@ -68,7 +68,23 @@ public class GameState implements Serializable {
     }
 
     // No arg constructor for saving.
-    public GameState(){
+    public GameState(GameManager gm){
+    System.out.println("No arg saving");
+        this.numPlayers = gm.getPlayers().size();
+        this.currentPlayerIndex = gm.getCurrentPlayerIndex();
+        this.playerBalances = gm.getPlayerBalances();
+        this.playerScores = gm.getPlayerScores();
+        this.players = gm.getPlayers();
+        this.dealer = gm.getDealer();
+        this.deck = gm.getDeck();
+        this.dealerBalance = gm.getDealerBalance();
+        this.dealerBet = gm.getDealerBet();
+        this.dealerScore = gm.getDealerScore();
+        this.currentBets = gm.getPlayerBets();
+        this.playerHands = gm.getPlayerHands();
+        this.dealerHand = gm.getDealerHand();
+        this.deckCards = gm.getFilteredDeck();
+
 
     }
 

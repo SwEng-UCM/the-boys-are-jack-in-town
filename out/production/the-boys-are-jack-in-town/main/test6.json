@@ -1,6 +1,4 @@
 {
-  "game": {
-    "INITIAL_BET": 1000,
     "isPaused": false,
     "num_players": 3,
     "playerBalances": [100, 666, 420],
@@ -76,9 +74,6 @@
         { "suit": "Spades", "rank": "Jack", "hidden": false },
         { "suit": "Spades", "rank": "Queen", "hidden": false },
         { "suit": "Spades", "rank": "Ace", "hidden": false }
-
-
       ]
     }
-  }
 }

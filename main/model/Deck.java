@@ -71,4 +71,8 @@ public class Deck {
         Collections.shuffle(cards, random);
     }
 
+    public List<Card> getAllCards() {
+        return cards;
+    }
+
 }
