@@ -52,4 +52,22 @@ public class AudioManager {
             backgroundMusic.stop();
         }
     }
+
+    public void playSoundEffect(String resourcePath) {
+        try {
+            URL url = getClass().getResource(resourcePath);
+            if (url == null) {
+                System.err.println("Sound not found: " + resourcePath);
+                return;
+            }
+    
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start(); // One-time playback
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

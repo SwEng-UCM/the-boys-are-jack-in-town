@@ -1,7 +1,10 @@
 package main.controller;
 
+import main.model.Badge;
 import main.model.Card;
 import main.model.Deck;
+import main.model.DifficultyStrategy;
+import main.model.MediumDifficulty;
 import main.model.Player;
 import main.view.BlackjackGUI;
 import main.view.Texts;
@@ -42,6 +45,7 @@ public class GameManager {
     private boolean gameOver;
     private BettingManager bettingManager;
     private int currentPlayerIndex;
+    private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -61,6 +65,9 @@ public class GameManager {
             instance = new GameManager();
         }
         return instance;
+    }
+    public void setDifficultyStrategy(DifficultyStrategy strategy) {
+        this.difficultyStrategy = strategy;
     }
 
     public BettingManager getBettingManager() {
@@ -113,52 +120,88 @@ public class GameManager {
                 int dealerBet = bettingManager.getDealerBalance() / 10;
                 bettingManager.placeDealerBet(dealerBet);
             }
-        } else {
-            dealerTurn();
         }
+        
     }
+    
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
             Player currentPlayer = players.get(currentPlayerIndex);
             currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
-            checkPlayerBust();
             gui.updateGameState(players, dealer, gameOver, false);
+    
+            if (currentPlayer.calculateScore() > 21) {
+                checkPlayerBust(); // already moves to next player
+            } else {
+                // 👇 Needed! Re-prompt the same player if still in the round
+                gui.promptPlayerAction(currentPlayer);
+            }
+            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
         }
     }
+    
 
     public void handlePlayerStand() {
         if (!gameOver) {
-            currentPlayerIndex++; // Move to the next player
-            startNextPlayerTurn();
+            currentPlayerIndex++; // move to next player
+    
+            if (currentPlayerIndex < players.size()) {
+                // prompt next player's turn
+                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            } else {
+                // all players done, now dealer plays
+                dealerTurn();
+            }
         }
     }
+    
+    
 
     public void checkPlayerBust() {
-        Player player = players.get(currentPlayerIndex); // Reference the current player
+        Player player = players.get(currentPlayerIndex);
         if (player.calculateScore() > 21) {
             gui.updateGameMessage(player.getName() + " busts! 😢");
             player.loseBet();
-            bettingManager.dealerWins(null); // Player busts, dealer wins
+            bettingManager.dealerWins(null);
             currentPlayerIndex++;
-            startNextPlayerTurn();
+    
+            if (currentPlayerIndex < players.size()) {
+                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            } else {
+                dealerTurn(); // 👈 only trigger if all players finished
+            }
         }
     }
+    
 
     public void dealerTurn() {
-        while (dealer.calculateScore() < 17) {
-            dealer.receiveCard(handleSpecialCard(deck.dealCard(), dealer));
+        Player referencePlayer = players.get(0); // Or choose the strongest player
+        for (Player p : players) {
+            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
+                referencePlayer = p;
+            }
+        }
+    
+        while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
+            dealer.receiveCard(deck.dealCard());
         }
         checkDealerBust();
         determineWinners();
     }
+    
+    // In GameManager.java
+    public DifficultyStrategy getDifficultyStrategy() {
+        return this.difficultyStrategy;
+    }
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
-            gui.updateGameMessage("Dealer busts! 🎉");
+            gui.updateGameMessage("Dealer busts!");
             for (Player player : players) {
                 if (player.calculateScore() <= 21) {
-                    player.winBet(player.getCurrentBet() * 2);
+                    int payout = (int)(player.getCurrentBet() * difficultyStrategy.getPayoutMultiplier());
+                    player.winBet(payout); // Use dynamic payout instead of hardcoded *2
                 }
             }
         }
@@ -169,27 +212,42 @@ public class GameManager {
             int dealerScore = dealer.calculateScore();
             for (Player player : players) {
                 int playerScore = player.calculateScore();
-
+                int basePayout = player.getCurrentBet();
+                int payout = (int)(basePayout * difficultyStrategy.getPayoutMultiplier());
+    
                 if (playerScore > 21) {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
+                    AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
-                    gui.updateGameMessage(player.getName() + " wins! 🎉");
-                    player.winBet(player.getCurrentBet() * 2);
+                    String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
+                    gui.updateGameMessage(winMessage);
+                    int originalBet = player.getCurrentBet();
+                    player.winBet(payout);
+                    AchievementManager.getInstance().resetDealerWinStreak();
+                    AchievementManager.getInstance().unlock(Badge.FIRST_WIN);
+                    if (originalBet * 2 >= 1000) {
+                        AchievementManager.getInstance().unlock(Badge.BIG_WIN);
+                    }
+                    AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
+                    AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
+                    AchievementManager.getInstance().trackDealerWin();
+                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();
                 }
-
             }
             gui.updatePlayerPanels();
             gameOver = true;
             checkGameOver();
             SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
+            AchievementManager am = AchievementManager.getInstance();
         }
     }
 
@@ -222,9 +280,13 @@ public class GameManager {
      */
     public boolean placeBet(Player player, int betAmount) {
         gui.updateGameState(players, dealer, gameOver, false);
-        return player.placeBet(betAmount);
-
+        boolean placed = player.placeBet(betAmount);
+        if (placed) {
+            AchievementManager.getInstance().unlock(Badge.FIRST_BET);
+        }
+        return placed;
     }
+    
 
     public int getPlayerBalance(Player player) {
         return player.getBalance();
@@ -264,6 +326,7 @@ public class GameManager {
             player.reset();
             player.receiveCard(deck.dealCard());
             player.receiveCard(deck.dealCard());
+            AchievementManager.getInstance().trackFirstBlackjack(player);
         }
 
         dealer.reset(); // Reset dealer's hand
@@ -273,6 +336,8 @@ public class GameManager {
 
         // Dealer receives one face-up and one face-down card
         dealer.receiveCard(deck.dealCard()); // Visible card
+
+        AchievementManager.getInstance().trackMultiplayerGame(players);
 
         // Update GUI with the new game state
         gui.updateGameMessage("Starting a new game!");
@@ -334,6 +399,13 @@ public class GameManager {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+    public int getCurrentPlayerIndex() {
+        return this.currentPlayerIndex;
+    }
+    
+    public void setCurrentPlayerIndex(int index) {
+        this.currentPlayerIndex = index;
     }
 
     public int getDealerBalance() {

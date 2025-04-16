@@ -36,6 +36,7 @@ public class Deck {
         // Shuffle the deck initially
         shuffle();
     }
+
     @JsonCreator
     public Deck(@JsonProperty("allCards") List<Card> cards) {
         random = new Random();
@@ -52,12 +53,26 @@ public class Deck {
         shuffle();
     }
 
+    // Copy constructor
+    public Deck(Deck original) {
+        this.cards = new ArrayList<>();
+        for (Card card : original.cards) {
+            this.cards.add(new Card(card)); // Assuming Card has a copy constructor
+        }
+        this.random = new Random();
+    }
+    
+
     public Card dealCard() {
         if (cards.isEmpty()) {
             throw new IllegalStateException("No cards left in the deck");
         }
         return cards.remove(cards.size() - 1);
     }
+    public List<Card> getCards() {
+        return cards;
+    }
+    
 
     public List<Card> drawMultipleRandomCards(int n) {
         List<Card> drawnCards = new ArrayList<>();

@@ -26,6 +26,14 @@ public class Player {
         this.currentBet = 0;
         this.currentScore = 0;
     }
+    // Copy constructor
+    public Player(Player other) {
+        this.name = other.name;
+        this.hand = new ArrayList<>(other.hand); // Create new list with same cards
+        this.scoreMultiplier = other.scoreMultiplier;
+        this.balance = other.balance;
+        this.currentBet = other.currentBet;
+    }
 
     /** Adds a card to the player's hand. */
     public void receiveCard(Card card) {
@@ -115,6 +123,12 @@ public class Player {
         hand.clear();
         scoreMultiplier = 1.0;
         currentBet = 0;
+    }
+    // In Player.java
+    public boolean hasAce() {
+        return hand.stream().anyMatch(card -> 
+            card.getRank().equals("Ace") && card.getType() == Card.CardType.STANDARD
+        );
     }
 
     /** Returns the player's name. */
