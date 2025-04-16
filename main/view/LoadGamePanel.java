@@ -21,7 +21,6 @@ public class LoadGamePanel extends JDialog {
         this.menu = parent;
         setSize(300, 200);
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout());
 
         // Initialize the file chooser
         fileChooser = new JFileChooser(new File("main"));
@@ -37,11 +36,8 @@ public class LoadGamePanel extends JDialog {
 
             try {
                 loadedState = new GameState(selectedFile);
-               // System.out.println(loadedState);
-
                 GameManager manager = GameManager.getInstance();
                 manager.loadGame(loadedState);
-
                 dispose();
             } catch (IOException e) {
                 System.err.println("Error reading file: " + e.getMessage());
@@ -51,10 +47,7 @@ public class LoadGamePanel extends JDialog {
         } else {
             System.out.println("No file selected");
         }
-
-
-
-
+        dispose();
     }
 }
 

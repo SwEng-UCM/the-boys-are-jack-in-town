@@ -2,46 +2,46 @@
   "players" : [ {
     "name" : "PLAYER 1",
     "hand" : [ {
-      "rank" : "Queen",
+      "rank" : "5",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 5,
+      "standardCardValue" : 5,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
       "suit" : "Clubs",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "King",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     } ],
     "balance" : 1000,
     "currentBet" : 0
   }, {
     "name" : "PLAYER 2",
     "hand" : [ {
-      "rank" : "Jack",
-      "suit" : "Spades",
+      "rank" : "5",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 5,
+      "standardCardValue" : 5,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "King",
+      "suit" : "Hearts",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 2,
-      "standardCardValue" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     } ],
     "balance" : 1000,
     "currentBet" : 0
@@ -49,469 +49,469 @@
   "dealer" : {
     "name" : "Dealer",
     "hand" : [ {
-      "rank" : "8",
-      "suit" : "Hearts",
+      "rank" : "7",
+      "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 8,
-      "standardCardValue" : 8,
-      "jokerWild" : false,
+      "value" : 7,
+      "standardCardValue" : 7,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     } ],
     "balance" : 1000,
     "currentBet" : 0
   },
   "deck" : {
     "allCards" : [ {
-      "rank" : "8",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 8,
-      "standardCardValue" : 8,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "6",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 6,
-      "standardCardValue" : 6,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 7,
-      "standardCardValue" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 7,
-      "standardCardValue" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Jack",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 4,
-      "standardCardValue" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "6",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 6,
-      "standardCardValue" : 6,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Queen",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "5",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 5,
-      "standardCardValue" : 5,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Queen",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 9,
-      "standardCardValue" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "6",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 6,
-      "standardCardValue" : 6,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 2,
-      "standardCardValue" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "King",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "King",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 2,
-      "standardCardValue" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
       "rank" : "10",
-      "suit" : "Spades",
+      "suit" : "Hearts",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "3",
-      "suit" : "Clubs",
+      "suit" : "Diamonds",
       "type" : "STANDARD",
       "value" : 3,
       "standardCardValue" : 3,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 9,
-      "standardCardValue" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "JW",
       "suit" : "Special",
       "type" : "JOKER_WILD",
       "value" : 11,
       "standardCardValue" : 0,
-      "jokerWild" : true,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : true
     }, {
-      "rank" : "10",
-      "suit" : "Diamonds",
+      "rank" : "8",
+      "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
+      "value" : 8,
+      "standardCardValue" : 8,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "SA",
-      "suit" : "Special",
-      "type" : "SPLIT_ACE",
-      "value" : 0,
-      "standardCardValue" : 0,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : true
-    }, {
-      "rank" : "Jack",
-      "suit" : "Clubs",
+      "rank" : "Ace",
+      "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
+      "value" : 11,
+      "standardCardValue" : 11,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "2",
-      "suit" : "Diamonds",
+      "suit" : "Spades",
       "type" : "STANDARD",
       "value" : 2,
       "standardCardValue" : 2,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "6",
+      "rank" : "Queen",
       "suit" : "Diamonds",
       "type" : "STANDARD",
-      "value" : 6,
-      "standardCardValue" : 6,
-      "jokerWild" : false,
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 9,
-      "standardCardValue" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "8",
       "suit" : "Diamonds",
       "type" : "STANDARD",
       "value" : 8,
       "standardCardValue" : 8,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 6,
+      "standardCardValue" : 6,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "Queen",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
     }, {
       "rank" : "Ace",
       "suit" : "Clubs",
       "type" : "STANDARD",
       "value" : 11,
       "standardCardValue" : 11,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "Ace",
+      "rank" : "3",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 3,
+      "standardCardValue" : 3,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 4,
+      "standardCardValue" : 4,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 7,
+      "standardCardValue" : 7,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "King",
       "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 11,
-      "standardCardValue" : 11,
-      "jokerWild" : false,
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 9,
-      "standardCardValue" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "Jack",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 2,
+      "standardCardValue" : 2,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "Queen",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "Jack",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
       "suit" : "Diamonds",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 9,
+      "standardCardValue" : 9,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 7,
+      "standardCardValue" : 7,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 9,
+      "standardCardValue" : 9,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 8,
+      "standardCardValue" : 8,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 6,
+      "standardCardValue" : 6,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 8,
+      "standardCardValue" : 8,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 5,
+      "standardCardValue" : 5,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
     }, {
       "rank" : "Queen",
       "suit" : "Spades",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "Jack",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "King",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 3,
+      "standardCardValue" : 3,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 9,
+      "standardCardValue" : 9,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 2,
+      "standardCardValue" : 2,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 4,
+      "standardCardValue" : 4,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 9,
+      "standardCardValue" : 9,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "Ace",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 11,
+      "standardCardValue" : 11,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "Ace",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 11,
+      "standardCardValue" : 11,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 2,
+      "standardCardValue" : 2,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
     }, {
       "rank" : "King",
       "suit" : "Clubs",
       "type" : "STANDARD",
       "value" : 10,
       "standardCardValue" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "4",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 4,
-      "standardCardValue" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Ace",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 11,
-      "standardCardValue" : 11,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "5",
+      "rank" : "6",
       "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 5,
-      "standardCardValue" : 5,
-      "jokerWild" : false,
+      "value" : 6,
+      "standardCardValue" : 6,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 4,
-      "standardCardValue" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Ace",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 11,
-      "standardCardValue" : 11,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "5",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 5,
-      "standardCardValue" : 5,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "standardCardValue" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 3,
-      "standardCardValue" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "8",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 8,
-      "standardCardValue" : 8,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 3,
-      "standardCardValue" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 3,
-      "standardCardValue" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "BB",
       "suit" : "Special",
       "type" : "BLACKJACK_BOMB",
       "value" : 21,
       "standardCardValue" : 0,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : true,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "5",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 5,
-      "standardCardValue" : 5,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
+      "rank" : "3",
       "suit" : "Spades",
       "type" : "STANDARD",
-      "value" : 7,
-      "standardCardValue" : 7,
-      "jokerWild" : false,
+      "value" : 3,
+      "standardCardValue" : 3,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 7,
-      "standardCardValue" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "4",
       "suit" : "Hearts",
       "type" : "STANDARD",
       "value" : 4,
       "standardCardValue" : 4,
-      "jokerWild" : false,
+      "splitAce" : false,
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "Jack",
+      "suit" : "Clubs",
+      "type" : "STANDARD",
+      "value" : 10,
+      "standardCardValue" : 10,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 5,
+      "standardCardValue" : 5,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "Hearts",
+      "type" : "STANDARD",
+      "value" : 7,
+      "standardCardValue" : 7,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "Spades",
+      "type" : "STANDARD",
+      "value" : 4,
+      "standardCardValue" : 4,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "Diamonds",
+      "type" : "STANDARD",
+      "value" : 6,
+      "standardCardValue" : 6,
+      "splitAce" : false,
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "SA",
+      "suit" : "Special",
+      "type" : "SPLIT_ACE",
+      "value" : 0,
+      "standardCardValue" : 0,
+      "splitAce" : true,
+      "blackjackBomb" : false,
+      "jokerWild" : false
     } ]
   },
   "currentPlayerIndex" : 0,
@@ -520,504 +520,504 @@
   "currentBets" : [ 0, 0 ],
   "dealerBalance" : 1000,
   "dealerBet" : 0,
-  "dealerScore" : 8,
-  "playerScores" : [ 20, 12 ],
+  "dealerScore" : 7,
+  "playerScores" : [ 15, 15 ],
   "playerHands" : [ [ {
-    "rank" : "Queen",
+    "rank" : "5",
+    "suit" : "Spades",
+    "type" : "STANDARD",
+    "value" : 5,
+    "standardCardValue" : 5,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
     "suit" : "Clubs",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "King",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   } ], [ {
-    "rank" : "Jack",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "2",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 2,
-    "standardCardValue" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  } ] ],
-  "dealerHand" : [ {
-    "rank" : "8",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 8,
-    "standardCardValue" : 8,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  } ],
-  "deckCards" : [ {
-    "rank" : "8",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 8,
-    "standardCardValue" : 8,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "6",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 6,
-    "standardCardValue" : 6,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 7,
-    "standardCardValue" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 7,
-    "standardCardValue" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Jack",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "4",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 4,
-    "standardCardValue" : 4,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "6",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 6,
-    "standardCardValue" : 6,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Queen",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
     "rank" : "5",
     "suit" : "Clubs",
     "type" : "STANDARD",
     "value" : 5,
     "standardCardValue" : 5,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Queen",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "9",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 9,
-    "standardCardValue" : 9,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "6",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 6,
-    "standardCardValue" : 6,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "2",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 2,
-    "standardCardValue" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "King",
     "suit" : "Hearts",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "King",
+    "jokerWild" : false
+  } ] ],
+  "dealerHand" : [ {
+    "rank" : "7",
     "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
+    "value" : 7,
+    "standardCardValue" : 7,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "2",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 2,
-    "standardCardValue" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
+    "jokerWild" : false
+  } ],
+  "deckCards" : [ {
     "rank" : "10",
-    "suit" : "Spades",
+    "suit" : "Hearts",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "3",
-    "suit" : "Clubs",
+    "suit" : "Diamonds",
     "type" : "STANDARD",
     "value" : 3,
     "standardCardValue" : 3,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "10",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "9",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 9,
-    "standardCardValue" : 9,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "JW",
     "suit" : "Special",
     "type" : "JOKER_WILD",
     "value" : 11,
     "standardCardValue" : 0,
-    "jokerWild" : true,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : true
   }, {
-    "rank" : "10",
-    "suit" : "Diamonds",
+    "rank" : "8",
+    "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
+    "value" : 8,
+    "standardCardValue" : 8,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "SA",
-    "suit" : "Special",
-    "type" : "SPLIT_ACE",
-    "value" : 0,
-    "standardCardValue" : 0,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : true
-  }, {
-    "rank" : "Jack",
-    "suit" : "Clubs",
+    "rank" : "Ace",
+    "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
+    "value" : 11,
+    "standardCardValue" : 11,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "2",
-    "suit" : "Diamonds",
+    "suit" : "Spades",
     "type" : "STANDARD",
     "value" : 2,
     "standardCardValue" : 2,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "6",
+    "rank" : "Queen",
     "suit" : "Diamonds",
     "type" : "STANDARD",
-    "value" : 6,
-    "standardCardValue" : 6,
-    "jokerWild" : false,
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "9",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 9,
-    "standardCardValue" : 9,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "8",
     "suit" : "Diamonds",
     "type" : "STANDARD",
     "value" : 8,
     "standardCardValue" : 8,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 6,
+    "standardCardValue" : 6,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "Queen",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
   }, {
     "rank" : "Ace",
     "suit" : "Clubs",
     "type" : "STANDARD",
     "value" : 11,
     "standardCardValue" : 11,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "Ace",
+    "rank" : "3",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 3,
+    "standardCardValue" : 3,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "4",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 4,
+    "standardCardValue" : 4,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 7,
+    "standardCardValue" : 7,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "King",
     "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 11,
-    "standardCardValue" : 11,
-    "jokerWild" : false,
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "9",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 9,
-    "standardCardValue" : 9,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "Jack",
+    "suit" : "Spades",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 2,
+    "standardCardValue" : 2,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
+    "suit" : "Spades",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "Queen",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "Jack",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
     "suit" : "Diamonds",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 9,
+    "standardCardValue" : 9,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 7,
+    "standardCardValue" : 7,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 9,
+    "standardCardValue" : 9,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "8",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 8,
+    "standardCardValue" : 8,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 6,
+    "standardCardValue" : 6,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "8",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 8,
+    "standardCardValue" : 8,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "5",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 5,
+    "standardCardValue" : 5,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
   }, {
     "rank" : "Queen",
     "suit" : "Spades",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "Jack",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "King",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "3",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 3,
+    "standardCardValue" : 3,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "Spades",
+    "type" : "STANDARD",
+    "value" : 9,
+    "standardCardValue" : 9,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 2,
+    "standardCardValue" : 2,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "4",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 4,
+    "standardCardValue" : 4,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 9,
+    "standardCardValue" : 9,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "Ace",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 11,
+    "standardCardValue" : 11,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "Ace",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 11,
+    "standardCardValue" : 11,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 2,
+    "standardCardValue" : 2,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
   }, {
     "rank" : "King",
     "suit" : "Clubs",
     "type" : "STANDARD",
     "value" : 10,
     "standardCardValue" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "4",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 4,
-    "standardCardValue" : 4,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Ace",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 11,
-    "standardCardValue" : 11,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "5",
+    "rank" : "6",
     "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 5,
-    "standardCardValue" : 5,
-    "jokerWild" : false,
+    "value" : 6,
+    "standardCardValue" : 6,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "4",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 4,
-    "standardCardValue" : 4,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Ace",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 11,
-    "standardCardValue" : 11,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "5",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 5,
-    "standardCardValue" : 5,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "10",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "standardCardValue" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "3",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 3,
-    "standardCardValue" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "8",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 8,
-    "standardCardValue" : 8,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "3",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 3,
-    "standardCardValue" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "3",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 3,
-    "standardCardValue" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "BB",
     "suit" : "Special",
     "type" : "BLACKJACK_BOMB",
     "value" : 21,
     "standardCardValue" : 0,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : true,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "5",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 5,
-    "standardCardValue" : 5,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
+    "rank" : "3",
     "suit" : "Spades",
     "type" : "STANDARD",
-    "value" : 7,
-    "standardCardValue" : 7,
-    "jokerWild" : false,
+    "value" : 3,
+    "standardCardValue" : 3,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 7,
-    "standardCardValue" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "4",
     "suit" : "Hearts",
     "type" : "STANDARD",
     "value" : 4,
     "standardCardValue" : 4,
-    "jokerWild" : false,
+    "splitAce" : false,
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "Jack",
+    "suit" : "Clubs",
+    "type" : "STANDARD",
+    "value" : 10,
+    "standardCardValue" : 10,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "5",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 5,
+    "standardCardValue" : 5,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "Hearts",
+    "type" : "STANDARD",
+    "value" : 7,
+    "standardCardValue" : 7,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "4",
+    "suit" : "Spades",
+    "type" : "STANDARD",
+    "value" : 4,
+    "standardCardValue" : 4,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "Diamonds",
+    "type" : "STANDARD",
+    "value" : 6,
+    "standardCardValue" : 6,
+    "splitAce" : false,
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "SA",
+    "suit" : "Special",
+    "type" : "SPLIT_ACE",
+    "value" : 0,
+    "standardCardValue" : 0,
+    "splitAce" : true,
+    "blackjackBomb" : false,
+    "jokerWild" : false
   } ]
 }

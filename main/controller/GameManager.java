@@ -297,6 +297,37 @@ public class GameManager {
         }
         return currentPlayer.calculateScore() <= 21; // Player is still in the round if they haven't busted
     }
+
+    /**
+     * Handles special cards when drawn.
+     * //
+     */
+
+    private Card handleSpecialCard(Card card, Player recipient) {
+        if (recipient != dealer) { // Display special messages only when the player draws them
+            switch (card.getType()) {
+                case BLACKJACK_BOMB:
+                    gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
+                    System.out.println("BB");
+                    gameOver = true;
+                    break;
+                case SPLIT_ACE:
+                    gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
+                    System.out.println("SA");
+                    break;
+                case JOKER_WILD:
+                    int wildValue = gui.promptJokerWildValue();
+                    card.setWildValue(wildValue);
+                    gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
+                    System.out.println("JW");
+                    break;
+                default:
+                    break;
+            }
+        }
+        return card;
+    }
+
     /*
      * Betting system.
      */
@@ -387,34 +418,7 @@ public class GameManager {
         return deck;
     }
 
-    /**
-     * Handles special cards when drawn.
-     * //
-     */
 
-    private Card handleSpecialCard(Card card, Player recipient) {
-        if (recipient != dealer) { // Display special messages only when the player draws them
-            switch (card.getType()) {
-                case BLACKJACK_BOMB:
-                    gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
-
-                    gameOver = true;
-                    break;
-                case SPLIT_ACE:
-                    gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
-                    break;
-                case JOKER_WILD:
-                    int wildValue = gui.promptJokerWildValue();
-                    card.setWildValue(wildValue);
-                    gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
-                    break;
-                default:
-                    break;
-
-            }
-        }
-        return card;
-    }
 
     public ArrayList<Player> getPlayers() {
         return this.players;
@@ -438,7 +442,6 @@ public class GameManager {
         applyGameState(gs);
     }
 
-    // this method should apply the game state changes
     private void applyGameState(GameState state) {
         System.out.println("Applying game state");
         this.players = new ArrayList<>(state.getPlayers());
@@ -455,7 +458,6 @@ public class GameManager {
             player.setHand(state.getPlayerHands().get(i));
             player.setCurrentScore();
             player.setCurrentBet(state.getCurrentBets().get(i));
-            //player.setBalance(state.getPlayerBalances().get(i));
             player.setBalance(player.getBalance());
         }
 
@@ -468,7 +470,6 @@ public class GameManager {
         //this.deck.setCards(state.getDeckCards());
 
         // Set betting manager
-       // this.bettingManager = new BettingManager(players, state.getPlayerBalances().get(currentPlayerIndex), state.getDealerBalance());
         this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
         this.bettingManager.placeDealerBet(state.getDealerBet());
 
@@ -492,7 +493,7 @@ public class GameManager {
     public void save() throws IOException {
         // Save all the relevant data that is used in the .json files
         GameState saveState = new GameState(this);
-        File saveFile = new File("C:\\Users\\finnf\\Desktop\\College\\UCM\\the-boys-are-jack-in-town\\main\\saveFile.json");
+        File saveFile = new File("main\\saveFile.json");
 
         // Set all the necessary data to the save state
         saveState.setDealer(this.dealer);
@@ -511,6 +512,7 @@ public class GameManager {
         }
         saveState.setPlayerBalances(playerBalances);
         saveState.setPlayerScores(playerScores);
+        saveState.setDealerScore(dealer.calculateScore());
         saveState.setCurrentBets(playerBets);
 
         // Write it to a json file that can be loaded in.

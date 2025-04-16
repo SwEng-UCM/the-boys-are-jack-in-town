@@ -194,10 +194,8 @@ public class BlackJackMenu extends JFrame {
         });
 
         loadGameButton.addActionListener(e -> {
-            new LoadGamePanel(this).setVisible(true);
+            new LoadGamePanel(this);
             dispose();
-            // add game manager with file constructor
-            //  GameManager gameManager = GameManager.getInstance();
         });
     }
 

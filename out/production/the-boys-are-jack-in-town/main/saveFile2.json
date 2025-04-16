@@ -105,8 +105,8 @@
       "jokerWild" : false,
       "blackjackBomb" : false
     } ],
-    "balance" : 1000,
-    "currentBet" : 0
+    "balance" : 4970,
+    "currentBet" : 55
   },
   "deck" : {
     "allCards" : [ {

@@ -35,40 +35,6 @@ public class GameState implements Serializable {
     private List<Card> dealerHand;
     private List<Card> deckCards;
 
-    // Add constructor for JSON deserialization
-    // constructor for old json format
-//    public GameState(File jsonFile) throws IOException {
-//        System.out.println("Loading");
-//        ObjectMapper mapper = new ObjectMapper();
-//        Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
-//        Map<String, Object> gameData = (Map<String, Object>) jsonData;
-//
-//
-//        this.players = ((List<?>) gameData.get("players")).stream()
-//                .map(p -> mapper.convertValue(p, Player.class))
-//                .collect(Collectors.toList());
-//        this.dealer = mapper.convertValue(gameData.get("dealer"), Player.class);
-//        this.deck = mapper.convertValue(gameData.get("deck"), Deck.class);
-//
-//        this.currentPlayerIndex = (int) gameData.get("currentPlayerIndex");
-//        this.playerBalances = (List<Integer>) gameData.get("playerBalances");
-//        this.currentBets = (List<Integer>) gameData.get("currentBets");
-//        this.dealerBalance = (int) gameData.get("dealerBalance");
-//        this.dealerBet = (int) gameData.get("dealerBet");
-//        this.dealerScore = (int) gameData.get("dealerScore");
-//        this.playerScores = (List<Integer>) gameData.get("playerScores");
-//
-//        List<List<Map<String, Object>>> rawPlayerHands = mapper.convertValue(gameData.get("playerHand"), List.class);
-//        this.playerHands = convertJsonToCardLists(rawPlayerHands);
-//
-//        List<Map<String, Object>> rawDealerHand = mapper.convertValue(gameData.get("dealerHand"), List.class);
-//        this.dealerHand = convertJsonToCards(rawDealerHand);
-//
-//        Map<String, Object> deckMap = (Map<String, Object>) gameData.get("deck");
-//        List<Map<String, Object>> cards = (List<Map<String, Object>>) deckMap.get("allCards");
-//        this.deckCards = convertJsonToCards(cards);
-//    }
-
     public GameState(File jsonFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonData = mapper.readValue(jsonFile, Map.class);
@@ -77,9 +43,11 @@ public class GameState implements Serializable {
 
         List<Player> players = new ArrayList<>();
         List<List<Card>> playerHands = new ArrayList<>();
+        List<Integer> playerBalances = new ArrayList<>();
         List<Card> deck = new ArrayList<>();
         List<Integer> playerBets = new ArrayList<>();
         List<Card> dealerHand = new ArrayList<>();
+        List<Integer> playerScores = new ArrayList<>();
 
         JsonNode playersNode = root.get("players");
         for (JsonNode playerNode : playersNode) {
@@ -88,17 +56,20 @@ public class GameState implements Serializable {
             int bet = playerNode.get("currentBet").asInt();
             players.add(new Player(name, balance));
             playerBets.add(bet);
+            playerBalances.add(balance);
 
             JsonNode handNode = playerNode.get("hand");
             List<Card> hand = new ArrayList<>();
+            int score = 0;
             for (JsonNode cardNode : handNode) {
                 String rank = cardNode.get("rank").asText();
                 String suit = cardNode.get("suit").asText();
                 int value = cardNode.get("value").asInt();
-
+                score += value;
                 hand.add(new Card(rank, suit, false));
             }
             playerHands.add(hand);
+            playerScores.add(score);
         }
         JsonNode deckNode = root.get("deck");
         JsonNode allCardsNode = deckNode.get("allCards");
@@ -110,11 +81,8 @@ public class GameState implements Serializable {
 
             deck.add(card);
         }
-
         JsonNode dealerNode = root.get("dealer");
         JsonNode dealerHandNode = dealerNode.get("hand");
-        String dealerName = dealerNode.get("name").asText();
-
         for(JsonNode cardNode : dealerHandNode) {
             String rank = cardNode.get("rank").asText();
             String suit = cardNode.get("suit").asText();
@@ -123,16 +91,21 @@ public class GameState implements Serializable {
 
             dealerHand.add(card);
         }
-
+        int cpi = root.get("currentPlayerIndex").asInt();
 
         this.players = players;
         this.playerHands = playerHands;
         this.deck = new Deck(deck);
         this.dealer = new Player(dealerNode.get("name").toString(), dealerNode.get("balance").asInt());
+        this.dealerBalance = dealerNode.get("balance").asInt();
+        this.dealerBet = dealerNode.get("currentBet").asInt();
         this.dealerHand = dealerHand;
         this.currentBets = playerBets;
+        this.playerBalances = playerBalances;
+        this.playerScores = playerScores;
+        // this.currentPlayerIndex = cpi;
 
-        toString();
+        System.out.println(this.toString());
     }
 
     // No arg constructor for saving.
@@ -153,21 +126,6 @@ public class GameState implements Serializable {
         this.deckCards = gm.getFilteredDeck();
     }
 
-    private List<Card> convertJsonToCards(List<Map<String, Object>> jsonCards) {
-        return jsonCards.stream()
-                .map(cardMap -> new Card(
-                        (String) cardMap.get("rank"),
-                        (String) cardMap.get("suit"),
-                        cardMap.get("hidden") != null && (boolean) cardMap.get("hidden")
-                ))
-                .collect(Collectors.toList());
-    }
-
-    private List<List<Card>> convertJsonToCardLists(List<List<Map<String, Object>>> jsonCardLists) {
-        return jsonCardLists.stream()
-                .map(this::convertJsonToCards)
-                .collect(Collectors.toList());
-    }
 
     // Getters
     public List<Player> getPlayers() { return players; }
@@ -271,14 +229,12 @@ public class GameState implements Serializable {
         mapper.writeValue(file, this);
     }
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("=== Game State ===\n");
-        sb.append("Number of Players: ").append(getNumPlayers()).append("\n");
-        sb.append("Player Balance: ").append(getPlayerBalances()).append("\n");
+        sb.append("Player Balances: ").append(getPlayerBalances()).append("\n");
         sb.append("Current Bet: ").append(getCurrentBets()).append("\n");
         sb.append("Dealer Balance: ").append(getDealerBalance()).append("\n");
         sb.append("Dealer Bet: ").append(getDealerBet()).append("\n");
@@ -312,7 +268,6 @@ public class GameState implements Serializable {
                 sb.append(p).append("\n");
             }
         }
-
         sb.append("\n-- Dealer --\n");
         sb.append(getDealer()).append("\n");
 
@@ -321,8 +276,5 @@ public class GameState implements Serializable {
 
         return sb.toString();
     }
-
-
-
 }
 
