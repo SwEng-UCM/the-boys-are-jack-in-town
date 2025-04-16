@@ -452,10 +452,6 @@ public class GameManager {
         return pBets;
     }
 
-    public int getCurrentPlayerIndex(){
-        return currentPlayerIndex;
-    }
-
     public List<List<Card>> getPlayerHands() {
         List<List<Card>> playerHands = new ArrayList<>();
         for(Player p : players) {

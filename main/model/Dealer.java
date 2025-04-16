@@ -100,7 +100,7 @@ public class Dealer {
     /**
      * Resets the game by clearing hands and reinitializing the deck.
      * 
-     * @param player The player whose hand is reset
+     * @param Player The player whose hand is reset
      */
     public void resetGame(ArrayList<Player> players) {
         for (Player player : players) {

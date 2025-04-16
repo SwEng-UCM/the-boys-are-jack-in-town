@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import main.model.Card;
-import main.model.Deck;
-import main.model.Player;
+import main.model.*;
 
 
 // MOMENTO CLass
@@ -26,8 +24,6 @@ import main.model.Player;
 public class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Game configuration
-    private String currentDifficulty;
     
     // Game entities
     private List<Player> players;
@@ -123,8 +119,8 @@ public class GameState implements Serializable {
     }
 
     // No arg constructor for saving.
-    public GameState(GameManager gm){
-    System.out.println("Saving");
+    public GameState(GameManager gm) {
+        System.out.println("Saving");
         this.currentPlayerIndex = gm.getCurrentPlayerIndex();
         this.playerBalances = gm.getPlayerBalances();
         this.playerScores = gm.getPlayerScores();
@@ -138,13 +134,10 @@ public class GameState implements Serializable {
         this.playerHands = gm.getPlayerHands();
         this.dealerHand = gm.getDealerHand();
         this.deckCards = gm.getFilteredDeck();
-      
-       this.currentDifficulty = manager.getDifficultyStrategy().getDifficultyName();
 
-    
-    // Game progress
+        this.currentDifficulty = gm.getDifficultyStrategy().getDifficultyName();
 
-   
+    }
     /**
      * Restores difficulty setting to GameManager
      */

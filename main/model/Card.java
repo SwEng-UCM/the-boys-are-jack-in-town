@@ -30,6 +30,7 @@ public class Card {
         this.hidden = hidden;
         this.type = CardType.STANDARD;
     }
+
     public Card(Card original) {
         this.rank = original.rank;
         this.suit = original.suit;
