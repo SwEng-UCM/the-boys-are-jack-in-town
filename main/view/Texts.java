@@ -2,6 +2,8 @@ package main.view;
 
 
 public class Texts {
+
+
     Texts() {
     }
 
@@ -293,8 +295,18 @@ public class Texts {
         "اللعبة متوقفة", 
         "Jeu en Pause"
     };
-        public static final String[] VOLUME = {"Volume", "Volumen", "Volume"};
+    public static final String[] VOLUME = {"Volume", "Volumen", "Volume", "Volume", "Volume", "Volume" };
 
+
+    public static String[] saveGame = {
+            "Save",
+            "Save",
+            "Save",
+            "Save",
+            "Save",
+            "Save",
+
+    } ;
     
 
 }

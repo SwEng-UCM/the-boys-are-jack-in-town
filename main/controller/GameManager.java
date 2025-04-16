@@ -12,7 +12,10 @@ import javax.swing.Timer;
 
 import static main.view.BlackJackMenu.language;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -26,6 +29,8 @@ import javax.swing.SwingUtilities;
  * actions,
  * dealer actions, and determine the game outcome.
  */
+
+// ORIGINATOR Class
 public class GameManager {
     private static GameManager instance;
 
@@ -51,8 +56,8 @@ public class GameManager {
         this.currentPlayerIndex = 0;
         players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
-
     }
+
 
     // Public method to provide access to the singleton instance
     public static GameManager getInstance() {
@@ -266,9 +271,9 @@ public class GameManager {
         return player.getHand().toString();
     }
 
-    public String getDealerHand() {
-        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
-    }
+//    public String getDealerHand() {
+//        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
+//    }
 
     /*
      * Betting system.
@@ -331,7 +336,6 @@ public class GameManager {
 
         // Dealer receives one face-up and one face-down card
         dealer.receiveCard(deck.dealCard()); // Visible card
-        //gui.updateGameMessage("Dealer has a hidden card.");
 
         AchievementManager.getInstance().trackMultiplayerGame(players);
 
@@ -358,6 +362,37 @@ public class GameManager {
         }
         return currentPlayer.calculateScore() <= 21; // Player is still in the round if they haven't busted
     }
+
+    /**
+     * Handles special cards when drawn.
+     * //
+     */
+
+    private Card handleSpecialCard(Card card, Player recipient) {
+        if (recipient != dealer) { // Display special messages only when the player draws them
+            switch (card.getType()) {
+                case BLACKJACK_BOMB:
+                    gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
+                    System.out.println("BB");
+                    gameOver = true;
+                    break;
+                case SPLIT_ACE:
+                    gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
+                    System.out.println("SA");
+                    break;
+                case JOKER_WILD:
+                    int wildValue = gui.promptJokerWildValue();
+                    card.setWildValue(wildValue);
+                    gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
+                    System.out.println("JW");
+                    break;
+                default:
+                    break;
+            }
+        }
+        return card;
+    }
+
     /*
      * Betting system.
      */
@@ -393,36 +428,69 @@ public class GameManager {
         return currentPlayer.getCurrentBet();
     }
 
+    public List<Integer> getPlayerScores() {
+        List<Integer> pScores = new ArrayList<>();
+        for(Player p : players) {
+            pScores.add(p.calculateScore());
+        }
+        return pScores;
+    }
 
+    public List<Integer> getPlayerBalances(){
+        List<Integer> pBalances = new ArrayList<>();
+        for(Player p : players) {
+            pBalances.add(p.getBalance());
+        }
+        return pBalances;
+    }
 
-    /**
-     * Handles special cards when drawn.
-     * //
-     */
+    public List<Integer> getPlayerBets(){
+        List<Integer> pBets = new ArrayList<>();
+        for(Player p : players) {
+            pBets.add(p.getCurrentBet());
+        }
+        return pBets;
+    }
 
-    private Card handleSpecialCard(Card card, Player recipient) {
-        if (recipient != dealer) { // Display special messages only when the player draws them
-            switch (card.getType()) {
-                case BLACKJACK_BOMB:
-                    gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
+    }
 
-                    gameOver = true;
-                    break;
-                case SPLIT_ACE:
-                    gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
-                    break;
-                case JOKER_WILD:
-                    int wildValue = gui.promptJokerWildValue();
-                    card.setWildValue(wildValue);
-                    gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
-                    break;
-                default:
-                    break;
+    public List<List<Card>> getPlayerHands() {
+        List<List<Card>> playerHands = new ArrayList<>();
+        for(Player p : players) {
+            List<Card> playerHand = p.getHand();
+            playerHands.add(playerHand);
+        }
+        return playerHands;
+    }
 
+    public List<Card> getDealerHand(){
+        List<Card> dealerHand = new ArrayList<>();
+        for(Card c: dealer.getHand()) {
+            dealerHand.add(c);
+        }
+        return dealerHand;
+    }
+
+    public List<Card> getFilteredDeck(){
+        List<Card> deck = new ArrayList<>();
+        List<Card> usedCards = new ArrayList<>();
+
+        for(Player p : players) {
+            usedCards.addAll(p.getHand());
+        }
+        usedCards.addAll(dealer.getHand());
+
+        for(Card c : this.deck.getAllCards()) {
+            if(!usedCards.contains(c)) {
+                deck.add(c);
             }
         }
-        return card;
+        return deck;
     }
+
+
 
     public ArrayList<Player> getPlayers() {
         return this.players;
@@ -438,5 +506,88 @@ public class GameManager {
 
     public Player getDealer() {
         return this.dealer;
+    }
+
+
+    // SAVE/LOAD
+    public void loadGame(GameState gs) throws IOException {
+        applyGameState(gs);
+    }
+
+    private void applyGameState(GameState state) {
+        System.out.println("Applying game state");
+        this.players = new ArrayList<>(state.getPlayers());
+        this.dealer = state.getDealer();
+        this.deck = state.getDeck();
+        this.currentPlayerIndex = determineCurrentPlayerIndex(state);
+        this.gameOver = false;
+        this.gui = new BlackjackGUI(this);
+
+        // Restore each player's hand and score
+        ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
+        for (int i = 0; i < loadedPlayers.size(); i++) {
+            Player player = loadedPlayers.get(i);
+            player.setHand(state.getPlayerHands().get(i));
+            player.setCurrentScore();
+            player.setCurrentBet(state.getCurrentBets().get(i));
+            player.setBalance(player.getBalance());
+        }
+
+        // Restore dealer's hand, score, and balance
+        this.dealer.setHand(state.getDealerHand());
+        this.dealer.setBalance(state.getDealerBalance());
+        this.dealer.setCurrentBet(state.getDealerBet());
+
+        // Restore deck
+        //this.deck.setCards(state.getDeckCards());
+
+        // Set betting manager
+        this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
+        this.bettingManager.placeDealerBet(state.getDealerBet());
+
+        // Update GUI
+        SwingUtilities.invokeLater(() -> {
+            gui.updateGameMessage("Game loaded successfully!");
+            gui.updateGameState(players, dealer, false, false);
+            gui.setGameButtonsEnabled(true);
+            gui.enableBetting();
+            startNextPlayerTurn();
+        });
+
+        System.out.println("Game loaded successfully!");
+    }
+
+    private int determineCurrentPlayerIndex(GameState state) {
+       return state.getCurrentPlayerIndex();
+
+    }
+
+    public void save() throws IOException {
+        // Save all the relevant data that is used in the .json files
+        GameState saveState = new GameState(this);
+        File saveFile = new File("main\\saveFile.json");
+
+        // Set all the necessary data to the save state
+        saveState.setDealer(this.dealer);
+        saveState.setCurrentPlayerIndex(currentPlayerIndex);
+        saveState.setDealerBalance(dealer.getBalance());
+        saveState.setDealerBet(dealer.getCurrentBet());
+
+        saveState.setPlayers(this.players);
+        List<Integer> playerBalances = new ArrayList<>();
+        List<Integer> playerScores = new ArrayList<>();
+        List<Integer> playerBets = new ArrayList<>();
+        for(Player p : this.players) {
+            playerBalances.add(p.getBalance());
+            playerScores.add(p.calculateScore());
+            playerBets.add(p.getCurrentBet());
+        }
+        saveState.setPlayerBalances(playerBalances);
+        saveState.setPlayerScores(playerScores);
+        saveState.setDealerScore(dealer.calculateScore());
+        saveState.setCurrentBets(playerBets);
+
+        // Write it to a json file that can be loaded in.
+        saveState.saveToFile(saveFile);
     }
 }

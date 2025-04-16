@@ -298,11 +298,13 @@ public class BlackjackGUI extends JFrame {
         JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
         JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
         JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
+        JMenuItem saveItem = new JMenuItem(Texts.saveGame[language]);
         
         Font menuFont = new Font("Arial", Font.BOLD, 18);
         resumeItem.setFont(menuFont);
         mainMenuItem.setFont(menuFont);
         exitItem.setFont(menuFont);
+        saveItem.setFont(menuFont);
     
         // Volume control
         JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
@@ -326,6 +328,15 @@ public class BlackjackGUI extends JFrame {
             float volume = source.getValue() / 100f;
             AudioManager.getInstance().setVolume(volume);
         });
+
+        saveItem.addActionListener(e -> {
+            try {
+                //gameManager.save();
+                GameManager.getInstance().save();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
         volumePanel.add(volumeSlider, BorderLayout.CENTER);
@@ -336,6 +347,8 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.add(mainMenuItem);
         pauseMenu.addSeparator();
         pauseMenu.add(exitItem);
+        pauseMenu.addSeparator();
+        pauseMenu.add(saveItem);
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
     
@@ -535,7 +548,7 @@ playerBetLabels.put(player, betLabel);
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
-        betLabel.setText(Texts.bet[language] + " $0");
+        betLabel.setText(Texts.bet[language] + " $"+gameManager.getPlayerBet(gameManager.getCurrentPlayer()));
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
@@ -704,20 +717,6 @@ playerBetLabels.put(player, betLabel);
         }
         return wildValue;
     }
-/*
-    private void checkForSpecialCard(Card card) {
-        if (card.isJokerWild()) {
-            updateGameMessage(Texts.jokerWildMessage[language]);
-        } else if (card.isSplitAce()) {
-            updateGameMessage(Texts.splitAceMessage[language]);
-        } else if (card.isBlackjackBomb()) {
-            updateGameMessage(Texts.blackjackBombMessage[language]);
-        } else {
-            updateSpecialMessage("...");
-        }
-    }
- */
-
  
  public void promptPlayerAction(Player player) {
     if (!gameManager.isCurrentPlayerStillInRound()) {
@@ -738,15 +737,13 @@ playerBetLabels.put(player, betLabel);
 }
 
 
-    
-
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayers()) {
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);  // ✅ Transparent player panel
             panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg
-    
+
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());

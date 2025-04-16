@@ -1,9 +1,16 @@
 package main.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a playing card with a rank and a suit, including special cards that modify Blackjack rules.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
+
     public enum CardType {
         STANDARD, BLACKJACK_BOMB, SPLIT_ACE, JOKER_WILD
     }
@@ -14,8 +21,10 @@ public class Card {
     private final boolean hidden;
     private final CardType type;
     private int wildValue; // Dynamic value for Joker Wild
+    private int value;
 
-    public Card(String rank, String suit, boolean hidden) {
+    @JsonCreator
+    public Card(@JsonProperty("rank") String rank, @JsonProperty("suit") String suit, @JsonProperty("hidden") boolean hidden) {
         this.rank = rank;
         this.suit = suit;
         this.hidden = hidden;
@@ -31,7 +40,8 @@ public class Card {
     
     
 
-    public Card(CardType type) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public Card( CardType type) {
         this.rank = switch (type) {
             case BLACKJACK_BOMB -> "BB";
             case SPLIT_ACE -> "SA";
@@ -110,4 +120,5 @@ public class Card {
     public boolean isBlackjackBomb() {
         return this.type == CardType.BLACKJACK_BOMB;
     }
+
 }

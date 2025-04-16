@@ -191,7 +191,6 @@ public class BlackJackMenu extends JFrame {
             );
         });
         
-        
 
         exitButton.addActionListener(e -> System.exit(0));
 
@@ -200,7 +199,8 @@ public class BlackJackMenu extends JFrame {
         });
 
         loadGameButton.addActionListener(e -> {
-            new LoadGamePanel(this).setVisible(true);
+            new LoadGamePanel(this);
+            dispose();
         });
     }
 
