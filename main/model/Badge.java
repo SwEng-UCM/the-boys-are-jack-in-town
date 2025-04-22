@@ -1,14 +1,18 @@
 package main.model;
 
+import main.view.Texts;
+
+import static main.view.BlackJackMenu.language;
+
 public enum Badge {
-    FIRST_WIN("First Win!", "img/badges/first_win.png", "img/badges/first_win_grey.png"),
-    FIRST_LOSS("First Loss", "img/badges/first_loss.png", "img/badges/first_loss_grey.png"),
-    FIRST_BET("First Bet!", "img/badges/first_bet.png", "img/badges/first_bet_grey.png"),
-    FIRST_BLACKJACK("First Blackjack!", "img/badges/first_blackjack.png", "img/badges/first_blackjack_grey.png"),
-    FIVE_WINS("5 Wins", "img/badges/five_wins.png", "img/badges/five_wins_grey.png"),
-    BIG_WIN("Big Winner", "img/badges/big_win.png", "img/badges/big_win_grey.png"),
-    DEALER_STREAK("Dealer: 3-Win Streak", "img/badges/dealer_streak.png", "img/badges/dealer_streak_grey.png"),
-    MULTIPLAYER("Multiplayer Madness", "img/badges/multiplayer.png", "img/badges/multiplayer_grey.png");
+    FIRST_WIN(Texts.firstWin[language], "img/badges/first_win.png", "img/badges/first_win_grey.png"),
+    FIRST_LOSS(Texts.firstLoss[language], "img/badges/first_loss.png", "img/badges/first_loss_grey.png"),
+    FIRST_BET(Texts.firstBet[language], "img/badges/first_bet.png", "img/badges/first_bet_grey.png"),
+    FIRST_BLACKJACK(Texts.firstBlackjack[language], "img/badges/first_blackjack.png", "img/badges/first_blackjack_grey.png"),
+    FIVE_WINS(Texts.fiveWins[language], "img/badges/five_wins.png", "img/badges/five_wins_grey.png"),
+    BIG_WIN(Texts.bigWin[language], "img/badges/big_win.png", "img/badges/big_win_grey.png"),
+    DEALER_STREAK(Texts.dealerStreak[language], "img/badges/dealer_streak.png", "img/badges/dealer_streak_grey.png"),
+    MULTIPLAYER(Texts.multiplayerAchievement[language], "img/badges/multiplayer.png", "img/badges/multiplayer_grey.png");
 
     public final String title;
     public final String coloredPath;

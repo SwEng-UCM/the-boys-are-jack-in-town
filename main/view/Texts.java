@@ -336,4 +336,86 @@ public class Texts {
             "Total",        // French
     };
 
+    public static String[] achievements = {
+      "Achievements",
+            "Logros",             // Spanish
+            "Éachtaí",            // Irish
+            "Eredmények",         // Hungarian
+            "الإنجازات",          // Arabic
+            "Succès"              // French
+    };
+
+    public static String[] firstWin = {
+            "First Win!",
+            "¡Primera Victoria!", // Spanish
+            "An Chéad Bhua!",     // Irish
+            "Első Győzelem!",     // Hungarian
+            "أول فوز!",           // Arabic
+            "Première Victoire!"  // French
+    };
+
+    public static String[] firstLoss = {
+            "First Loss",         // English
+            "¡Primera Derrota!",  // Spanish
+            "An Chéad Chaill!",   // Irish
+            "Első Vereség!",      // Hungarian
+            "أول خسارة!",         // Arabic
+            "Première Défaite!"   // French
+    };
+
+    public static String[] firstBet = {
+            "First Bet!",         // English
+            "¡Primera Apuesta!",  // Spanish
+            "An Chéad Gheall!",   // Irish
+            "Első Tét!",          // Hungarian
+            "أول رهان!",          // Arabic
+            "Premier Pari!"       // French
+    };
+
+    public static String[] firstBlackjack = {
+            "First Blackjack!",         // English
+            "¡Primer Blackjack!",       // Spanish
+            "An Chéad Blackjack!",      // Irish
+            "Első Blackjack!",          // Hungarian
+            "أول بلاك جاك!",            // Arabic
+            "Premier Blackjack!"        // French
+    };
+
+    public static String[] fiveWins = {
+            "5 Wins",              // English
+            "5 Victorias",         // Spanish
+            "5 Bhuaigh",           // Irish
+            "5 Győzelem",          // Hungarian
+            "٥ انتصارات",          // Arabic
+            "5 Victoires"          // French
+    };
+
+    public static String[] bigWin = {
+            "Big Winner",          // English
+            "Gran Ganador",        // Spanish
+            "Buaiteoir Mór",       // Irish
+            "Nagy Nyertes",        // Hungarian
+            "فائز كبير",           // Arabic
+            "Gros Gagnant"         // French
+    };
+
+    public static String[] dealerStreak = {
+            "Dealer: 3-Win Streak",       // English
+            "Crupier: Racha de 3 Victorias", // Spanish
+            "Dáileoir: Sraith 3 mBua",       // Irish
+            "Oszto: 3 Nyerő Sorozat",        // Hungarian
+            "الموزع: سلسلة 3 انتصارات",      // Arabic
+            "Croupier : Série de 3 Victoires"// French
+    };
+
+    public static String[] multiplayerAchievement = {
+            "Multiplayer Madness",     // English
+            "Locura Multijugador",     // Spanish
+            "Craiceáilte Il-imreora",  // Irish
+            "Többszemélyes Őrület",     // Hungarian
+            "جنون اللاعبين المتعددين", // Arabic
+            "Folie Multijoueur"        // French
+    };
+
+
 }

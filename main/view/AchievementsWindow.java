@@ -6,10 +6,12 @@ import main.model.Badge;
 import javax.swing.*;
 import java.awt.*;
 
+import static main.view.BlackJackMenu.language;
+
 public class AchievementsWindow extends JFrame {
 
     public AchievementsWindow() {
-        setTitle("Achievements");
+        setTitle(Texts.achievements[language]);
         setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
