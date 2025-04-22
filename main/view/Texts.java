@@ -326,6 +326,14 @@ public class Texts {
             " دوره",
             " joue",
     };
-    
+
+    public static String[] total = {
+            "Total",
+            "Total",        // Spanish
+            "Iomlán",       // Irish
+            "Összesen",     // Hungarian
+            "المجموع",      // Arabic
+            "Total",        // French
+    };
 
 }

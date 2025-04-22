@@ -357,7 +357,7 @@ public class BlackjackGUI extends JFrame {
         betField.setPreferredSize(new Dimension(350, 40));
         betField.setMaximumSize(new Dimension(300, 30));
         betField.setFont(new Font("Arial", Font.PLAIN, 24));
-        enterBetLabel = new JLabel("Enter Bet");
+        enterBetLabel = new JLabel(Texts.enterBet[language]);
         enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
         enterBetLabel.setForeground(Color.WHITE);
         betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
@@ -439,7 +439,7 @@ public class BlackjackGUI extends JFrame {
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-                JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
                 dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
@@ -747,7 +747,7 @@ playerBetLabels.put(player, betLabel);
 
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
-            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());
+            JLabel betLabel = new JLabel( Texts.bet[language]+" $" + player.getCurrentBet());
     
             // ✅ White text for visibility
             scoreLabel.setForeground(Color.WHITE);

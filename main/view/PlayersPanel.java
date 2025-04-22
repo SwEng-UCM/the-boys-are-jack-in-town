@@ -8,7 +8,9 @@ import main.model.Player;
 import java.awt.*;
 import java.util.List;
 
-                          
+import static main.view.BlackJackMenu.language;
+
+
 class PlayersPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
@@ -67,7 +69,7 @@ class PlayersPanel extends JPanel {
 
     private JLabel createPlayerLabel(Player player) {
         JLabel label = new JLabel(String.format(
-            "%s - $%d (BET: $%d)", 
+            "%s - $%d ("+Texts.bet[language]+" $%d)",
             player.getName(), 
             player.getBalance(), 
             player.getCurrentBet()
@@ -96,7 +98,7 @@ class PlayersPanel extends JPanel {
         }
     
         // Total score label
-        JLabel totalLabel = new JLabel("TOTAL: " + player.calculateScore(), SwingConstants.CENTER);
+        JLabel totalLabel = new JLabel(Texts.total[language]+": " + player.calculateScore(), SwingConstants.CENTER);
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setFont(new Font("Arial", Font.BOLD, 26));
 
