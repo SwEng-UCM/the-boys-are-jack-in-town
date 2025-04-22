@@ -317,6 +317,15 @@ public class Texts {
             "حفظ",           // Arabic
             "Sauvegarder"    // French
     };
+
+    public static String[] turns = {
+            "'s turn",
+            " turno",
+            " cas",
+            " köre",
+            " دوره",
+            " joue",
+    };
     
 
 }

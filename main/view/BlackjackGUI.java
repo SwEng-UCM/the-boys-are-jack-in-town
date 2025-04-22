@@ -598,7 +598,7 @@ playerBetLabels.put(player, betLabel);
     private void nextTurn() {
         if (gameManager.hasNextPlayer()) {
             gameManager.startNextPlayerTurn();
-            updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
+            updateGameMessage(gameManager.getCurrentPlayer().getName() + Texts.turns[language]);
             enableBetting();
         } else {
             gameManager.dealerTurn();
@@ -727,7 +727,8 @@ playerBetLabels.put(player, betLabel);
         }
     } else {
         setGameButtonsEnabled(true);
-        updateGameMessage(player.getName() + "'s turn");
+//        updateGameMessage(player.getName() + "'s turn");
+        updateGameMessage(player.getName() + Texts.turns[language]);
 
         // ✅ Only allow betting if game is not running
         if (!gameManager.isGameRunning()) {
