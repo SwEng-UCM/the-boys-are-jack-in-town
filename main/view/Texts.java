@@ -3,13 +3,17 @@ package main.view;
 
 public class Texts {
 
-
-    Texts() {
-    }
-
-
     public static String[] startGame =
             {"Start Game!", "Empieza el juego!", "Tús a chur leis an gcluiche!", "Kezdjük a játékot!", "ابدأ اللعبة", "Commencer le jeu!"};
+
+    public static String[] loadGame = {
+            "Load Game",
+            "Cargar el juego!",
+            "Luchtaigh Cluiche",
+            "Játék Betöltése",
+            "تحميل اللعبة",
+            "Charger la Partie"
+    };
 
     public static String[] instructions =
             {"Instructions", "Instrucciones", "Treoir",
@@ -20,7 +24,7 @@ public class Texts {
                     "Kilépés", "خروج", "Quitter"};
 
     public static String[] options =
-            {"Options", "Opciónes", "Rogha",
+            {"Options", "Opciones", "Rogha",
                     "Opciók", "خيارات", "Options"};
 
 
@@ -295,18 +299,24 @@ public class Texts {
         "اللعبة متوقفة", 
         "Jeu en Pause"
     };
-    public static final String[] VOLUME = {"Volume", "Volumen", "Volume", "Volume", "Volume", "Volume" };
 
+    public static final String[] VOLUME = {
+            "Volume",        // English
+            "Volumen",       // Spanish
+            "Toirte",        // Irish
+            "Hangerő",       // Hungarian
+            "مستوى الصوت",   // Arabic
+            "Volume"         // French
+    };
 
     public static String[] saveGame = {
-            "Save",
-            "Save",
-            "Save",
-            "Save",
-            "Save",
-            "Save",
-
-    } ;
+            "Save",          // English
+            "Guardar",       // Spanish
+            "Sábháil",       // Irish
+            "Mentés",        // Hungarian
+            "حفظ",           // Arabic
+            "Sauvegarder"    // French
+    };
     
 
 }

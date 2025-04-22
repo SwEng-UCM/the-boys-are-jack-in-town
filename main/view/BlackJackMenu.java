@@ -72,7 +72,8 @@ public class BlackJackMenu extends JFrame {
         optionsButton = createStyledButton(Texts.options[language]);
         optionsButton.setIcon(loadIcon("img/icons/options.png", 32, 32));
     
-        loadGameButton = createStyledButton("Load Game");
+        loadGameButton = createStyledButton(Texts.loadGame[language]);
+        loadGameButton.setIcon(loadIcon("img/icons/folder.png", 32, 32));
     
         exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
@@ -93,9 +94,6 @@ public class BlackJackMenu extends JFrame {
     
         startTitleAnimation();
     }
-    
-    
-    
     
 
     private void layoutComponents() {
@@ -266,6 +264,7 @@ public class BlackJackMenu extends JFrame {
 
         // Update button texts
         startButton.setText(Texts.startGame[language]);
+        loadGameButton.setText(Texts.loadGame[language]);
         instructionsButton.setText(Texts.instructions[language]);
         exitButton.setText(Texts.exit[language]);
         optionsButton.setText(Texts.options[language]);
