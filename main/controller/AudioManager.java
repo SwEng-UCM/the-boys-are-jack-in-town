@@ -8,18 +8,18 @@ public class AudioManager {
     private static AudioManager instance;
     private Clip backgroundMusic;
     private float currentVolume = 0.1f; // Default volume (10%)
-    
+
     private AudioManager() {
         // Private constructor for singleton
     }
-    
+
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
         }
         return instance;
     }
-    
+
     public void playBackgroundMusic() {
         try {
             if (backgroundMusic != null && backgroundMusic.isActive()) {
@@ -37,7 +37,7 @@ public class AudioManager {
             e.printStackTrace();
         }
     }
-    
+
     public void setVolume(float volume) {
         currentVolume = volume;
         if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -46,7 +46,11 @@ public class AudioManager {
             gainControl.setValue(dB);
         }
     }
-    
+
+    public float getVolume() {
+        return currentVolume;
+    }
+
     public void stopMusic() {
         if (backgroundMusic != null) {
             backgroundMusic.stop();
@@ -60,7 +64,7 @@ public class AudioManager {
                 System.err.println("Sound not found: " + resourcePath);
                 return;
             }
-    
+
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
@@ -69,5 +73,4 @@ public class AudioManager {
             e.printStackTrace();
         }
     }
-    
 }
