@@ -49,6 +49,8 @@ public class GameManager {
     private BettingManager bettingManager;
     private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
+    
+    
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -72,16 +74,36 @@ public class GameManager {
     public void setDifficultyStrategy(DifficultyStrategy strategy) {
         this.difficultyStrategy = strategy;
     }
+    
     private void saveGameState() {
-        GameState currentState = new GameState(players, dealer, deck, currentPlayerIndex, gameOver);
+        GameState currentState = new GameState(this.players, this.dealer, this.deck, this.currentPlayerIndex, this.gameOver);
         undoStack.push(currentState); // Save the current state to the undo stack
         redoStack.clear(); // Clear the redo stack since a new action invalidates the redo history
+    }
+    public void restoreFullState(GameManager manager) {
+        // Restore core entities
+        manager.getPlayers().clear();
+        manager.getPlayers().addAll(this.players);
+        manager.getDealer().getHand().clear();
+        manager.getDealer().getHand().addAll(this.dealer.getHand());
+    
+        // Restore game progress
+        manager.setCurrentPlayerIndex(this.currentPlayerIndex);
+        manager.setGameOver(this.gameOver);
+    
+        // Restore deck
+        manager.getDeck().getCards().clear();
+        manager.getDeck().getCards().addAll(this.deck.getCards());
+    
+        // Restore difficulty
+        manager.setDifficultyStrategy(manager.getDifficultyStrategy());
     }
     public void undoLastAction() {
         if (!undoStack.isEmpty()) {
             GameState previousState = undoStack.pop(); // Pop the last state from the undo stack
-            redoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the redo stack
-            this.players = previousState.getPlayers();
+            redoStack.push(new GameState(this)); // Save the current state to the redo stack
+            previousState.restoreFullState(this); // Restore the previous state
+            this.players = new ArrayList<>(previousState.getPlayers()); // Convert List<Player> to ArrayList<Player>
             this.dealer = previousState.getDealer();
             this.deck = previousState.getDeck();
             this.currentPlayerIndex = previousState.getCurrentPlayerIndex();
@@ -95,8 +117,9 @@ public class GameManager {
     public void redoLastAction() {
         if (!redoStack.isEmpty()) {
             GameState nextState = redoStack.pop(); // Pop the last state from the redo stack
-            undoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the undo stack
-            this.players = nextState.getPlayers();
+            undoStack.push(new GameState(this)); // Save the current state to the undo stack
+            nextState.restoreFullState(this); // Restore the next state
+            this.players = new ArrayList<>(nextState.getPlayers()); // Convert List<Player> to ArrayList<Player>
             this.dealer = nextState.getDealer();
             this.deck = nextState.getDeck();
             this.currentPlayerIndex = nextState.getCurrentPlayerIndex();
@@ -160,7 +183,7 @@ public class GameManager {
     public boolean isGamePaused() {
         return isPaused;
     }
-    
+
     public void addPlayer(String name, int initialBalance) {
         players.add(new Player(name, initialBalance));
     }
@@ -175,22 +198,6 @@ public class GameManager {
         }
         
     }
-    public void dealerTurn() {
-        saveGameState(); // Save the current state before modifying it
-        Player referencePlayer = players.get(0); // Or choose the strongest player
-        for (Player p : players) {
-            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
-                referencePlayer = p;
-            }
-        }
-    
-        while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
-            dealer.receiveCard(deck.dealCard());
-        }
-        checkDealerBust();
-        determineWinners();
-    }
-    
     public void handlePlayerStand() {
         if (!gameOver) {
             currentPlayerIndex++; // move to next player

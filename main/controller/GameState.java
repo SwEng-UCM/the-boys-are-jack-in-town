@@ -285,6 +285,13 @@ public class GameState implements Serializable {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.writeValue(file, this);
     }
+    public GameState(ArrayList<Player> players, Player dealer, Deck deck, int currentPlayerIndex, boolean gameOver) {
+        this.players = new ArrayList<>(players); // Deep copy if necessary
+        this.dealer = new Player(dealer); // Ensure Player has a copy constructor
+        this.deck = new Deck(deck); // Ensure Deck has a copy constructor
+        this.currentPlayerIndex = currentPlayerIndex;
+        this.gameOver = gameOver;
+    }
 
     @Override
     public String toString() {
