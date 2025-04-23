@@ -161,17 +161,18 @@ public class BlackJackMenu extends JFrame {
         titlePanel.add(mainTitleLabel);
         titlePanel.setComponentZOrder(mainTitleLabel, 0);
 
-        // ✅ Stack the title and image panels vertically
+        // Move up the image and title by adding padding above
         JPanel stackedTopPanel = new JPanel();
         stackedTopPanel.setLayout(new BoxLayout(stackedTopPanel, BoxLayout.Y_AXIS));
         stackedTopPanel.setOpaque(false);
-        stackedTopPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Add top margin
+        stackedTopPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Add top margin
 
-        imagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -15, 0)); // Move image up slightly
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(-50, 0, 0, 0));  // Move title up slightly
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -20, 0)); // Move image up slightly
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(-30, 0, 0, 0));  // Move title up slightly
 
         stackedTopPanel.add(imagePanel);
         stackedTopPanel.add(titlePanel);
+
 
         // ✅ Now add that to the NORTH position
         contentPanel.add(stackedTopPanel, BorderLayout.NORTH);
@@ -238,6 +239,11 @@ public class BlackJackMenu extends JFrame {
         revalidate();
         repaint();
     }
+
+    private int calculatePadding(int percentage) {
+        return (int) (getHeight() * (percentage / 100.0));
+    }
+    
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
