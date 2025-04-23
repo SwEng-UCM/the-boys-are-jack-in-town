@@ -266,6 +266,15 @@ public class Texts {
             "بلاك جاك 2: الأولاد عادوا إلى المدينة.", // Arabic 🇸🇦
             "Blackjack 2: Les garçons sont de retour en ville!!" // French 🇫🇷
     };
+    public static  String[] pauseTitle = {
+        "Pause Menu",         // English
+        "Menú de Pausa",      // Spanish
+        "Pá Menú",            // Irish
+        "Szünet menü",        // Hungarian
+        "قائمة التوقف",       // Arabic
+        "Menu Pause"          // French
+    };
+    
  
 
   

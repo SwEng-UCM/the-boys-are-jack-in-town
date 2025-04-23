@@ -23,6 +23,8 @@ public class BlackJackMenu extends JFrame {
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JComboBox<String> difficultyComboBox;
+    private JPanel topRightBar;
+
 
 
     
@@ -90,6 +92,29 @@ public class BlackJackMenu extends JFrame {
         mainTitleLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 60));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
+        mainTitleLabel.setOpaque(false);
+        mainTitleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+
+        JLabel profileLabel = new JLabel("👤 Guest");
+        profileLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        profileLabel.setForeground(Color.WHITE);
+
+        String[] languages = {"🇬🇧", "🇪🇸", "🇫🇷", "🇮🇪", "🇭🇺", "🇸🇦"};
+        JComboBox<String> languageBox = new JComboBox<>(languages);
+        languageBox.setSelectedIndex(language); // sync with current language
+        languageBox.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+
+        languageBox.addActionListener(e -> {
+            language = languageBox.getSelectedIndex();
+            refreshMenu(); // Refresh menu to apply new language
+        });
+
+        topRightBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        topRightBar.setOpaque(false);
+        topRightBar.add(profileLabel);
+        topRightBar.add(languageBox);
+
+
     
         startTitleAnimation();
     }
@@ -117,9 +142,17 @@ public class BlackJackMenu extends JFrame {
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
         mainTitleLabel.setBounds(0, 0, 1, 100);
+        contentPanel.add(topRightBar, BorderLayout.NORTH);
+
+
         titlePanel.add(mainTitleLabel);
     
+        contentPanel.add(topRightBar, BorderLayout.NORTH);
         contentPanel.add(titlePanel, BorderLayout.CENTER);
+        contentPanel.add(imagePanel, BorderLayout.SOUTH); // Optional: or reorder if needed
+
+        
+
     
         // Button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -150,12 +183,18 @@ public class BlackJackMenu extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.3f));
+                g2.setComposite(AlphaComposite.SrcOver.derive(0.4f));
                 g2.setColor(Color.WHITE);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+        
+                // subtle inner shadow
+                g2.setColor(new Color(0, 0, 0, 30));
+                g2.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
+        
                 g2.dispose();
             }
         };
+        
         glassPanel.setOpaque(false);
         glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
@@ -211,19 +250,21 @@ public class BlackJackMenu extends JFrame {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     
-                Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
-                Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
+                Color gradientStart = getModel().isRollover() ? new Color(255, 255, 160) : new Color(255, 220, 50);
+                Color gradientEnd = getModel().isRollover() ? new Color(255, 180, 0) : new Color(240, 160, 0);
     
                 GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
     
-                // Shadow effect
-                g2.setColor(new Color(0, 0, 0, 40));
-                g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
+                // Glow on hover
+                if (getModel().isRollover()) {
+                    g2.setColor(new Color(255, 255, 150, 80));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
+                }
     
-                super.paintComponent(g);
                 g2.dispose();
+                super.paintComponent(g);
             }
         };
     
@@ -233,15 +274,12 @@ public class BlackJackMenu extends JFrame {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);
-        button.setPreferredSize(new Dimension(320, 80));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
-        button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15); // space between icon and text
-
-    
+        button.setPreferredSize(new Dimension(360, 80));
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setIconTextGap(15);
         return button;
     }
+    
 
     private ImageIcon loadIcon(String path, int width, int height) {
         try {
@@ -285,10 +323,11 @@ public class BlackJackMenu extends JFrame {
             int titleWidth = mainTitleLabel.getPreferredSize().width;
             mainTitleLabel.setBounds(titleX, 0, titleWidth, 100);
             mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
-            repaint(); // Full repaint - less efficient but guaranteed to work
+            mainTitleLabel.repaint();
         });
         titleTimer.start();
     }
+    
     
     private class BackgroundPanel extends JPanel {
         private int xOffset = 0;
