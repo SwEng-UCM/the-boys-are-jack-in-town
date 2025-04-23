@@ -15,5 +15,14 @@
             "connectionTimeout": 30,
             "password": "hanna.hanna123"
         }
+    ],
+    "java.project.sourcePaths": [
+        "."
+    ],
+    "java.project.referencedLibraries": [
+        "c:\\Users\\Emre Eryilmaz\\OneDrive\\Documents\\GitHub\\the-boys-are-jack-in-town\\lib\\jackson-core-2.9.9.jar",
+        "c:\\Users\\Emre Eryilmaz\\OneDrive\\Documents\\GitHub\\the-boys-are-jack-in-town\\lib\\jackson-annotations-2.9.9.jar",
+        "c:\\Users\\Emre Eryilmaz\\OneDrive\\Documents\\GitHub\\the-boys-are-jack-in-town\\lib\\mysql-connector-j-9.2.0.jar",
+        "c:\\Users\\Emre Eryilmaz\\OneDrive\\Documents\\GitHub\\the-boys-are-jack-in-town\\lib\\jackson-databind-2.9.9.jar"
     ]
 }

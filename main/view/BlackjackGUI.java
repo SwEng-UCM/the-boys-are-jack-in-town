@@ -729,6 +729,18 @@ playerBetLabels.put(player, betLabel);
         cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+        String imagePath = card.getImagePath();
+        try {
+            ImageIcon cardIcon = new ImageIcon(imagePath);
+            Image scaledImage = cardIcon.getImage().getScaledInstance(100, 150, Image.SCALE_SMOOTH);
+            JLabel cardLabel = new JLabel(new ImageIcon(scaledImage));
+            cardPanel.add(cardLabel, BorderLayout.CENTER);
+        } catch (Exception e) {
+            // Fallback if the image is not found
+            JLabel fallbackLabel = new JLabel(card.getRank() + " of " + card.getSuit(), SwingConstants.CENTER);
+            fallbackLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            cardPanel.add(fallbackLabel, BorderLayout.CENTER);
+        }
 
         JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
         rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -821,6 +833,7 @@ playerBetLabels.put(player, betLabel);
         playersPanel.revalidate();
         playersPanel.repaint();
     }
+    
 
     private class BackgroundPanel extends JPanel {
         @Override
@@ -835,6 +848,7 @@ playerBetLabels.put(player, betLabel);
             }
         }
     }
+    
     
     
 }

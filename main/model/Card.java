@@ -25,8 +25,8 @@ public class Card {
 
     @JsonCreator
     public Card(@JsonProperty("rank") String rank, @JsonProperty("suit") String suit, @JsonProperty("hidden") boolean hidden) {
-        this.rank = rank;
-        this.suit = suit;
+        this.rank = rank.toLowerCase(); // Ensure lowercase for consistency
+        this.suit = suit.toLowerCase(); // Ensure lowercase for consistency
         this.hidden = hidden;
         this.type = CardType.STANDARD;
     }
@@ -35,6 +35,7 @@ public class Card {
         this.rank = original.rank;
         this.suit = original.suit;
         this.type = original.type;
+        
         this.wildValue = original.wildValue;
         this.hidden = false; // or original.hidden if you want to keep it
     }
@@ -66,7 +67,9 @@ public class Card {
     public CardType getType() {
         return this.type;
     }
-
+    public String getImagePath() {
+        return "resources/images/cards/" + rank + "_of_" + suit + ".png";
+    }
     public int getValue() {
         return switch (type) {
             case BLACKJACK_BOMB -> 21; // Instant win
@@ -121,5 +124,14 @@ public class Card {
     public boolean isBlackjackBomb() {
         return this.type == CardType.BLACKJACK_BOMB;
     }
+    public String getImageFileName() {
+        if (this.isHidden()) return "back.png";
+    
+        String r = rank.toLowerCase();      // "Ace" → "ace"
+        String s = suit.toLowerCase();      // "Diamonds" → "diamonds"
+    
+        return r + "_of_" + s + ".png";     // → ace_of_diamonds.png
+    }
+    
 
 }
