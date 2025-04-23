@@ -52,6 +52,8 @@ public class BlackjackGUI extends JFrame {
     private boolean backgroundLoaded = false;
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
+    private JButton undoButton;
+    private JButton redoButton;
 
 
     private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
@@ -305,7 +307,7 @@ public class BlackjackGUI extends JFrame {
         mainMenuItem.setFont(menuFont);
         exitItem.setFont(menuFont);
         saveItem.setFont(menuFont);
-    
+
         // Volume control
         JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
         volumePanel.setBackground(new Color(50, 50, 50));
@@ -376,6 +378,57 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
+        undoButton = new JButton();
+        undoButton.setPreferredSize(new Dimension(50, 50));
+        ImageIcon undoIcon = new ImageIcon("resources/images/undo.png"); // Ensure the file path is correct
+        Image scaledUndoIcon = undoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+        undoButton.setIcon(new ImageIcon(scaledUndoIcon)); // Set the scaled icon
+        undoButton.setToolTipText("Undo the last action"); // Add a tooltip
+        undoButton.setBackground(new Color(255, 215, 0)); // Gold background
+        undoButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        undoButton.setContentAreaFilled(false);
+        undoButton.setOpaque(true);
+        undoButton.setFocusPainted(false);
+    
+        // Initialize Redo button with an image
+        redoButton = new JButton();
+        redoButton.setPreferredSize(new Dimension(50, 50));
+        ImageIcon redoIcon = new ImageIcon("resources/images/redo.png"); // Ensure the file path is correct
+        Image scaledRedoIcon = redoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
+        redoButton.setIcon(new ImageIcon(scaledRedoIcon)); // Set the scaled icon
+        redoButton.setToolTipText("Redo the last undone action"); // Add a tooltip
+        redoButton.setBackground(new Color(255, 215, 0)); // Gold background
+        redoButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        redoButton.setContentAreaFilled(false);
+        redoButton.setOpaque(true);
+        redoButton.setFocusPainted(false);
+    
+        // Add hover effects for Undo button
+        undoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                undoButton.setBackground(new Color(255, 200, 0)); // Darker gold on hover
+            }
+    
+            @Override
+            public void mouseExited(MouseEvent e) {
+                undoButton.setBackground(new Color(255, 215, 0)); // Original gold
+            }
+        });
+    
+        // Add hover effects for Redo button
+        redoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                redoButton.setBackground(new Color(255, 200, 0)); // Darker gold on hover
+            }
+    
+            @Override
+            public void mouseExited(MouseEvent e) {
+                redoButton.setBackground(new Color(255, 215, 0)); // Original gold
+            }
+        });
+
     }
    
     private void attachEventListeners() {
@@ -514,7 +567,14 @@ playerBetLabels.put(player, betLabel);
                 popupMenuWillBecomeInvisible(e);
             }
         });
-
+        undoButton = new JButton("Undo");
+        redoButton = new JButton("Redo");
+        
+        undoButton.addActionListener(e -> gameManager.undoLastAction());
+        redoButton.addActionListener(e -> gameManager.redoLastAction());
+        
+        buttonPanel.add(undoButton);
+        buttonPanel.add(redoButton);
         pauseMenu.show(pauseButton, 0, pauseButton.getHeight());
     }
 

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.SwingUtilities;
 
@@ -43,6 +44,8 @@ public class GameManager {
     private Deck deck;
     private BlackjackGUI gui;
     private boolean gameOver;
+    private final Stack<GameState> undoStack = new Stack<>();
+    private final Stack<GameState> redoStack = new Stack<>();
     private BettingManager bettingManager;
     private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
@@ -69,7 +72,41 @@ public class GameManager {
     public void setDifficultyStrategy(DifficultyStrategy strategy) {
         this.difficultyStrategy = strategy;
     }
-
+    private void saveGameState() {
+        GameState currentState = new GameState(players, dealer, deck, currentPlayerIndex, gameOver);
+        undoStack.push(currentState); // Save the current state to the undo stack
+        redoStack.clear(); // Clear the redo stack since a new action invalidates the redo history
+    }
+    public void undoLastAction() {
+        if (!undoStack.isEmpty()) {
+            GameState previousState = undoStack.pop(); // Pop the last state from the undo stack
+            redoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the redo stack
+            this.players = previousState.getPlayers();
+            this.dealer = previousState.getDealer();
+            this.deck = previousState.getDeck();
+            this.currentPlayerIndex = previousState.getCurrentPlayerIndex();
+            this.gameOver = previousState.isGameOver();
+            gui.updateGameState(players, dealer, gameOver, isPaused);
+            gui.updateGameMessage("Undo successful!");
+        } else {
+            gui.updateGameMessage("No actions to undo!");
+        }
+    }
+    public void redoLastAction() {
+        if (!redoStack.isEmpty()) {
+            GameState nextState = redoStack.pop(); // Pop the last state from the redo stack
+            undoStack.push(new GameState(players, dealer, deck, currentPlayerIndex, gameOver)); // Save the current state to the undo stack
+            this.players = nextState.getPlayers();
+            this.dealer = nextState.getDealer();
+            this.deck = nextState.getDeck();
+            this.currentPlayerIndex = nextState.getCurrentPlayerIndex();
+            this.gameOver = nextState.isGameOver();
+            gui.updateGameState(players, dealer, gameOver, isPaused);
+            gui.updateGameMessage("Redo successful!");
+        } else {
+            gui.updateGameMessage("No actions to redo!");
+        }
+    }
     public BettingManager getBettingManager() {
         return bettingManager;
     }
@@ -86,6 +123,21 @@ public class GameManager {
         }
         gui.updateGameMessage(Texts.GAME_PAUSED[language]);
         gui.updateGameState(players, dealer, false, true); // gameOver=false, isPaused=true
+    }
+    public void handlePlayerHit() {
+        if (!gameOver && !isPaused) {
+            saveGameState(); // Save the current state before modifying it
+            Player currentPlayer = players.get(currentPlayerIndex);
+            currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
+            gui.updateGameState(players, dealer, gameOver, false);
+    
+            if (currentPlayer.calculateScore() > 21) {
+                checkPlayerBust(); // already moves to next player
+            } else {
+                gui.promptPlayerAction(currentPlayer);
+            }
+            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
+        }
     }
 
     public boolean isPaused() {
@@ -108,7 +160,7 @@ public class GameManager {
     public boolean isGamePaused() {
         return isPaused;
     }
-
+    
     public void addPlayer(String name, int initialBalance) {
         players.add(new Player(name, initialBalance));
     }
@@ -123,25 +175,22 @@ public class GameManager {
         }
         
     }
-    
-
-    public void handlePlayerHit() {
-        if (!gameOver && !isPaused) {
-            Player currentPlayer = players.get(currentPlayerIndex);
-            currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
-            gui.updateGameState(players, dealer, gameOver, false);
-    
-            if (currentPlayer.calculateScore() > 21) {
-                checkPlayerBust(); // already moves to next player
-            } else {
-                // 👇 Needed! Re-prompt the same player if still in the round
-                gui.promptPlayerAction(currentPlayer);
+    public void dealerTurn() {
+        saveGameState(); // Save the current state before modifying it
+        Player referencePlayer = players.get(0); // Or choose the strongest player
+        for (Player p : players) {
+            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
+                referencePlayer = p;
             }
-            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
         }
+    
+        while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
+            dealer.receiveCard(deck.dealCard());
+        }
+        checkDealerBust();
+        determineWinners();
     }
     
-
     public void handlePlayerStand() {
         if (!gameOver) {
             currentPlayerIndex++; // move to next player
