@@ -30,6 +30,10 @@ public class Card {
         this.hidden = hidden;
         this.type = CardType.STANDARD;
     }
+    public boolean isHidden() {
+        return this.hidden;
+    }
+    
 
     public Card(Card original) {
         this.rank = original.rank;
