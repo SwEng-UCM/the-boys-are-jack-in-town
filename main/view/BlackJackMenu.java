@@ -5,11 +5,12 @@ package main.view;
 import main.controller.GameManager;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-// 🔼 Add these imports at the top
 import main.model.EasyDifficulty;
 import main.model.MediumDifficulty;
 import main.model.HardDifficulty;
@@ -18,16 +19,17 @@ import main.model.HardDifficulty;
 import static main.view.Languages.*;
 
 public class BlackJackMenu extends JFrame {
-    private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton;
+    private JButton startButton, multiplayerButton, instructionsButton, exitButton, optionsButton, loadGameButton;
     private JLabel imageLabel, mainTitleLabel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JComboBox<String> difficultyComboBox;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private int gameHeight = (int) screenSize.getHeight();
+    private int gameWidth = (int)screenSize.getWidth();
+    private JPanel titlePanel;
     private JPanel topRightBar;
 
-
-
-    
     private int titleX = 0;
     private Timer titleTimer;
     public static int language = 0;
@@ -55,6 +57,18 @@ public class BlackJackMenu extends JFrame {
             backgroundLoaded = false;
         }
         
+        SwingUtilities.invokeLater(() -> {
+            titleX = getWidth(); // Ensure width is valid after window is visible
+            startTitleAnimation();
+        });
+    
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                titleX = getWidth(); // Reset to full width on resize
+            }
+        });
+        
         // Custom image icon
         ImageIcon icon = new ImageIcon("img/black.png");
         setIconImage(icon.getImage());
@@ -62,11 +76,14 @@ public class BlackJackMenu extends JFrame {
         initializeComponents();
         layoutComponents();
         attachEventListeners();
+
     }
 
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
         startButton.setIcon(loadIcon("img/icons/start.png", 32, 32));
+
+        multiplayerButton = createStyledButton("Multiplayer");
     
         instructionsButton = createStyledButton(Texts.instructions[language]);
         instructionsButton.setIcon(loadIcon("img/icons/instructions.png", 32, 32));
@@ -82,7 +99,7 @@ public class BlackJackMenu extends JFrame {
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
         Image originalImage = originalIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(500, 300, Image.SCALE_SMOOTH);
+        Image resizedImage = originalImage.getScaledInstance((int) (gameWidth*0.2), (int)(gameHeight*0.2), Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
         imageLabel = new JLabel(resizedIcon);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -119,34 +136,44 @@ public class BlackJackMenu extends JFrame {
         startTitleAnimation();
     }
     
-    
-    
-    
-
     private void layoutComponents() {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 20));
     
-        // Center content panel
+        // Content panel (using BorderLayout)
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
     
-        // Image panel
+        // Image panel (adjust size to screen)
         JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         imagePanel.setOpaque(false);
         imagePanel.add(imageLabel);
     
-        // Title animation panel
-        JPanel titlePanel = new JPanel(null);
+        // Title panel (null layout to position title directly)
+        titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
-        titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
-        mainTitleLabel.setBounds(0, 0, 1, 100);
+        titlePanel.setPreferredSize(new Dimension(gameWidth, (int)(gameHeight * 0.2)));
+
+        mainTitleLabel.setBounds(gameWidth, 0, mainTitleLabel.getPreferredSize().width, (int)(gameHeight * 0.15));
         contentPanel.add(topRightBar, BorderLayout.NORTH);
 
 
         titlePanel.add(mainTitleLabel);
+        titlePanel.setComponentZOrder(mainTitleLabel, 0);
+
+        // ✅ Stack the title and image panels vertically
+        JPanel stackedTopPanel = new JPanel();
+        stackedTopPanel.setLayout(new BoxLayout(stackedTopPanel, BoxLayout.Y_AXIS));
+        stackedTopPanel.setOpaque(false);
+        stackedTopPanel.add(imagePanel);
+        stackedTopPanel.add(titlePanel);
+
+        // ✅ Now add that to the NORTH position
+        contentPanel.add(stackedTopPanel, BorderLayout.NORTH);
+
+
     
+        contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(topRightBar, BorderLayout.NORTH);
         contentPanel.add(titlePanel, BorderLayout.CENTER);
         contentPanel.add(imagePanel, BorderLayout.SOUTH); // Optional: or reorder if needed
@@ -154,30 +181,30 @@ public class BlackJackMenu extends JFrame {
         
 
     
-        // Button panel
+        // Button panel (using GridBagLayout for buttons)
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 2)); // Increased padding
     
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(15, 0, 15, 0);
+        gbc.insets = new Insets(0, 0, 5, 0);  // Adjusted insets for more spacing between buttons
         gbc.fill = GridBagConstraints.HORIZONTAL;
     
         buttonPanel.add(startButton, gbc);
+        buttonPanel.add(multiplayerButton, gbc);
         buttonPanel.add(loadGameButton, gbc);
         buttonPanel.add(instructionsButton, gbc);
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
     
-        // Wrap buttons vertically
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
         lowerPanel.setOpaque(false);
         lowerPanel.add(buttonPanel);
     
-        // Glassmorphism-style panel
+        // Create glassPanel with space below
         JPanel glassPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -196,18 +223,23 @@ public class BlackJackMenu extends JFrame {
         };
         
         glassPanel.setOpaque(false);
-        glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        glassPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
     
-        contentPanel.add(imagePanel, BorderLayout.NORTH);
+        
+        // Add everything to the main panel
+        //contentPanel.add(imagePanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(glassPanel, BorderLayout.SOUTH);
+        
+        // Add spacerPanel and then glassPanel to the south
+        mainPanel.add(glassPanel, BorderLayout.SOUTH);   // Then add glassPanel after spacer
     
         add(mainPanel);
+    
+        // Refresh UI to make sure everything is rendered properly
+        revalidate();
+        repaint();
     }
-    
-    
-    
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
@@ -268,18 +300,23 @@ public class BlackJackMenu extends JFrame {
             }
         };
     
-        button.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        // Make the button size based on gameWidth and gameHeight
+        int buttonWidth = (int) (gameWidth * 0.2);  // Set button width to 20% of screen width
+        int buttonHeight = (int) (gameHeight * 0.08); // Set button height to 10% of screen height
+    
+        button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        button.setFont(new Font("Segoe UI", Font.BOLD, gameHeight/30));
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);
-        button.setPreferredSize(new Dimension(360, 80));
-        button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setIconTextGap(15);
+        button.setHorizontalTextPosition(SwingConstants.LEFT);
+        button.setHorizontalAlignment(SwingConstants.CENTER);  // Center icon + text block
+        button.setIconTextGap(15); // space between icon and text
+    
         return button;
     }
-    
 
     private ImageIcon loadIcon(String path, int width, int height) {
         try {
@@ -314,21 +351,34 @@ public class BlackJackMenu extends JFrame {
     }
 
     private void startTitleAnimation() {
-        titleX = getWidth();
-        titleTimer = new Timer(16, e -> {
-            titleX -= 2;
-            if (titleX + mainTitleLabel.getWidth() < 0) {
-                titleX = getWidth();
-            }
-            int titleWidth = mainTitleLabel.getPreferredSize().width;
-            mainTitleLabel.setBounds(titleX, 0, titleWidth, 100);
-            mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
-            mainTitleLabel.repaint();
+        SwingUtilities.invokeLater(() -> {
+            titleX = getWidth()/2;
+            titleTimer = new Timer(16, e -> {
+                float fontSize = gameHeight * 0.05f;
+                mainTitleLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, (int) fontSize));
+            
+                titleX -= 3;
+                if (titleX + mainTitleLabel.getPreferredSize().width < 0) {
+                    titleX = getWidth();
+                }
+            
+                if (titlePanel.getHeight() > 0) {
+                    int titleHeight = mainTitleLabel.getPreferredSize().height;
+                    int panelHeight = titlePanel.getHeight();
+                    int y = (int) ((panelHeight - titleHeight) / 4);
+            
+                    mainTitleLabel.setBounds(titleX, y, mainTitleLabel.getPreferredSize().width, titleHeight);
+                }
+            
+                mainTitleLabel.repaint();
+            });
+            
+                titleTimer.start();
+                System.out.println("Animation started at width: " + getWidth());
         });
-        titleTimer.start();
     }
     
-    
+
     private class BackgroundPanel extends JPanel {
         private int xOffset = 0;
         private Timer animationTimer;
