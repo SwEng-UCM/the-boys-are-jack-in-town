@@ -165,21 +165,19 @@ public class BlackJackMenu extends JFrame {
         JPanel stackedTopPanel = new JPanel();
         stackedTopPanel.setLayout(new BoxLayout(stackedTopPanel, BoxLayout.Y_AXIS));
         stackedTopPanel.setOpaque(false);
+        stackedTopPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Add top margin
+
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, -15, 0)); // Move image up slightly
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(-50, 0, 0, 0));  // Move title up slightly
+
         stackedTopPanel.add(imagePanel);
         stackedTopPanel.add(titlePanel);
 
         // ✅ Now add that to the NORTH position
         contentPanel.add(stackedTopPanel, BorderLayout.NORTH);
 
-
-    
-        contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(topRightBar, BorderLayout.NORTH);
-        contentPanel.add(titlePanel, BorderLayout.CENTER);
-        contentPanel.add(imagePanel, BorderLayout.SOUTH); // Optional: or reorder if needed
-
-        
-
+        contentPanel.add(stackedTopPanel, BorderLayout.CENTER); // Optional: or reorder if needed
     
         // Button panel (using GridBagLayout for buttons)
         JPanel buttonPanel = new JPanel(new GridBagLayout());
