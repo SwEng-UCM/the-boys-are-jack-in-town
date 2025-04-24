@@ -2,810 +2,1717 @@
   "players" : [ {
     "name" : "PLAYER 1",
     "hand" : [ {
-      "rank" : "Jack",
-      "suit" : "Hearts",
+      "rank" : "9",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
+      "value" : 9,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_spades.png",
+      "imageFileName" : "9_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "4",
-      "suit" : "Hearts",
+      "rank" : "2",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 4,
-      "jokerWild" : false,
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_clubs.png",
+      "imageFileName" : "2_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_clubs.png",
+      "imageFileName" : "6_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_diamonds.png",
+      "imageFileName" : "5_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     } ],
-    "balance" : 1123,
-    "currentBet" : 222
+    "balance" : 1000,
+    "currentBet" : 0
   }, {
     "name" : "PLAYER 2",
     "hand" : [ {
-      "rank" : "Queen",
-      "suit" : "Clubs",
+      "rank" : "9",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 9,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_clubs.png",
+      "imageFileName" : "9_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_diamonds.png",
+      "imageFileName" : "3_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 8,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_hearts.png",
+      "imageFileName" : "8_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
+      "suit" : "diamonds",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_diamonds.png",
+      "imageFileName" : "10_of_diamonds.png",
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "JW",
-      "suit" : "Special",
-      "type" : "JOKER_WILD",
-      "value" : 11,
-      "jokerWild" : true,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     } ],
-    "balance" : 267,
-    "currentBet" : 400
+    "balance" : 1000,
+    "currentBet" : 0
   } ],
   "dealer" : {
     "name" : "Dealer",
     "hand" : [ {
-      "rank" : "5",
-      "suit" : "Hearts",
+      "rank" : "7",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 5,
-      "jokerWild" : false,
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_clubs.png",
+      "imageFileName" : "7_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_hearts.png",
+      "imageFileName" : "jack_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_clubs.png",
+      "imageFileName" : "jack_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_hearts.png",
+      "imageFileName" : "10_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     } ],
     "balance" : 1000,
     "currentBet" : 0
   },
   "deck" : {
     "allCards" : [ {
-      "rank" : "2",
-      "suit" : "Spades",
+      "rank" : "4",
+      "suit" : "diamonds",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_diamonds.png",
+      "imageFileName" : "4_of_diamonds.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "Ace",
-      "suit" : "Clubs",
+      "rank" : "king",
+      "suit" : "hearts",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_hearts.png",
+      "imageFileName" : "king_of_hearts.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "9",
-      "suit" : "Diamonds",
+      "suit" : "hearts",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 9,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_hearts.png",
+      "imageFileName" : "9_of_hearts.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "King",
-      "suit" : "Hearts",
+      "rank" : "ace",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_spades.png",
+      "imageFileName" : "ace_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "3",
-      "suit" : "Spades",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 3,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_spades.png",
+      "imageFileName" : "3_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "King",
-      "suit" : "Clubs",
+      "rank" : "king",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_clubs.png",
+      "imageFileName" : "king_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Jack",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Ace",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Queen",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "King",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "8",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 8,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "5",
-      "suit" : "Clubs",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 5,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_clubs.png",
+      "imageFileName" : "5_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "6",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 6,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Jack",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "10",
-      "suit" : "Hearts",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_clubs.png",
+      "imageFileName" : "10_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "SA",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "SPLIT_ACE",
+      "value" : 0,
+      "splitAce" : true,
+      "imagePath" : "resources/images/cards/SA_of_Special.png",
+      "imageFileName" : "sa_of_special.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     }, {
       "rank" : "8",
-      "suit" : "Clubs",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 8,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_spades.png",
+      "imageFileName" : "8_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "Ace",
-      "suit" : "Diamonds",
+      "rank" : "ace",
+      "suit" : "diamonds",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_diamonds.png",
+      "imageFileName" : "ace_of_diamonds.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_clubs.png",
+      "imageFileName" : "4_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_hearts.png",
+      "imageFileName" : "7_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_diamonds.png",
+      "imageFileName" : "2_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_diamonds.png",
+      "imageFileName" : "6_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "JW",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "JOKER_WILD",
+      "value" : 11,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/JW_of_Special.png",
+      "imageFileName" : "jw_of_special.png",
+      "blackjackBomb" : false,
+      "jokerWild" : true
+    }, {
+      "rank" : "king",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_diamonds.png",
+      "imageFileName" : "king_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_clubs.png",
+      "imageFileName" : "queen_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_hearts.png",
+      "imageFileName" : "4_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_hearts.png",
+      "imageFileName" : "6_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "BB",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "BLACKJACK_BOMB",
+      "value" : 21,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/BB_of_Special.png",
+      "imageFileName" : "bb_of_special.png",
+      "blackjackBomb" : true,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_hearts.png",
+      "imageFileName" : "5_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 8,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_diamonds.png",
+      "imageFileName" : "8_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_spades.png",
+      "imageFileName" : "queen_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_hearts.png",
+      "imageFileName" : "3_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_spades.png",
+      "imageFileName" : "5_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_diamonds.png",
+      "imageFileName" : "jack_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 9,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_diamonds.png",
+      "imageFileName" : "9_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 8,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_clubs.png",
+      "imageFileName" : "8_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "ace",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_hearts.png",
+      "imageFileName" : "ace_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_diamonds.png",
+      "imageFileName" : "queen_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_diamonds.png",
+      "imageFileName" : "7_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "king",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_spades.png",
+      "imageFileName" : "king_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_spades.png",
+      "imageFileName" : "2_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_hearts.png",
+      "imageFileName" : "2_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_clubs.png",
+      "imageFileName" : "3_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_hearts.png",
+      "imageFileName" : "queen_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_spades.png",
+      "imageFileName" : "jack_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_spades.png",
+      "imageFileName" : "10_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_spades.png",
+      "imageFileName" : "6_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "ace",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_clubs.png",
+      "imageFileName" : "ace_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_spades.png",
+      "imageFileName" : "4_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_spades.png",
+      "imageFileName" : "7_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     } ],
     "cards" : [ {
-      "rank" : "2",
-      "suit" : "Spades",
+      "rank" : "4",
+      "suit" : "diamonds",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_diamonds.png",
+      "imageFileName" : "4_of_diamonds.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "Ace",
-      "suit" : "Clubs",
+      "rank" : "king",
+      "suit" : "hearts",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_hearts.png",
+      "imageFileName" : "king_of_hearts.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "9",
-      "suit" : "Diamonds",
+      "suit" : "hearts",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 9,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_hearts.png",
+      "imageFileName" : "9_of_hearts.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "King",
-      "suit" : "Hearts",
+      "rank" : "ace",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_spades.png",
+      "imageFileName" : "ace_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "3",
-      "suit" : "Spades",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 3,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_spades.png",
+      "imageFileName" : "3_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "King",
-      "suit" : "Clubs",
+      "rank" : "king",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_clubs.png",
+      "imageFileName" : "king_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "10",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Jack",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Ace",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Queen",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "2",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 2,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "7",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 7,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "King",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "4",
-      "suit" : "Diamonds",
-      "type" : "STANDARD",
-      "value" : 4,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "8",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 8,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "5",
-      "suit" : "Clubs",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 5,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_clubs.png",
+      "imageFileName" : "5_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "9",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 9,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Hearts",
-      "type" : "STANDARD",
-      "value" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "6",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 6,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "3",
-      "suit" : "Clubs",
-      "type" : "STANDARD",
-      "value" : 3,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
-    }, {
-      "rank" : "Jack",
-      "suit" : "Spades",
-      "type" : "STANDARD",
-      "value" : 10,
-      "jokerWild" : false,
-      "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
       "rank" : "10",
-      "suit" : "Hearts",
+      "suit" : "clubs",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 10,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_clubs.png",
+      "imageFileName" : "10_of_clubs.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "SA",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "SPLIT_ACE",
+      "value" : 0,
+      "splitAce" : true,
+      "imagePath" : "resources/images/cards/SA_of_Special.png",
+      "imageFileName" : "sa_of_special.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     }, {
       "rank" : "8",
-      "suit" : "Clubs",
+      "suit" : "spades",
+      "hidden" : false,
       "type" : "STANDARD",
       "value" : 8,
-      "jokerWild" : false,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_spades.png",
+      "imageFileName" : "8_of_spades.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
     }, {
-      "rank" : "Ace",
-      "suit" : "Diamonds",
+      "rank" : "ace",
+      "suit" : "diamonds",
+      "hidden" : false,
       "type" : "STANDARD",
-      "value" : 11,
-      "jokerWild" : false,
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_diamonds.png",
+      "imageFileName" : "ace_of_diamonds.png",
       "blackjackBomb" : false,
-      "splitAce" : false
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_clubs.png",
+      "imageFileName" : "4_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_hearts.png",
+      "imageFileName" : "7_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_diamonds.png",
+      "imageFileName" : "2_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_diamonds.png",
+      "imageFileName" : "6_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "JW",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "JOKER_WILD",
+      "value" : 11,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/JW_of_Special.png",
+      "imageFileName" : "jw_of_special.png",
+      "blackjackBomb" : false,
+      "jokerWild" : true
+    }, {
+      "rank" : "king",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_diamonds.png",
+      "imageFileName" : "king_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_clubs.png",
+      "imageFileName" : "queen_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_hearts.png",
+      "imageFileName" : "4_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_hearts.png",
+      "imageFileName" : "6_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "BB",
+      "suit" : "Special",
+      "hidden" : false,
+      "type" : "BLACKJACK_BOMB",
+      "value" : 21,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/BB_of_Special.png",
+      "imageFileName" : "bb_of_special.png",
+      "blackjackBomb" : true,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_hearts.png",
+      "imageFileName" : "5_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 8,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_diamonds.png",
+      "imageFileName" : "8_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_spades.png",
+      "imageFileName" : "queen_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_hearts.png",
+      "imageFileName" : "3_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "5",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 5,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/5_of_spades.png",
+      "imageFileName" : "5_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_diamonds.png",
+      "imageFileName" : "jack_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "9",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 9,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/9_of_diamonds.png",
+      "imageFileName" : "9_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "8",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 8,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/8_of_clubs.png",
+      "imageFileName" : "8_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "ace",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_hearts.png",
+      "imageFileName" : "ace_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_diamonds.png",
+      "imageFileName" : "queen_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "diamonds",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_diamonds.png",
+      "imageFileName" : "7_of_diamonds.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "king",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/king_of_spades.png",
+      "imageFileName" : "king_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_spades.png",
+      "imageFileName" : "2_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "2",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 2,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/2_of_hearts.png",
+      "imageFileName" : "2_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "3",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 3,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/3_of_clubs.png",
+      "imageFileName" : "3_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "queen",
+      "suit" : "hearts",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/queen_of_hearts.png",
+      "imageFileName" : "queen_of_hearts.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "jack",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/jack_of_spades.png",
+      "imageFileName" : "jack_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "10",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 10,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/10_of_spades.png",
+      "imageFileName" : "10_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "6",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 6,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/6_of_spades.png",
+      "imageFileName" : "6_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "ace",
+      "suit" : "clubs",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 0,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/ace_of_clubs.png",
+      "imageFileName" : "ace_of_clubs.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "4",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 4,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/4_of_spades.png",
+      "imageFileName" : "4_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
+    }, {
+      "rank" : "7",
+      "suit" : "spades",
+      "hidden" : false,
+      "type" : "STANDARD",
+      "value" : 7,
+      "splitAce" : false,
+      "imagePath" : "resources/images/cards/7_of_spades.png",
+      "imageFileName" : "7_of_spades.png",
+      "blackjackBomb" : false,
+      "jokerWild" : false
     } ]
   },
-  "currentPlayerIndex" : 1,
+  "currentPlayerIndex" : 2,
   "numPlayers" : 0,
-  "playerBalances" : [ 1123, 267 ],
-  "currentBets" : [ 222, 400 ],
+  "playerBalances" : [ 1000, 1000 ],
+  "currentBets" : [ 0, 0 ],
   "dealerBalance" : 1000,
   "dealerBet" : 0,
-  "dealerScore" : 5,
-  "playerScores" : [ 14, 21 ],
+  "dealerScore" : 17,
+  "playerScores" : [ 22, 30 ],
   "playerHands" : [ [ {
-    "rank" : "Jack",
-    "suit" : "Hearts",
+    "rank" : "9",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 9,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/9_of_spades.png",
+    "imageFileName" : "9_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 2,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/2_of_clubs.png",
+    "imageFileName" : "2_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 6,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/6_of_clubs.png",
+    "imageFileName" : "6_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "5",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 5,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/5_of_diamonds.png",
+    "imageFileName" : "5_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  } ], [ {
+    "rank" : "9",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 9,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/9_of_clubs.png",
+    "imageFileName" : "9_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "3",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 3,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/3_of_diamonds.png",
+    "imageFileName" : "3_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "8",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 8,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/8_of_hearts.png",
+    "imageFileName" : "8_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
+    "suit" : "diamonds",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/10_of_diamonds.png",
+    "imageFileName" : "10_of_diamonds.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  } ] ],
+  "dealerHand" : [ {
+    "rank" : "7",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 7,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/7_of_clubs.png",
+    "imageFileName" : "7_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
   }, {
+    "rank" : "jack",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/jack_of_hearts.png",
+    "imageFileName" : "jack_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "jack",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/jack_of_clubs.png",
+    "imageFileName" : "jack_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 10,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/10_of_hearts.png",
+    "imageFileName" : "10_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  } ],
+  "deckCards" : [ {
     "rank" : "4",
-    "suit" : "Hearts",
+    "suit" : "diamonds",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 4,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/4_of_diamonds.png",
+    "imageFileName" : "4_of_diamonds.png",
     "blackjackBomb" : false,
-    "splitAce" : false
-  } ], [ {
-    "rank" : "Queen",
-    "suit" : "Clubs",
+    "jokerWild" : false
+  }, {
+    "rank" : "king",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/king_of_hearts.png",
+    "imageFileName" : "king_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 9,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/9_of_hearts.png",
+    "imageFileName" : "9_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "ace",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/ace_of_spades.png",
+    "imageFileName" : "ace_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "3",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 3,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/3_of_spades.png",
+    "imageFileName" : "3_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "king",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/king_of_clubs.png",
+    "imageFileName" : "king_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "5",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 5,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/5_of_clubs.png",
+    "imageFileName" : "5_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
+    "suit" : "clubs",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 10,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/10_of_clubs.png",
+    "imageFileName" : "10_of_clubs.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "SA",
+    "suit" : "Special",
+    "hidden" : false,
+    "type" : "SPLIT_ACE",
+    "value" : 0,
+    "splitAce" : true,
+    "imagePath" : "resources/images/cards/SA_of_Special.png",
+    "imageFileName" : "sa_of_special.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "8",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 8,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/8_of_spades.png",
+    "imageFileName" : "8_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "ace",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/ace_of_diamonds.png",
+    "imageFileName" : "ace_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "4",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 4,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/4_of_clubs.png",
+    "imageFileName" : "4_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 7,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/7_of_hearts.png",
+    "imageFileName" : "7_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 2,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/2_of_diamonds.png",
+    "imageFileName" : "2_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 6,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/6_of_diamonds.png",
+    "imageFileName" : "6_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
   }, {
     "rank" : "JW",
     "suit" : "Special",
+    "hidden" : false,
     "type" : "JOKER_WILD",
     "value" : 11,
-    "jokerWild" : true,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/JW_of_Special.png",
+    "imageFileName" : "jw_of_special.png",
     "blackjackBomb" : false,
-    "splitAce" : false
-  } ] ],
-  "dealerHand" : [ {
-    "rank" : "5",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 5,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  } ],
-  "deckCards" : [ {
-    "rank" : "2",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : true
   }, {
-    "rank" : "Ace",
-    "suit" : "Clubs",
+    "rank" : "king",
+    "suit" : "diamonds",
+    "hidden" : false,
     "type" : "STANDARD",
-    "value" : 11,
-    "jokerWild" : false,
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/king_of_diamonds.png",
+    "imageFileName" : "king_of_diamonds.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "9",
-    "suit" : "Diamonds",
+    "rank" : "queen",
+    "suit" : "clubs",
+    "hidden" : false,
     "type" : "STANDARD",
-    "value" : 9,
-    "jokerWild" : false,
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/queen_of_clubs.png",
+    "imageFileName" : "queen_of_clubs.png",
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "King",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "3",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "King",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "10",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "10",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Jack",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Ace",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 11,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "Queen",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "2",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "2",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 2,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "4",
-    "suit" : "Clubs",
+    "suit" : "hearts",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 4,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/4_of_hearts.png",
+    "imageFileName" : "4_of_hearts.png",
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "7",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 7,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "King",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "4",
-    "suit" : "Diamonds",
-    "type" : "STANDARD",
-    "value" : 4,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "8",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 8,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "5",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 5,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "9",
-    "suit" : "Spades",
-    "type" : "STANDARD",
-    "value" : 9,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "3",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "6",
-    "suit" : "Clubs",
+    "suit" : "hearts",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 6,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/6_of_hearts.png",
+    "imageFileName" : "6_of_hearts.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "3",
-    "suit" : "Clubs",
-    "type" : "STANDARD",
-    "value" : 3,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "rank" : "BB",
+    "suit" : "Special",
+    "hidden" : false,
+    "type" : "BLACKJACK_BOMB",
+    "value" : 21,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/BB_of_Special.png",
+    "imageFileName" : "bb_of_special.png",
+    "blackjackBomb" : true,
+    "jokerWild" : false
   }, {
-    "rank" : "Jack",
-    "suit" : "Spades",
+    "rank" : "5",
+    "suit" : "hearts",
+    "hidden" : false,
     "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
+    "value" : 5,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/5_of_hearts.png",
+    "imageFileName" : "5_of_hearts.png",
     "blackjackBomb" : false,
-    "splitAce" : false
-  }, {
-    "rank" : "10",
-    "suit" : "Hearts",
-    "type" : "STANDARD",
-    "value" : 10,
-    "jokerWild" : false,
-    "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
     "rank" : "8",
-    "suit" : "Clubs",
+    "suit" : "diamonds",
+    "hidden" : false,
     "type" : "STANDARD",
     "value" : 8,
-    "jokerWild" : false,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/8_of_diamonds.png",
+    "imageFileName" : "8_of_diamonds.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
   }, {
-    "rank" : "Ace",
-    "suit" : "Diamonds",
+    "rank" : "queen",
+    "suit" : "spades",
+    "hidden" : false,
     "type" : "STANDARD",
-    "value" : 11,
-    "jokerWild" : false,
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/queen_of_spades.png",
+    "imageFileName" : "queen_of_spades.png",
     "blackjackBomb" : false,
-    "splitAce" : false
+    "jokerWild" : false
+  }, {
+    "rank" : "3",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 3,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/3_of_hearts.png",
+    "imageFileName" : "3_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "5",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 5,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/5_of_spades.png",
+    "imageFileName" : "5_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "jack",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/jack_of_diamonds.png",
+    "imageFileName" : "jack_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "9",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 9,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/9_of_diamonds.png",
+    "imageFileName" : "9_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "8",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 8,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/8_of_clubs.png",
+    "imageFileName" : "8_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "ace",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/ace_of_hearts.png",
+    "imageFileName" : "ace_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "queen",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/queen_of_diamonds.png",
+    "imageFileName" : "queen_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "diamonds",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 7,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/7_of_diamonds.png",
+    "imageFileName" : "7_of_diamonds.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "king",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/king_of_spades.png",
+    "imageFileName" : "king_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 2,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/2_of_spades.png",
+    "imageFileName" : "2_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "2",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 2,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/2_of_hearts.png",
+    "imageFileName" : "2_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "3",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 3,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/3_of_clubs.png",
+    "imageFileName" : "3_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "queen",
+    "suit" : "hearts",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/queen_of_hearts.png",
+    "imageFileName" : "queen_of_hearts.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "jack",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/jack_of_spades.png",
+    "imageFileName" : "jack_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "10",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 10,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/10_of_spades.png",
+    "imageFileName" : "10_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "6",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 6,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/6_of_spades.png",
+    "imageFileName" : "6_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "ace",
+    "suit" : "clubs",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 0,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/ace_of_clubs.png",
+    "imageFileName" : "ace_of_clubs.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "4",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 4,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/4_of_spades.png",
+    "imageFileName" : "4_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
+  }, {
+    "rank" : "7",
+    "suit" : "spades",
+    "hidden" : false,
+    "type" : "STANDARD",
+    "value" : 7,
+    "splitAce" : false,
+    "imagePath" : "resources/images/cards/7_of_spades.png",
+    "imageFileName" : "7_of_spades.png",
+    "blackjackBomb" : false,
+    "jokerWild" : false
   } ],
   "currentDifficulty" : "Medium",
   "gameOver" : false

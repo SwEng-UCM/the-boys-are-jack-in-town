@@ -714,25 +714,17 @@ playerBetLabels.put(player, betLabel);
         return button;
     }
 
-    private JLabel createStyledLabel(String text) {
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 26));
-        label.setForeground(Color.WHITE);
-        return label;
-    }
-
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel(new BorderLayout());
-
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
-        cardPanel.setMinimumSize(new Dimension(cardWidth, cardHeight));
-        cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-        String imagePath = "resources/images/cards/" + card.getImageFileName();
+    
+        String imagePath = "img/cards/" + card.getImageFileName();
         System.out.println("Loading image: " + imagePath);
+    
         try {
-            ImageIcon cardIcon = new ImageIcon("/resources/img/cards/" + card.getImageFileName());
+            ImageIcon cardIcon = new ImageIcon(imagePath);  // ✅ no leading slash
             Image scaledImage = cardIcon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
             JLabel cardLabel = new JLabel(new ImageIcon(scaledImage));
             cardPanel.add(cardLabel, BorderLayout.CENTER);
@@ -742,19 +734,17 @@ playerBetLabels.put(player, betLabel);
             fallbackLabel.setFont(new Font("Arial", Font.BOLD, 14));
             cardPanel.add(fallbackLabel, BorderLayout.CENTER);
         }
-
-        JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
-
-        JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-
-        cardPanel.setLayout(new BorderLayout());
-        cardPanel.add(rankLabel, BorderLayout.CENTER);
-        cardPanel.add(suitLabel, BorderLayout.SOUTH);
-
+    
         return cardPanel;
     }
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 26));
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+    
+    
 
     public int promptJokerWildValue() {
         int wildValue = 0;
