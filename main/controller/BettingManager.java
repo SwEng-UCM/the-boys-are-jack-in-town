@@ -5,12 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The BettingManager class handles all betting logic for players and the dealer.
+ * It tracks player balances, current bets, and manages payouts and bet resets after each round.
+ */
 public class BettingManager {
     private Map<String, Integer> playerBalances; // Each player's balance
     private Map<String, Integer> playerBets; // Each player's current bet
     private int dealerBalance;
     private int dealerBet;
 
+    /**
+     * Constructs a BettingManager for the given list of players, setting initial balances for players and the dealer.
+     *
+     * @param players the list of players participating
+     * @param initialPlayerBalance the starting balance for each player
+     * @param initialDealerBalance the starting balance for the dealer
+     */
     public BettingManager(List<Player> players, int initialPlayerBalance, int initialDealerBalance) {
         playerBalances = new HashMap<>();
         playerBets = new HashMap<>();
@@ -110,19 +121,40 @@ public class BettingManager {
         dealerBet = 0;
     }
 
-    // Getters
+    /**
+     * Retrieves the current balance of a player.
+     *
+     * @param playerName the name of the player
+     * @return the player's current balance
+     */
     public int getPlayerBalance(String playerName) {
         return playerBalances.getOrDefault(playerName, 0);
     }
 
+    /**
+     * Retrieves the current balance of the dealer.
+     *
+     * @return the dealer's current balance
+     */
     public int getDealerBalance() {
         return dealerBalance;
     }
 
+    /**
+     * Retrieves the current bet placed by a player.
+     *
+     * @param playerName the name of the player
+     * @return the player's current bet
+     */
     public int getPlayerBet(String playerName) {
         return playerBets.getOrDefault(playerName, 0);
     }
 
+    /**
+     * Retrieves the current bet placed by the dealer.
+     *
+     * @return the dealer's current bet
+     */
     public int getDealerBet() {
         return dealerBet;
     }
