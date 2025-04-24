@@ -729,9 +729,10 @@ playerBetLabels.put(player, betLabel);
         cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-        String imagePath = card.getImagePath();
+        String imagePath = "resources/images/cards/" + card.getImageFileName();
+        System.out.println("Loading image: " + imagePath);
         try {
-            ImageIcon cardIcon = new ImageIcon("img/cards/" + card.getImageFileName());
+            ImageIcon cardIcon = new ImageIcon("/resources/img/cards/" + card.getImageFileName());
             Image scaledImage = cardIcon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
             JLabel cardLabel = new JLabel(new ImageIcon(scaledImage));
             cardPanel.add(cardLabel, BorderLayout.CENTER);
