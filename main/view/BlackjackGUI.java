@@ -111,6 +111,8 @@ public class BlackjackGUI extends JFrame {
         achievementButton.setContentAreaFilled(false);
         achievementButton.setBorderPainted(false);
         achievementButton.setOpaque(false);
+        buttonPanel.add(undoButton); // Add Undo button
+        buttonPanel.add(redoButton); // Add Redo button
 
         // Load your icon
         ImageIcon achievementIcon = new ImageIcon("img/icons/achievement.png");
@@ -436,6 +438,8 @@ public class BlackjackGUI extends JFrame {
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
+        undoButton.addActionListener(e -> gameManager.undoLastAction());
+        redoButton.addActionListener(e -> gameManager.redoLastAction());
     
         pauseButton.addActionListener(e -> showPauseMenu());
  
@@ -598,6 +602,8 @@ playerBetLabels.put(player, betLabel);
         pauseButton.setEnabled(true); // Always enabled
         betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
         placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        undoButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        redoButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
 
         pauseButton.setEnabled(true);
     }
@@ -612,6 +618,7 @@ playerBetLabels.put(player, betLabel);
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
+        
 
         // Force UI refresh
         balanceLabel.revalidate();
@@ -620,6 +627,8 @@ playerBetLabels.put(player, betLabel);
         dealerBalanceLabel.repaint();
         dealerBetLabel.revalidate();
         dealerBetLabel.repaint();
+        System.out.println("img/cards/");
+        ImageIcon undoIcon = new ImageIcon("img/cards/undo.png"); // Ensure the file path is correct
 
         // Refresh the entire main panel
         mainPanel.revalidate();
@@ -628,6 +637,7 @@ playerBetLabels.put(player, betLabel);
 
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
+        playersPanel.removeAll();
         dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
     
         playersPanel.updatePanel(players); 
@@ -644,7 +654,23 @@ playerBetLabels.put(player, betLabel);
             if (!dealer.getHand().isEmpty()) {
                 dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
                 dealerPanel.add(createHiddenCardPanel());
+                
             }
+            dealerScoreLabel.setText("Dealer Score: ???");
+            System.out.println("img/cards/");
+            
+        }
+        for (Player player : players) {
+            JPanel playerPanel = new JPanel(new BorderLayout());
+            playerPanel.add(new JLabel(player.getName() + ": " + player.calculateScore()), BorderLayout.NORTH);
+    
+            JPanel cardsPanel = new JPanel(new FlowLayout());
+            for (Card card : player.getHand()) {
+                cardsPanel.add(createCardPanel(card));
+            }
+            playerPanel.add(cardsPanel, BorderLayout.CENTER);
+    
+            playersPanel.add(playerPanel);
         }
     
         // Revalidate and repaint panels to update the UI

@@ -110,6 +110,10 @@ public class GameManager {
             this.gameOver = previousState.isGameOver();
             gui.updateGameState(players, dealer, gameOver, isPaused);
             gui.updateGameMessage("Undo successful!");
+            if (!gameOver) {
+                startNextPlayerTurn(); // Ensure the game continues
+            }
+            
         } else {
             gui.updateGameMessage("No actions to undo!");
         }
@@ -126,6 +130,9 @@ public class GameManager {
             this.gameOver = nextState.isGameOver();
             gui.updateGameState(players, dealer, gameOver, isPaused);
             gui.updateGameMessage("Redo successful!");
+            if (!gameOver) {
+                startNextPlayerTurn(); // Ensure the game continues
+            }
         } else {
             gui.updateGameMessage("No actions to redo!");
         }
@@ -190,6 +197,8 @@ public class GameManager {
 
     public void startNextPlayerTurn() {
         if (currentPlayerIndex < players.size()) {
+            Player currentPlayer = players.get(currentPlayerIndex);
+            gui.updateGameMessage(currentPlayer.getName() + "'s turn!");
             gui.promptPlayerAction(players.get(currentPlayerIndex));
             if (currentPlayerIndex == 0) {
                 int dealerBet = bettingManager.getDealerBalance() / 10;

@@ -167,13 +167,14 @@ public class GameState implements Serializable {
         manager.getDealer().getHand().clear();
         manager.getDealer().getHand().addAll(this.dealer.getHand());
         
+        // Restore deck
+        manager.getDeck().getCards().clear();
+        manager.getDeck().getCards().addAll(this.deck.getCards());
         // Restore game progress
         manager.setCurrentPlayerIndex(this.currentPlayerIndex);
         manager.setGameOver(this.gameOver);
         
-        // Restore deck
-        manager.getDeck().getCards().clear();
-        manager.getDeck().getCards().addAll(this.deck.getCards());
+        
         
         // Restore difficulty
         restoreDifficulty(manager);
