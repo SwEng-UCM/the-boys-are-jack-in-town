@@ -284,7 +284,8 @@ public class BlackJackMenu extends JFrame {
                     // Try to connect in a separate thread
                     new Thread(() -> {
                         try {
-                            BlackjackClient client = new BlackjackClient(serverIP, port);
+                            BlackjackClient client = new BlackjackClient();
+                            client.connect(serverIP, port);
                             GameManager gameManager = GameManager.getInstance();
                             gameManager.setClient(client); // Connect client to game manager
                             

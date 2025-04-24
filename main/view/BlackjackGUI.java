@@ -58,9 +58,7 @@ public class BlackjackGUI extends JFrame {
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
 
-    private Socket socket;
-    private ObjectOutputStream output;
-    private ObjectInputStream input;
+
     private JLabel connectionStatusLabel;
     private boolean isConnected = false;
     
@@ -565,35 +563,6 @@ public class BlackjackGUI extends JFrame {
             updateDealerHand(gameManager.getDealer().getHand());
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + 
                 gameManager.getDealer().calculateScore());
-        }
-    }
-
-        public void connectToServer(String host, int port) throws IOException {
-        socket = new Socket(host, port);
-        output = new ObjectOutputStream(socket.getOutputStream());
-        input = new ObjectInputStream(socket.getInputStream());
-        
-        // Start a thread to listen for server updates
-        new Thread(this::listenForUpdates).start();
-    }
-
-    private void listenForUpdates() {
-        try {
-            while (socket.isConnected()) {
-                GameState state = (GameState) input.readObject();
-                SwingUtilities.invokeLater(() -> applyGameState(state));
-            }
-        } catch (Exception e) {
-            System.err.println("Connection lost: " + e.getMessage());
-        }
-    }
-
-    public void sendAction(String action) {
-        try {
-            output.writeObject(action);
-            output.flush();
-        } catch (IOException e) {
-            System.err.println("Failed to send action: " + e.getMessage());
         }
     }
 
