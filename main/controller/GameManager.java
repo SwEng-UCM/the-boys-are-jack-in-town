@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
 
 // ORIGINATOR Class
 public class GameManager {
-    private static GameManager instance;
+    
 
     private final int INITIAL_BET = 1000;
     private boolean isPaused = false;
@@ -63,7 +63,7 @@ public class GameManager {
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
     }
 
-
+    private static GameManager instance;
     // Public method to provide access to the singleton instance
     public static GameManager getInstance() {
         if (instance == null) {
@@ -100,9 +100,14 @@ public class GameManager {
     }
     public void undoLastAction() {
         if (!undoStack.isEmpty()) {
+            System.out.println("Undo: Restoring previous state...");
             GameState previousState = undoStack.pop(); // Pop the last state from the undo stack
             redoStack.push(new GameState(this)); // Save the current state to the redo stack
             previousState.restoreFullState(this); // Restore the previous state
+            System.out.println("Undo: State restored successfully.");
+            System.out.println("Undo: Current player index: " + currentPlayerIndex);
+            System.out.println("Undo: Players: " + players);
+            System.out.println("Undo: Dealer hand: " + dealer.getHand());
             this.players = new ArrayList<>(previousState.getPlayers()); // Convert List<Player> to ArrayList<Player>
             this.dealer = previousState.getDealer();
             this.deck = previousState.getDeck();
@@ -120,9 +125,14 @@ public class GameManager {
     }
     public void redoLastAction() {
         if (!redoStack.isEmpty()) {
+            System.out.println("Undo: Restoring previous state...");
             GameState nextState = redoStack.pop(); // Pop the last state from the redo stack
             undoStack.push(new GameState(this)); // Save the current state to the undo stack
             nextState.restoreFullState(this); // Restore the next state
+            System.out.println("Undo: State restored successfully.");
+            System.out.println("Undo: Current player index: " + currentPlayerIndex);
+            System.out.println("Undo: Players: " + players);
+            System.out.println("Undo: Dealer hand: " + dealer.getHand());
             this.players = new ArrayList<>(nextState.getPlayers()); // Convert List<Player> to ArrayList<Player>
             this.dealer = nextState.getDealer();
             this.deck = nextState.getDeck();

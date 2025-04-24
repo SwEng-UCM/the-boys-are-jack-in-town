@@ -30,6 +30,7 @@ public class Card {
         this.hidden = hidden;
         this.type = CardType.STANDARD;
     }
+    
     public boolean isHidden() {
         return this.hidden;
     }

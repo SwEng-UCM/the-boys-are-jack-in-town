@@ -58,21 +58,32 @@ public class Player {
     public int calculateScore() {
         int score = 0;
         int aceCount = 0;
-
+    
         for (Card card : hand) {
-            score += card.getValue();
-            // Only count standard Aces for adjustment purposes
-            if (card.getRank().equals("Ace") && card.getType() == Card.CardType.STANDARD) {
-                aceCount++;
+            String rank = card.getRank();
+    
+            switch (rank) {
+                case "Jack":
+                case "Queen":
+                case "King":
+                    score += 10; // Face cards are worth 10 points
+                    break;
+                case "Ace":
+                    aceCount++; // Count Aces separately
+                    score += 11; // Initially count Ace as 11
+                    break;
+                default:
+                    score += Integer.parseInt(rank); // Numeric cards (2-10)
+                    break;
             }
         }
-
-        // Convert standard Aces from 11 to 1 if score exceeds 21
+    
+        // Adjust Aces from 11 to 1 if score exceeds 21
         while (score > 21 && aceCount > 0) {
-            score -= 10;
+            score -= 10; // Convert one Ace from 11 to 1
             aceCount--;
         }
-
+    
         return (int) (score * scoreMultiplier);
     }
 

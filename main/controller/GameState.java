@@ -161,24 +161,36 @@ public class GameState implements Serializable {
      * Restores complete game state to GameManager
      */
     public void restoreFullState(GameManager manager) {
-        // Restore core entities
-        manager.getPlayers().clear();
-        manager.getPlayers().addAll(this.players);
-        manager.getDealer().getHand().clear();
-        manager.getDealer().getHand().addAll(this.dealer.getHand());
-        
+        // Restore players
+        if (this.players != null) {
+            manager.getPlayers().clear();
+            manager.getPlayers().addAll(this.players);
+        } else {
+            System.err.println("Error: Players list is null!");
+        }
+    
+        // Restore dealer
+        if (this.dealer != null && this.dealer.getHand() != null) {
+            manager.getDealer().getHand().clear();
+            manager.getDealer().getHand().addAll(this.dealer.getHand());
+        } else {
+            System.err.println("Error: Dealer or dealer hand is null!");
+        }
+    
         // Restore deck
-        manager.getDeck().getCards().clear();
-        manager.getDeck().getCards().addAll(this.deck.getCards());
+        if (this.deck != null && this.deck.getCards() != null) {
+            manager.getDeck().getCards().clear();
+            manager.getDeck().getCards().addAll(this.deck.getCards());
+        } else {
+            System.err.println("Error: Deck or deck cards are null!");
+        }
+    
         // Restore game progress
         manager.setCurrentPlayerIndex(this.currentPlayerIndex);
         manager.setGameOver(this.gameOver);
-        
-        
-        
-        // Restore difficulty
+    
+        // Restore difficulty strategy
         restoreDifficulty(manager);
-
     }
 
 

@@ -746,7 +746,7 @@ playerBetLabels.put(player, betLabel);
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
     
-        String imagePath = "img/cards/" + card.getImageFileName();
+        String imagePath = ("img/cards/") + card.getImageFileName();
         System.out.println("Loading image: " + imagePath);
     
         try {
@@ -841,6 +841,11 @@ playerBetLabels.put(player, betLabel);
             scoreLabel.setForeground(Color.WHITE);
             balanceLabel.setForeground(Color.WHITE);
             betLabel.setForeground(Color.WHITE);
+            JPanel cardPanel = new JPanel(new FlowLayout());
+            cardPanel.setOpaque(false);
+            for (Card card : player.getHand()) {
+                cardPanel.add(createCardPanel(card)); // ✅ use your card renderer
+            }
     
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
