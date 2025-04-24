@@ -1,4 +1,4 @@
-package main.controller;
+package test.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
