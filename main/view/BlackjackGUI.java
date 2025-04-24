@@ -156,6 +156,14 @@ public class BlackjackGUI extends JFrame {
         topPanel.add(dealerArea, BorderLayout.CENTER);
         topPanel.add(topRightPanel, BorderLayout.EAST);
 
+        // Connection status label
+        connectionStatusLabel = new JLabel("Offline");
+        connectionStatusLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        connectionStatusLabel.setForeground(Color.RED);
+
+        // Add to your top right panel
+        topRightPanel.add(connectionStatusLabel);
+
         // Center section (messages + buttons)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -372,13 +380,7 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
 
-        // Connection status label
-        connectionStatusLabel = new JLabel("Offline");
-        connectionStatusLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        connectionStatusLabel.setForeground(Color.RED);
-
-        // Add to your top right panel
-        topRightPanel.add(connectionStatusLabel);
+        
     
         // Bet panel components
         betField = new JTextField(5);
@@ -594,7 +596,7 @@ public class BlackjackGUI extends JFrame {
             System.err.println("Failed to send action: " + e.getMessage());
         }
     }
-    
+
     public void setConnected(boolean connected) {
         isConnected = connected;
         SwingUtilities.invokeLater(() -> {
