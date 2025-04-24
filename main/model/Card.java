@@ -41,7 +41,7 @@ public class Card {
         this.type = original.type;
         
         this.wildValue = original.wildValue;
-        this.hidden = false; // or original.hidden if you want to keep it
+        this.hidden = original.hidden; // or original.hidden if you want to keep it
     }
     
     
