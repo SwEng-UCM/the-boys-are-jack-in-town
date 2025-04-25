@@ -68,6 +68,10 @@ public class BlackjackGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        initializeComponents();  // Create ALL components first
+        layoutComponents();      // THEN arrange components
+        attachEventListeners();  // FINALLY setup interactions
+       
 
 
         try {
@@ -84,9 +88,7 @@ public class BlackjackGUI extends JFrame {
         setIconImage(icon.getImage());
     
         // Correct initialization sequence
-        initializeComponents();  // Create ALL components first
-        layoutComponents();      // THEN arrange components
-        attachEventListeners();  // FINALLY setup interactions
+
         
         setVisible(true);        // Make visible LAST
         AudioManager.getInstance().playBackgroundMusic();
@@ -173,7 +175,7 @@ public class BlackjackGUI extends JFrame {
         mainPanel.add(southContainer, BorderLayout.SOUTH);
 
         add(mainPanel);
-        gameManager.startNewGame();
+       // gameManager.startNewGame();
         // this is where the game is being started //
     }
 
@@ -181,6 +183,7 @@ public class BlackjackGUI extends JFrame {
         // Initialize CORE containers first
         mainPanel = new BackgroundPanel();
         mainPanel.setLayout(new BorderLayout());
+        buttonPanel.add(newGameButton);
 
         playersPanel = new PlayersPanel();
         scrollPane = new JScrollPane(playersPanel);
@@ -437,6 +440,7 @@ public class BlackjackGUI extends JFrame {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
+        
         placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
         undoButton.addActionListener(e -> gameManager.undoLastAction());
         redoButton.addActionListener(e -> gameManager.redoLastAction());

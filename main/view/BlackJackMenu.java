@@ -173,7 +173,7 @@ public class BlackJackMenu extends JFrame {
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
             System.out.println("Start Game button clicked!"); // Debugging log
-            GameManager gameManager = GameManager.getInstance();
+            GameManager gameManager = GameManager.getInstance(); // Use singleton instance
             BlackjackGUI gui = new BlackjackGUI(gameManager);
             gui.setVisible(true);
             dispose(); // Close the menu window

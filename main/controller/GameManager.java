@@ -61,6 +61,7 @@ public class GameManager {
         this.currentPlayerIndex = 0;
         players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
+        System.out.println("GameManager initialized!");
     }
 
     private static GameManager instance;
