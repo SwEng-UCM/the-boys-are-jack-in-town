@@ -104,7 +104,7 @@ public class GameState implements Serializable {
 
         this.players = players;
         this.playerHands = playerHands;
-        this.deck = new Deck(deck);
+        this.deck = new Deck();
         this.dealer = new Player(dealerNode.get("name").toString(), dealerNode.get("balance").asInt());
         this.dealerBalance = dealerNode.get("balance").asInt();
         this.dealerBet = dealerNode.get("currentBet").asInt();

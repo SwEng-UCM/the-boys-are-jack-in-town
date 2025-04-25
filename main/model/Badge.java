@@ -1,5 +1,12 @@
 package main.model;
 
+/**
+ * Enum representing all possible achievement badges in the game.
+ * Each badge has a title, a colored icon path, and a greyed-out (locked) version icon path.
+ * 
+ * This enum is part of the Model layer in MVC and serves as a static definition
+ * of achievement types that can be unlocked and displayed to the player.
+ */
 public enum Badge {
     FIRST_WIN("First Win!", "img/badges/first_win.png", "img/badges/first_win_grey.png"),
     FIRST_LOSS("First Loss", "img/badges/first_loss.png", "img/badges/first_loss_grey.png"),
@@ -14,6 +21,13 @@ public enum Badge {
     public final String coloredPath;
     public final String greyPath;
 
+    /**
+     * Constructs a Badge enum constant with title and image paths.
+     *
+     * @param title the display title of the badge
+     * @param coloredPath the file path to the unlocked badge icon
+     * @param greyPath the file path to the locked (grey) badge icon
+     */
     Badge(String title, String coloredPath, String greyPath) {
         this.title = title;
         this.coloredPath = coloredPath;
