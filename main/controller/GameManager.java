@@ -105,6 +105,9 @@ public class GameManager {
             GameState previousState = undoStack.pop(); // Pop the last state from the undo stack
             redoStack.push(new GameState(this)); // Save the current state to the redo stack
             previousState.restoreFullState(this); // Restore the previous state
+            if (gui != null) {
+                gui.updateGameState(players, dealer, gameOver, isPaused); // 👈 ADD THIS
+            }
             System.out.println("Undo: State restored successfully.");
             System.out.println("Undo: Current player index: " + currentPlayerIndex);
             System.out.println("Undo: Players: " + players);
@@ -116,8 +119,8 @@ public class GameManager {
             this.gameOver = previousState.isGameOver();
             gui.updateGameState(players, dealer, gameOver, isPaused);
             gui.updateGameMessage("Undo successful!");
-            if (!gameOver) {
-                startNextPlayerTurn(); // Ensure the game continues
+            if (!gameOver && getCurrentPlayer() != null) {
+                gui.promptPlayerAction(getCurrentPlayer()); // ✅ RESUME PROPERLY
             }
             
         } else {
@@ -130,6 +133,9 @@ public class GameManager {
             GameState nextState = redoStack.pop(); // Pop the last state from the redo stack
             undoStack.push(new GameState(this)); // Save the current state to the undo stack
             nextState.restoreFullState(this); // Restore the next state
+            if (gui != null) {
+                gui.updateGameState(players, dealer, gameOver, isPaused); // 👈 ADD THIS
+            }
             System.out.println("Undo: State restored successfully.");
             System.out.println("Undo: Current player index: " + currentPlayerIndex);
             System.out.println("Undo: Players: " + players);
@@ -141,8 +147,8 @@ public class GameManager {
             this.gameOver = nextState.isGameOver();
             gui.updateGameState(players, dealer, gameOver, isPaused);
             gui.updateGameMessage("Redo successful!");
-            if (!gameOver) {
-                startNextPlayerTurn(); // Ensure the game continues
+            if (!gameOver && getCurrentPlayer() != null) {
+                gui.promptPlayerAction(getCurrentPlayer()); // ✅ RESUME PROPERLY
             }
         } else {
             gui.updateGameMessage("No actions to redo!");

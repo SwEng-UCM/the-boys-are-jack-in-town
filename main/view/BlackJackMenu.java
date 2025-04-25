@@ -104,7 +104,7 @@ public class BlackJackMenu extends JFrame {
     
         // Center content panel
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setOpaque(false);
+        contentPanel.setOpaque(false);  
         contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
     
         // Image panel
@@ -173,10 +173,14 @@ public class BlackJackMenu extends JFrame {
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
             System.out.println("Start Game button clicked!"); // Debugging log
-            GameManager gameManager = GameManager.getInstance(); // Use singleton instance
-            BlackjackGUI gui = new BlackjackGUI(gameManager);
-            gui.setVisible(true);
-            dispose(); // Close the menu window
+            try {
+                GameManager gameManager = GameManager.getInstance(); // Use singleton instance
+                BlackjackGUI gui = new BlackjackGUI(gameManager);
+                gui.setVisible(true);
+                dispose(); // Close the menu window
+            } catch (Exception ex) {
+                ex.printStackTrace(); // Print any exceptions
+            }
         });
 
         instructionsButton.addActionListener(e -> {

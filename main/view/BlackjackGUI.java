@@ -63,17 +63,20 @@ public class BlackjackGUI extends JFrame {
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
         this.bettingManager = gameManager.getBettingManager();
+    
+        // Initialize GUI components
+        initializeComponents();  // Create ALL components first
+        layoutComponents();      // THEN arrange components
+        attachEventListeners();  // FINALLY setup interactions
+    
+        // Set JFrame properties
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-        initializeComponents();  // Create ALL components first
-        layoutComponents();      // THEN arrange components
-        attachEventListeners();  // FINALLY setup interactions
-       
-
-
+    
+        // Load background image
         try {
             backgroundImage = ImageIO.read(getClass().getResource("/img/backgroundimage.png"));
             backgroundLoaded = true;
@@ -81,16 +84,23 @@ public class BlackjackGUI extends JFrame {
             System.err.println("Error loading background image: " + e.getMessage());
             backgroundLoaded = false;
         }
-        
+    
+        // Set the game manager's GUI reference
         gameManager.setGui(this);
     
+        // Delay starting the game until the GUI is fully visible
+        SwingUtilities.invokeLater(() -> {
+            gameManager.startNewGame(); // Start the game AFTER the GUI is visible
+        });
+    
+        // Set the window icon
         ImageIcon icon = new ImageIcon("img/black.png");
         setIconImage(icon.getImage());
     
-        // Correct initialization sequence
-
-        
-        setVisible(true);        // Make visible LAST
+        // Make the GUI visible
+        setVisible(true);
+    
+        // Play background music
         AudioManager.getInstance().playBackgroundMusic();
     }
 
@@ -183,7 +193,7 @@ public class BlackjackGUI extends JFrame {
         // Initialize CORE containers first
         mainPanel = new BackgroundPanel();
         mainPanel.setLayout(new BorderLayout());
-        buttonPanel.add(newGameButton);
+        
 
         playersPanel = new PlayersPanel();
         scrollPane = new JScrollPane(playersPanel);
@@ -201,6 +211,7 @@ public class BlackjackGUI extends JFrame {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betLabel = createStyledLabel(Texts.bet[language] + " $0");
         balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        buttonPanel.add(newGameButton);
         
 
         // Set properties for main components
@@ -383,30 +394,23 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
-        undoButton = new JButton();
+        undoButton = createStyledButton("Undo");
+        undoButton.setIcon(new ImageIcon("img/cards/undo.png")); // ✅ your styled icon
+        undoButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        undoButton.setIconTextGap(15);
+        //undoButton = new JButton();
         undoButton.setPreferredSize(new Dimension(50, 50));
-        ImageIcon undoIcon = new ImageIcon("resources/images/undo.png"); // Ensure the file path is correct
-        Image scaledUndoIcon = undoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
-        undoButton.setIcon(new ImageIcon(scaledUndoIcon)); // Set the scaled icon
-        undoButton.setToolTipText("Undo the last action"); // Add a tooltip
-        undoButton.setBackground(new Color(255, 215, 0)); // Gold background
-        undoButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        undoButton.setContentAreaFilled(false);
-        undoButton.setOpaque(true);
-        undoButton.setFocusPainted(false);
+       
     
         // Initialize Redo button with an image
-        redoButton = new JButton();
+        //redoButton = new JButton();
+        redoButton = createStyledButton("Redo");
+        redoButton.setIcon(new ImageIcon("img/cards/redo.png")); // ✅ your styled icon
+        redoButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        redoButton.setIconTextGap(15);
         redoButton.setPreferredSize(new Dimension(50, 50));
-        ImageIcon redoIcon = new ImageIcon("resources/images/redo.png"); // Ensure the file path is correct
-        Image scaledRedoIcon = redoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
-        redoButton.setIcon(new ImageIcon(scaledRedoIcon)); // Set the scaled icon
-        redoButton.setToolTipText("Redo the last undone action"); // Add a tooltip
-        redoButton.setBackground(new Color(255, 215, 0)); // Gold background
-        redoButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        redoButton.setContentAreaFilled(false);
-        redoButton.setOpaque(true);
-        redoButton.setFocusPainted(false);
+        
+       
     
         // Add hover effects for Undo button
         undoButton.addMouseListener(new MouseAdapter() {
