@@ -76,6 +76,8 @@ public class GameState implements Serializable {
         this.currentDifficulty = "Medium"; // Default if not saved
     }
 
+    public GameState(){}
+
     // === Restore Methods ===
 
     public void restoreFullState(GameManager manager) {

@@ -49,6 +49,6 @@ public class LoadGamePanel extends JDialog {
             System.out.println("Load cancelled.");
         }
 
-        dispose(); // Now dispose once properly
+        dispose(); 
     }
 }

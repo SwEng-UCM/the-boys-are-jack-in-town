@@ -330,7 +330,6 @@ public class BlackjackGUI extends JFrame {
         });
 
         saveItem.addActionListener(e -> {
-            //gameManager.save();
             GameManager.getInstance().save();
         });
         

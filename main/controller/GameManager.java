@@ -596,9 +596,20 @@ public class GameManager {
     // inside GameManager.java
 
         // Save (Originator -> Memento)
-        public GameState save() {
-            return new GameState(this);
+        public void save() {
+            // Create a GameState object from the current game data
+            GameState gameState = new GameState(this); // Assuming the GameState constructor takes the GameManager
+        
+            // Save the GameState using the GameStateManager
+            GameStateManager gameStateManager = new GameStateManager();
+            try {
+                gameStateManager.saveGame(gameState);  // Save the game state to the file
+                System.out.println("Game saved successfully!");
+            } catch (IOException e) {
+                System.err.println("Error saving game: " + e.getMessage());
+            }
         }
+        
 
         // Restore (Memento -> Originator)
         public void applyGameState(GameState state) {

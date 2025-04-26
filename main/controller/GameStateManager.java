@@ -10,7 +10,7 @@ import java.io.IOException;
  * This class follows the Controller role in MVC by managing data flow between the Model (GameState) and storage.
  */
 public class GameStateManager {
-    private static final String SAVE_FILE_PATH = "game_state.json";
+    private static final String SAVE_FILE_PATH = "saves/game_state.json";
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
