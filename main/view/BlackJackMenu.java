@@ -239,10 +239,6 @@ public class BlackJackMenu extends JFrame {
         revalidate();
         repaint();
     }
-
-    private int calculatePadding(int percentage) {
-        return (int) (getHeight() * (percentage / 100.0));
-    }
     
 
     private void attachEventListeners() {
