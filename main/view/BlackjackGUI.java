@@ -83,6 +83,7 @@ public class BlackjackGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        
     
         // Load background image
         try {
@@ -97,9 +98,7 @@ public class BlackjackGUI extends JFrame {
         gameManager.setGui(this);
     
         // Delay starting the game until the GUI is fully visible
-        SwingUtilities.invokeLater(() -> {
-            gameManager.startNewGame(); // Start the game AFTER the GUI is visible
-        });
+        
     
         // Set the window icon
         ImageIcon icon = new ImageIcon("img/black.png");
