@@ -23,6 +23,7 @@ public class BlackJackMenu extends JFrame {
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JComboBox<String> difficultyComboBox;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 
     
@@ -116,8 +117,9 @@ public class BlackJackMenu extends JFrame {
         JPanel titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
-        mainTitleLabel.setBounds(0, 0, 1, 100);
         titlePanel.add(mainTitleLabel);
+        mainTitleLabel.setBounds(0, 0, 1, 100);
+      
     
         contentPanel.add(titlePanel, BorderLayout.CENTER);
     
@@ -172,29 +174,33 @@ public class BlackJackMenu extends JFrame {
 
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
-            System.out.println("Start Game button clicked!"); // Debugging log
-            try {
-                GameManager gameManager = GameManager.getInstance(); // Use singleton instance
-                BlackjackGUI gui = new BlackjackGUI(gameManager);
-                gui.setVisible(true);
-                dispose(); // Close the menu window
-            } catch (Exception ex) {
-                ex.printStackTrace(); // Print any exceptions
-            }
-        });
-
-        instructionsButton.addActionListener(e -> {
-            String message = Texts.instructionsPopup[language][0] + "\n" +
-                             "1. " + Texts.instructionsPopup[language][1] + "\n" +
-                             "2. " + Texts.instructionsPopup[language][2] + "\n" +
-                             "3. " + Texts.instructionsPopup[language][3];
+            SwingWorker<BlackjackGUI, Void> worker = new SwingWorker<>() {
+                @Override
+                protected BlackjackGUI doInBackground() throws Exception {
+                    GameManager gameManager = GameManager.getInstance(); // Get the singleton instance
+                    return new BlackjackGUI(gameManager); // 🔥 Create GUI safely in background
+                }
         
-            JOptionPane.showMessageDialog(this, 
-                message, 
-                Texts.instructions[language], 
-                JOptionPane.INFORMATION_MESSAGE
-            );
+                @Override
+                protected void done() {
+                    try {
+                        BlackjackGUI gui = get();   // ✅ safely get the GUI
+                        gui.setVisible(true);       // ✅ show it on Event Dispatch Thread (EDT)
+                        dispose();                  // ✅ close the menu
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(
+                            BlackJackMenu.this,
+                            "Error starting game: " + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
+            };
+            worker.execute(); // 🔥 Start the worker
         });
+        
         
 
         exitButton.addActionListener(e -> System.exit(0));
@@ -281,16 +287,16 @@ public class BlackJackMenu extends JFrame {
     }
 
     private void startTitleAnimation() {
-        titleX = getWidth();
+        titleX = screenSize.width; // ✅ USE screen width directly
         titleTimer = new Timer(16, e -> {
             titleX -= 2;
-            if (titleX + mainTitleLabel.getWidth() < 0) {
-                titleX = getWidth();
+            int labelWidth = mainTitleLabel.getPreferredSize().width;
+            if (titleX + labelWidth < 0) {
+                titleX = screenSize.width;
             }
-            int titleWidth = mainTitleLabel.getPreferredSize().width;
-            mainTitleLabel.setBounds(titleX, 0, titleWidth, 100);
+            mainTitleLabel.setBounds(titleX, 0, labelWidth, 100);
             mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
-            repaint(); // Full repaint - less efficient but guaranteed to work
+            repaint();
         });
         titleTimer.start();
     }

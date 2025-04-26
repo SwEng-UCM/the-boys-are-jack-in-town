@@ -30,7 +30,7 @@ import java.util.HashMap;
 import static main.view.BlackJackMenu.language;
 
 public class BlackjackGUI extends JFrame {
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int gameHeight = (int) screenSize.getHeight();
     private int gameWidth = (int)screenSize.getWidth();
     private int buttonWidth = (int) (gameWidth * 0.15);
@@ -64,6 +64,14 @@ public class BlackjackGUI extends JFrame {
         this.gameManager = gameManager;
         this.bettingManager = gameManager.getBettingManager();
     
+        gameHeight = (int) screenSize.getHeight();
+        gameWidth = (int) screenSize.getWidth();
+        buttonWidth = (int) (gameWidth * 0.15);
+        buttonHeight = (int) (gameHeight * 0.08);
+        buttonFontSize = gameWidth / 60;
+        cardWidth = (int) (gameWidth * 0.10);
+        cardHeight = (int) (gameHeight * 0.22);
+        cardFontSize = gameWidth / 60;
         // Initialize GUI components
         initializeComponents();  // Create ALL components first
         layoutComponents();      // THEN arrange components
@@ -96,12 +104,25 @@ public class BlackjackGUI extends JFrame {
         // Set the window icon
         ImageIcon icon = new ImageIcon("img/black.png");
         setIconImage(icon.getImage());
+        pack(); // 📦 Automatically size the frame according to its contents
+        setLocationRelativeTo(null); // 🌎 Center the frame on the screen
     
         // Make the GUI visible
         setVisible(true);
+
+        SwingUtilities.invokeLater(() -> {
+            gameManager.setGui(this);
+        
+            Timer timer = new Timer(300, e -> {
+                gameManager.startNewGame();
+            });
+            timer.setRepeats(false);
+            timer.start();
+        });
     
         // Play background music
         AudioManager.getInstance().playBackgroundMusic();
+        
     }
 
     private void layoutComponents() {
@@ -123,8 +144,8 @@ public class BlackjackGUI extends JFrame {
         achievementButton.setContentAreaFilled(false);
         achievementButton.setBorderPainted(false);
         achievementButton.setOpaque(false);
-        buttonPanel.add(undoButton); // Add Undo button
-        buttonPanel.add(redoButton); // Add Redo button
+       // buttonPanel.add(undoButton); // Add Undo button
+        //buttonPanel.add(redoButton); // Add Redo button
 
         // Load your icon
         ImageIcon achievementIcon = new ImageIcon("img/icons/achievement.png");
@@ -158,6 +179,11 @@ public class BlackjackGUI extends JFrame {
         centerPanel.add(gameMessageLabel, BorderLayout.NORTH);
         centerPanel.add(specialMessageLabel, BorderLayout.SOUTH);
         centerPanel.add(buttonPanel, BorderLayout.CENTER);
+        buttonPanel.add(hitButton);
+        buttonPanel.add(standButton);
+        buttonPanel.add(newGameButton);
+        buttonPanel.add(undoButton);
+        buttonPanel.add(redoButton);
 
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
@@ -211,7 +237,7 @@ public class BlackjackGUI extends JFrame {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betLabel = createStyledLabel(Texts.bet[language] + " $0");
         balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
-        buttonPanel.add(newGameButton);
+        
         
 
         // Set properties for main components
@@ -230,7 +256,6 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.setOpaque(false);
     
         // Get screen dimensions
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width;
         int screenHeight = screenSize.height;
     
@@ -579,8 +604,7 @@ playerBetLabels.put(player, betLabel);
                 popupMenuWillBecomeInvisible(e);
             }
         });
-        undoButton = new JButton("Undo");
-        redoButton = new JButton("Redo");
+        
         
         undoButton.addActionListener(e -> gameManager.undoLastAction());
         redoButton.addActionListener(e -> gameManager.redoLastAction());
