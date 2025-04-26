@@ -330,12 +330,8 @@ public class BlackjackGUI extends JFrame {
         });
 
         saveItem.addActionListener(e -> {
-            try {
-                //gameManager.save();
-                GameManager.getInstance().save();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            //gameManager.save();
+            GameManager.getInstance().save();
         });
         
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
@@ -535,12 +531,8 @@ playerBetLabels.put(player, betLabel);
         });
     
         saveBtn.addActionListener(e -> {
-            try {
-                gameManager.save();
-                JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error saving game: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            gameManager.save();
+            JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
         });
     
         menuBtn.addActionListener(e -> {

@@ -2,28 +2,28 @@ package main.view;
 
 import main.controller.GameManager;
 import main.controller.GameState;
+import main.controller.GameLoader; // (We will create this tiny helper)
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
-// CARE TAKER Class
+// CARETAKER Class
 public class LoadGamePanel extends JDialog {
-    private BlackJackMenu menu;
-    private JFileChooser fileChooser;
-    private GameState loadedState;
+    private final BlackJackMenu menu;
+    private final JFileChooser fileChooser;
 
     public LoadGamePanel(BlackJackMenu parent) {
         super();
         this.menu = parent;
-        setSize(300, 200);
+        setTitle("Load Saved Game");
+        setModal(true); // Block input to other windows until closed
+        setSize(400, 300);
         setLocationRelativeTo(parent);
 
-        // Initialize the file chooser
-        fileChooser = new JFileChooser(new File("main"));
+        fileChooser = new JFileChooser(new File("saves")); // Suggest a "saves" folder if you have it
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
@@ -35,19 +35,20 @@ public class LoadGamePanel extends JDialog {
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 
             try {
-                loadedState = new GameState(selectedFile);
-                GameManager manager = GameManager.getInstance();
-                manager.loadGame(loadedState);
-                dispose();
-            } catch (IOException e) {
-                System.err.println("Error reading file: " + e.getMessage());
-                JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                GameState loadedState = GameLoader.loadFromFile(selectedFile);
+                GameManager.getInstance().applyGameState(loadedState); // <- correct place!
+                JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Error loading game: " + e.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        "Failed to load game: " + e.getMessage(),
+                        "Load Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            System.out.println("No file selected");
+            System.out.println("Load cancelled.");
         }
-        dispose();
+
+        dispose(); // Now dispose once properly
     }
 }
-
