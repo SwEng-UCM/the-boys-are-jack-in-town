@@ -417,5 +417,14 @@ public class Texts {
             "Folie Multijoueur"        // French
     };
 
+    public static String[] betConfirmed = {
+            "Bet Confirmed:",         // English
+            "Apuesta Confirmada:",    // Spanish
+            "Geall Dearbhaithe:",     // Irish
+            "Tét Megerősítve:",       // Hungarian
+            "تم تأكيد الرهان:",        // Arabic
+            "Pari Confirmé :"         // French
+    };
+
 
 }

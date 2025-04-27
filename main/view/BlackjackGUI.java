@@ -439,9 +439,9 @@ public class BlackjackGUI extends JFrame {
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-                JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, Texts.betConfirmed[language]+" $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
-                dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
+                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
