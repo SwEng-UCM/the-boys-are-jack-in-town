@@ -93,7 +93,7 @@ public class BlackjackGUI extends JFrame {
         
         gameManager.setGui(this);
     
-        ImageIcon icon = new ImageIcon("img/black.png");
+        ImageIcon icon = new ImageIcon("/img/black.png");
         setIconImage(icon.getImage());
     
         // Correct initialization sequence

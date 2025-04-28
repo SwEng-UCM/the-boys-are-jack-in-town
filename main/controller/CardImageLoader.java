@@ -17,7 +17,7 @@ public class CardImageLoader {
         for (String rank : ranks) {
             for (String suit : suits) {
                 String key = rank + "_of_" + suit;
-                String path =  "src/main/java/main/view/img/cards/" + key + ".png"; // ✅ correct path
+                String path =  "/img/cards/" + key; // ✅ correct path
                 try {
                     ImageIcon icon = new ImageIcon(CardImageLoader.class.getResource(path));
                     cardImages.put(key, icon);
@@ -29,13 +29,12 @@ public class CardImageLoader {
     }
 
     public static ImageIcon getCardImage(String rank, String suit) {
-        String path = "src/main/java/main/view/img/cards/" + rank.toLowerCase() + "_of_" + suit.toLowerCase() + ".png";
-        File imageFile = new File(path);
-        if (imageFile.exists()) {
-         return new ImageIcon(imageFile.getAbsolutePath());
-     } else {
-        System.err.println("Card image not found: " + path);
-        return null;
+        String key = rank.toLowerCase() + "_of_" + suit.toLowerCase();
+        ImageIcon icon = cardImages.get(key);
+        if (icon == null) {
+        System.err.println("Card image not found: " + key);
+        }
+        return icon;
     }
-    }
+    
 }
