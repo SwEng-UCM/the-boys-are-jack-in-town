@@ -6,6 +6,7 @@ import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
 import main.controller.BettingManager;
+import main.controller.CardImageLoader;
 import main.controller.AchievementManager;
 
 import java.awt.event.MouseAdapter;
@@ -57,6 +58,8 @@ public class BlackjackGUI extends JFrame {
     private boolean backgroundLoaded = false;
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
+    private JButton undoButton;
+    private JButton redoButton;
 
 
     private JLabel connectionStatusLabel;
@@ -72,6 +75,7 @@ public class BlackjackGUI extends JFrame {
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
         this.bettingManager = gameManager.getBettingManager();
+        CardImageLoader.loadCardImages(); // <<< ADD THIS HERE
         setTitle(Texts.guiTitle[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,6 +123,8 @@ public class BlackjackGUI extends JFrame {
         // Achievement panel on the LEFT
         JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topLeftPanel.setOpaque(false);
+        buttonPanel.add(undoButton);
+        buttonPanel.add(redoButton);
 
         JButton achievementButton = new JButton();
         achievementButton.setPreferredSize(new Dimension(50, 50));
@@ -204,7 +210,7 @@ public class BlackjackGUI extends JFrame {
         mainPanel = new BackgroundPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        playersPanel = new PlayersPanel();
+        playersPanel = new PlayersPanel(this);
         scrollPane = new JScrollPane(playersPanel);
 
         scrollPane.setOpaque(false);
@@ -220,6 +226,9 @@ public class BlackjackGUI extends JFrame {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betLabel = createStyledLabel(Texts.bet[language] + " $0");
         balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
+        undoButton = createStyledButton("Undo");
+        redoButton = createStyledButton("Redo");
+
         
 
         // Set properties for main components
@@ -411,6 +420,9 @@ public class BlackjackGUI extends JFrame {
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
+        undoButton.addActionListener(e -> gameManager.undo());
+        redoButton.addActionListener(e -> gameManager.redo());
+
     
         pauseButton.addActionListener(e -> showPauseMenu());
  
@@ -447,10 +459,19 @@ public class BlackjackGUI extends JFrame {
         updateDealerBalance(gameState.getDealerBalance());
         updateCurrentBets(gameState.getCurrentBets());
         updateGameStatus(gameState.isGameOver());
+        if (!gameState.isGameOver()) {
+            if (gameManager.getCurrentPlayerIndex() < gameManager.getPlayers().size()) {
+                promptPlayerAction(gameManager.getCurrentPlayer());
+            } else {
+                gameManager.dealerTurn();
+            }
+        }
     }
 
     private void updatePlayerHands(List<List<Card>> playerHands) {
         playersPanel.removeAll();
+        
+        
         
         for (int i = 0; i < playerHands.size(); i++) {
             Player player = gameManager.getPlayers().get(i);
@@ -966,27 +987,37 @@ public class BlackjackGUI extends JFrame {
     }
     
 
-    private JPanel createCardPanel(Card card) {
+    public JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel(new BorderLayout());
-
+    
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setMinimumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setMaximumSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-
-        JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
-
-        JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-
-        cardPanel.setLayout(new BorderLayout());
-        cardPanel.add(rankLabel, BorderLayout.CENTER);
-        cardPanel.add(suitLabel, BorderLayout.SOUTH);
-
+    
+        String rank = card.getRank().toLowerCase();
+        String suit = card.getSuit().toLowerCase();
+        ImageIcon originalIcon = CardImageLoader.getCardImage(rank, suit);
+    
+        JLabel cardLabel;
+        if (originalIcon != null) {
+            // ✨ Resize the card image to fit nicely
+            Image scaledImage = originalIcon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+            cardLabel = new JLabel(new ImageIcon(scaledImage));
+        } else {
+            cardLabel = new JLabel(rank + " of " + suit, SwingConstants.CENTER);
+            cardLabel.setForeground(Color.BLACK);
+        }
+    
+        cardLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        cardPanel.add(cardLabel, BorderLayout.CENTER);
+    
         return cardPanel;
     }
+    
+    
+    
 
     public int promptJokerWildValue() {
         int wildValue = 0;

@@ -66,6 +66,9 @@ public class Card {
     public CardType getType() {
         return this.type;
     }
+    public String getCardName() {
+        return rank + "_of_" + suit;
+    }
 
     public int getValue() {
         return switch (type) {

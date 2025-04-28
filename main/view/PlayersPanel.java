@@ -10,6 +10,7 @@ import java.util.List;
 
                           
 class PlayersPanel extends JPanel {
+    private BlackjackGUI gui; // 🆕 Reference to the existing GUI
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); // Always call super first
@@ -29,7 +30,8 @@ class PlayersPanel extends JPanel {
     private int cardHeight = (int) (gameHeight * 0.16);
     private int cardFontSize = gameWidth / 95;
 
-    public PlayersPanel() {
+    public PlayersPanel(BlackjackGUI gui) {
+        this.gui = gui;
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBackground(new Color(0, 0, 0, 0)); // ✅ Fully transparent background

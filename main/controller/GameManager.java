@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.SwingUtilities;
 
@@ -47,6 +48,8 @@ public class GameManager {
     private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
     private BlackjackClient client;
+    private Stack<GameState> undoStack = new Stack<>();
+    private Stack<GameState> redoStack = new Stack<>();
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -128,6 +131,7 @@ public class GameManager {
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
+            saveState();
             Player currentPlayer = players.get(currentPlayerIndex);
             currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
             gui.updateGameState(players, dealer, gameOver, false);
@@ -145,6 +149,8 @@ public class GameManager {
 
     public void handlePlayerStand() {
         if (!gameOver) {
+            saveState();
+
             currentPlayerIndex++; // move to next player
     
             if (currentPlayerIndex < players.size()) {
@@ -280,6 +286,7 @@ public class GameManager {
      * Betting system.
      */
     public boolean placeBet(Player player, int betAmount) {
+        GameManager.getInstance().saveState(); // 🆕 Save when placing bet
         gui.updateGameState(players, dealer, gameOver, false);
         boolean placed = player.placeBet(betAmount);
         if (placed) {
@@ -316,6 +323,7 @@ public class GameManager {
     }
 
     public void startNewGame() {
+        saveState();
         gameOver = false; // Mark that the game is no longer over
         isPaused = false;
         resumeGame();
@@ -512,46 +520,46 @@ public class GameManager {
     }
 
     private void applyGameState(GameState state) {
-        System.out.println("Applying game state");
+        System.out.println("Applying game state...");
+
         this.players = new ArrayList<>(state.getPlayers());
         this.dealer = state.getDealer();
         this.deck = state.getDeck();
-        this.currentPlayerIndex = determineCurrentPlayerIndex(state);
-        this.gameOver = false;
-        this.gui = new BlackjackGUI(this);
-
-        // Restore each player's hand and score
-        ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
-        for (int i = 0; i < loadedPlayers.size(); i++) {
-            Player player = loadedPlayers.get(i);
+        this.currentPlayerIndex = state.getCurrentPlayerIndex();
+        this.gameOver = state.isGameOver();
+    
+        // Restore each player's hand
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
             player.setHand(state.getPlayerHands().get(i));
-            player.setCurrentScore();
             player.setCurrentBet(state.getCurrentBets().get(i));
-            player.setBalance(player.getBalance());
+            player.setBalance(player.getBalance()); // optional
+            player.setCurrentScore(); // recompute score
         }
-
-        // Restore dealer's hand, score, and balance
-        this.dealer.setHand(state.getDealerHand());
-        this.dealer.setBalance(state.getDealerBalance());
-        this.dealer.setCurrentBet(state.getDealerBet());
-
-        // Restore deck
-        //this.deck.setCards(state.getDeckCards());
-
-        // Set betting manager
-        this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
+    
+        // Restore dealer's hand
+        dealer.setHand(state.getDealerHand());
+        dealer.setBalance(state.getDealerBalance());
+        dealer.setCurrentBet(state.getDealerBet());
+    
+        // Restore betting manager
+        this.bettingManager = new BettingManager(players, players.get(0).getBalance(), dealer.getBalance());
         this.bettingManager.placeDealerBet(state.getDealerBet());
-
-        // Update GUI
+    
+        // ✅ DO NOT create new gui!
+        // Just update the existing GUI
         SwingUtilities.invokeLater(() -> {
-            gui.updateGameMessage("Game loaded successfully!");
-            gui.updateGameState(players, dealer, false, false);
-            gui.setGameButtonsEnabled(true);
-            gui.enableBetting();
-            startNextPlayerTurn();
+            if (gui != null) {
+                gui.updateGameState(players, dealer, gameOver, false);
+                gui.updateGameMessage("Game state restored!");
+                gui.setGameButtonsEnabled(true);
+                gui.enableBetting();
+                resumeGameAfterRestore();
+            }
         });
-
-        System.out.println("Game loaded successfully!");
+    
+        System.out.println("Game state applied!");
+    
     }
 
     private int determineCurrentPlayerIndex(GameState state) {
@@ -587,6 +595,11 @@ public class GameManager {
         // Write it to a json file that can be loaded in.
         saveState.saveToFile(saveFile);
     }
+    public void saveState() {
+        undoStack.push(new GameState(this)); // Save a snapshot
+        redoStack.clear(); // Clear redo history when a new move happens
+    }
+    
 
 
     public void setClient(BlackjackClient client) {
@@ -596,5 +609,38 @@ public class GameManager {
     public BlackjackClient getClient() {
         return client;
     }
+    public void undo() {
+        if (!undoStack.isEmpty()) {
+            redoStack.push(new GameState(this)); // Save current state before undo
+            GameState lastState = undoStack.pop();
+            lastState.restoreFullState(this);
+            if (gui != null) {
+                gui.applyGameState(lastState);
+                
+            }
+        }
+    }
+    
+    public void redo() {
+        if (!redoStack.isEmpty()) {
+            undoStack.push(new GameState(this)); // Save current state before redo
+            GameState nextState = redoStack.pop();
+            nextState.restoreFullState(this);
+            if (gui != null) {
+                gui.applyGameState(nextState);
+                
+            }
+        }
+    }
+    private void resumeGameAfterRestore() {
+        if (!gameOver) {
+            if (currentPlayerIndex < players.size()) {
+                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            } else {
+                dealerTurn();
+            }
+        }
+    }
+    
 
 }
