@@ -296,7 +296,7 @@ public class BlackjackGUI extends JFrame {
 undoButton = new JButton();
 undoButton.setToolTipText("Undo last action");
 undoButton.setIcon(new ImageIcon(
-    new ImageIcon("img/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
 );
 undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
 undoButton.setBorderPainted(false);

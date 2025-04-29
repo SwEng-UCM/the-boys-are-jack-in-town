@@ -10,10 +10,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-// 🔼 Add these imports at the top
 import main.model.EasyDifficulty;
 import main.model.MediumDifficulty;
 import main.model.HardDifficulty;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 
 import static main.view.Languages.*;
@@ -24,9 +25,7 @@ public class BlackJackMenu extends JFrame {
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
     private JComboBox<String> difficultyComboBox;
-
-
-    
+    private JPanel topRightBar;
     private int titleX = 0;
     private Timer titleTimer;
     public static int language = 0;

@@ -11,7 +11,7 @@ public class CommandManager {
     public void undo() {
         if (lastCommand != null) {
             lastCommand.undo();
-            AudioManager.getInstance().playSoundEffect("/sounds/undo.wav");
+            AudioManager.getInstance().playSoundEffect("/resources/sounds/undo.wav");
             lastCommand = null;
         }
     }
