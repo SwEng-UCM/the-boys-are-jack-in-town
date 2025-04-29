@@ -65,6 +65,9 @@ public class BlackJackMenu extends JFrame {
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
         startButton.setIcon(loadIcon("resources/img/icons/start.png", 32, 32));
+
+        multiplayerButton = createStyledButton("Multiplayer");
+        multiplayerButton.setIcon(loadIcon("resources/icons/multiplayer.png", 32, 32));
     
         instructionsButton = createStyledButton(Texts.instructions[language]);
         instructionsButton.setIcon(loadIcon("resources/img/icons/instructions.png", 32, 32));
@@ -74,6 +77,7 @@ public class BlackJackMenu extends JFrame {
     
         loadGameButton = createStyledButton(Texts.loadGame[language]);
         loadGameButton.setIcon(loadIcon("resources/img/icons/folder.png", 32, 32));
+
     
         exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("resources/img/icons/exit.png", 32, 32));
