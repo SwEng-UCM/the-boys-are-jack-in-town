@@ -343,6 +343,8 @@ public class BlackJackMenu extends JFrame {
         instructionsButton.setText(Texts.instructions[language]);
         exitButton.setText(Texts.exit[language]);
         optionsButton.setText(Texts.options[language]);
+        multiplayerButton.setText(Texts.multiplayer[language]);
+
 
         // Repaint UI
         revalidate();
