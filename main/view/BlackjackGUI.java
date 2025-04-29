@@ -1,6 +1,7 @@
 package main.view;
 
 import main.controller.GameManager;
+import main.controller.GameState;
 import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
@@ -11,6 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +30,7 @@ import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static main.view.BlackJackMenu.language;
 
@@ -54,8 +59,14 @@ public class BlackjackGUI extends JFrame {
     private JPanel topRightPanel;
 
 
+    private JLabel connectionStatusLabel;
+    private boolean isConnected = false;
+    
+
+
     private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
     private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
+    private static BlackjackGUI instance;
 
 
     public BlackjackGUI(GameManager gameManager) {
@@ -88,6 +99,13 @@ public class BlackjackGUI extends JFrame {
         
         setVisible(true);        // Make visible LAST
         AudioManager.getInstance().playBackgroundMusic();
+    }
+
+    public static BlackjackGUI getInstance(GameManager gm) {
+        if (instance == null) {
+            instance = new BlackjackGUI(gm);
+        }
+        return instance;
     }
 
     private void layoutComponents() {
@@ -135,6 +153,14 @@ public class BlackjackGUI extends JFrame {
         topPanel.add(topLeftPanel, BorderLayout.WEST);
         topPanel.add(dealerArea, BorderLayout.CENTER);
         topPanel.add(topRightPanel, BorderLayout.EAST);
+
+        // Connection status label
+        connectionStatusLabel = new JLabel("Offline");
+        connectionStatusLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        connectionStatusLabel.setForeground(Color.RED);
+
+        // Add to your top right panel
+        topRightPanel.add(connectionStatusLabel);
 
         // Center section (messages + buttons)
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -346,6 +372,8 @@ public class BlackjackGUI extends JFrame {
         pauseMenu.add(saveItem);
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
+
+        
     
         // Bet panel components
         betField = new JTextField(5);
@@ -405,6 +433,160 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
+    public void applyGameState(GameState gameState) {
+        updatePlayerHands(gameState.getPlayerHands());
+        updateDealerHand(gameState.getDealerHand());
+        updatePlayerScores(gameState.getPlayerScores());
+        updateDealerScore(gameState.getDealerScore());
+        updatePlayerBalances(gameState.getPlayerBalances());
+        updateDealerBalance(gameState.getDealerBalance());
+        updateCurrentBets(gameState.getCurrentBets());
+        updateGameStatus(gameState.isGameOver());
+    }
+
+    private void updatePlayerHands(List<List<Card>> playerHands) {
+        playersPanel.removeAll();
+        
+        for (int i = 0; i < playerHands.size(); i++) {
+            Player player = gameManager.getPlayers().get(i);
+            List<Card> hand = playerHands.get(i);
+            
+            JPanel playerPanel = new JPanel(new BorderLayout());
+            playerPanel.setOpaque(false);
+            
+            // Create card panels
+            JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+            cardsPanel.setOpaque(false);
+            for (Card card : hand) {
+                cardsPanel.add(createCardPanel(card));
+            }
+            
+            // Player info
+            JLabel infoLabel = new JLabel(
+                String.format("%s: %d | Bet: $%d | Balance: $%d", 
+                    player.getName(), 
+                    player.calculateScore(),
+                    player.getCurrentBet(),
+                    player.getBalance())
+            );
+            infoLabel.setForeground(Color.WHITE);
+            infoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            
+            playerPanel.add(infoLabel, BorderLayout.NORTH);
+            playerPanel.add(cardsPanel, BorderLayout.CENTER);
+            
+            playersPanel.add(playerPanel);
+        }
+        
+        playersPanel.revalidate();
+        playersPanel.repaint();
+    }
+    
+    private void updateDealerHand(List<Card> dealerHand) {
+        dealerPanel.removeAll();
+        
+        if (gameManager.isGameOver()) {
+            // Show all cards
+            for (Card card : dealerHand) {
+                dealerPanel.add(createCardPanel(card));
+            }
+        } else {
+            // Show first card and hide others
+            if (!dealerHand.isEmpty()) {
+                dealerPanel.add(createCardPanel(dealerHand.get(0)));
+                for (int i = 1; i < dealerHand.size(); i++) {
+                    dealerPanel.add(createHiddenCardPanel());
+                }
+            }
+        }
+        
+        dealerPanel.revalidate();
+        dealerPanel.repaint();
+    }
+    
+    private void updatePlayerScores(List<Integer> playerScores) {
+        for (int i = 0; i < playerScores.size(); i++) {
+            Player player = gameManager.getPlayers().get(i);
+            player.setScore(playerScores.get(i));
+        }
+        updatePlayerPanels();
+    }
+    
+    private void updateDealerScore(int dealerScore) {
+        if (gameManager.isGameOver()) {
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealerScore);
+        } else {
+            // Only show first card value during game
+            List<Card> dealerHand = gameManager.getDealer().getHand();
+            if (!dealerHand.isEmpty()) {
+                int visibleScore = dealerHand.get(0).getValue();
+                dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + visibleScore + " + ?");
+            }
+        }
+    }
+    
+    private void updatePlayerBalances(List<Integer> playerBalances) {
+        for (int i = 0; i < playerBalances.size(); i++) {
+            Player player = gameManager.getPlayers().get(i);
+            player.setBalance(playerBalances.get(i));
+            JLabel balanceLabel = playerBalanceLabels.get(player);
+            if (balanceLabel != null) {
+                balanceLabel.setText("Balance: $" + playerBalances.get(i));
+            }
+        }
+    }
+    
+    private void updateDealerBalance(int dealerBalance) {
+        dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + dealerBalance);
+    }
+    
+    private void updateCurrentBets(List<Integer> currentBets) {
+        for (int i = 0; i < currentBets.size(); i++) {
+            Player player = gameManager.getPlayers().get(i);
+            player.setCurrentBet(currentBets.get(i));
+            JLabel betLabel = playerBetLabels.get(player);
+            if (betLabel != null) {
+                betLabel.setText("Bet: $" + currentBets.get(i));
+            }
+        }
+    }
+    
+    private void updateGameStatus(boolean isGameOver) {
+        setGameButtonsEnabled(!isGameOver);
+        if (isGameOver) {
+            // Show dealer's full hand
+            updateDealerHand(gameManager.getDealer().getHand());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + 
+                gameManager.getDealer().calculateScore());
+        }
+    }
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+        SwingUtilities.invokeLater(() -> {
+            if (connected) {
+                connectionStatusLabel.setText("Online");
+                connectionStatusLabel.setForeground(Color.GREEN);
+            } else {
+                connectionStatusLabel.setText("Offline");
+                connectionStatusLabel.setForeground(Color.RED);
+            }
+        });
+    }
+
+    public void showConnectionError(String message) {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(
+                this,
+                "Connection error: " + message,
+                "Network Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+        });
+    }
+
+
+
     public void updatePlayerBalanceAndBet(Player player) {
         JLabel balanceLabel = playerBalanceLabels.get(player);
         JLabel betLabel = playerBetLabels.get(player);
@@ -422,8 +604,6 @@ public class BlackjackGUI extends JFrame {
         }
     }
     
-    
-
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
@@ -459,7 +639,7 @@ public class BlackjackGUI extends JFrame {
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel("Bet: $0");
             playerBalanceLabels.put(player, balanceLabel);
-playerBetLabels.put(player, betLabel);
+            playerBetLabels.put(player, betLabel);
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);

@@ -46,6 +46,7 @@ public class GameManager {
     private BettingManager bettingManager;
     private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
+    private BlackjackClient client;
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -630,7 +631,16 @@ public class GameManager {
             System.out.println("Game loaded successfully!");
         }
 
-            
+        // Write it to a json file that can be loaded in.
+        saveState.saveToFile(saveFile);
+    }
 
 
+    public void setClient(BlackjackClient client) {
+        this.client = client;
+    }
+
+    public BlackjackClient getClient() {
+        return client;
+    }
 }

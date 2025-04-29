@@ -230,6 +230,10 @@ public class Player {
      *
      * @return the player's name and balance as a string
      */
+    public void setScore(int current){
+        this.currentScore = current;
+    }
+
     @Override
     public String toString() {
         return this.name + " " + this.balance;
