@@ -126,6 +126,8 @@ public class BlackjackGUI extends JFrame {
         achievementButton.setPreferredSize(new Dimension(50, 50));
         achievementButton.setToolTipText("View Achievements");
         achievementButton.setFocusPainted(false);
+        achievementButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         achievementButton.setContentAreaFilled(false);
         achievementButton.setBorderPainted(false);
         achievementButton.setOpaque(false);
@@ -301,6 +303,8 @@ undoButton.setIcon(new ImageIcon(
 undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
 undoButton.setBorderPainted(false);
 undoButton.setFocusPainted(false);
+undoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 undoButton.setContentAreaFilled(false);
 undoButton.setOpaque(false);
 
@@ -350,6 +354,8 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         pauseButton.setContentAreaFilled(false);
         pauseButton.setOpaque(true);
         pauseButton.setFocusPainted(false);
+        pauseButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
     
         // Pause button hover effects
         pauseButton.addMouseListener(new MouseAdapter() {
@@ -818,6 +824,8 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         button.setForeground(Color.BLACK);
         button.setBackground(bgColor);
         button.setOpaque(true);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
     
@@ -995,9 +1003,11 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR)); // 🖐 ADD THIS LINE
     
         return button;
     }
+    
     
 
     private JLabel createStyledLabel(String text) {
