@@ -138,7 +138,7 @@ public class GameManager {
                 // 👇 Needed! Re-prompt the same player if still in the round
                 gui.promptPlayerAction(currentPlayer);
             }
-            AudioManager.getInstance().playSoundEffect("/sounds/card-sounds.wav");
+            AudioManager.getInstance().playSoundEffect("/resources/sounds/card-sounds.wav");
         }
     }
     
@@ -220,7 +220,7 @@ public class GameManager {
                     gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
                     player.loseBet();
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
-                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
+                    AudioManager.getInstance().playSoundEffect("/resources/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
                     String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
                     gui.updateGameMessage(winMessage);
@@ -231,14 +231,14 @@ public class GameManager {
                     if (originalBet * 2 >= 1000) {
                         AchievementManager.getInstance().unlock(Badge.BIG_WIN);
                     }
-                    AudioManager.getInstance().playSoundEffect("/sounds/win.wav");
+                    AudioManager.getInstance().playSoundEffect("/resources/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
                     gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AchievementManager.getInstance().trackDealerWin();
-                    AudioManager.getInstance().playSoundEffect("/sounds/lose.wav");
+                    AudioManager.getInstance().playSoundEffect("/resources/sounds/lose.wav");
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
                     player.tieBet();

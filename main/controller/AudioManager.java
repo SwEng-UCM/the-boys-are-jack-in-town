@@ -34,7 +34,7 @@ public class AudioManager {
 
     /**
      * Plays background music in a continuous loop.
-     * Loads the audio file from the resource path "/sounds/videoplayback.wav".
+     * Loads the audio file from the resource path "/resources/videoplayback.wav".
      * If the music is already playing, this method does nothing.
      */
     public void playBackgroundMusic() {
@@ -44,7 +44,7 @@ public class AudioManager {
                 return;
             }
             // Load your background music file
-            URL url = getClass().getResource("/sounds/videoplayback.wav");
+            URL url = getClass().getResource("/resources/sounds/videoplayback.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioIn);
@@ -90,7 +90,7 @@ public class AudioManager {
     /**
      * Plays a one-time sound effect from the specified resource path.
      *
-     * @param resourcePath the path to the sound effect resource (e.g., "/sounds/effect.wav")
+     * @param resourcePath the path to the sound effect resource (e.g., "/resources/sounds/effect.wav")
      */
     public void playSoundEffect(String resourcePath) {
         try {
