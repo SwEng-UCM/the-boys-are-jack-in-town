@@ -631,16 +631,8 @@ public class GameManager {
             System.out.println("Game loaded successfully!");
         }
 
-        // Write it to a json file that can be loaded in.
-        saveState.saveToFile(saveFile);
-    }
+        public void setClient(BlackjackClient client) {
+            this.client = client;
+        }
 
-
-    public void setClient(BlackjackClient client) {
-        this.client = client;
-    }
-
-    public BlackjackClient getClient() {
-        return client;
-    }
 }
