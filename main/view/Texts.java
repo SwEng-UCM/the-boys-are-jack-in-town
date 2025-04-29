@@ -1,6 +1,11 @@
 package main.view;
 
-
+/*
+ * The Texts class serves as a centralized repository for
+ * all localized UI strings used in the Blackjack game. It supports
+ * English, Spanish, Irish, Hungarian, Arabic, and French.
+ *
+ */
 public class Texts {
 
     public static String[] startGame =
@@ -480,7 +485,4 @@ public class Texts {
             "صعب",
             "Difficile"
     };
-
-
-
 }
