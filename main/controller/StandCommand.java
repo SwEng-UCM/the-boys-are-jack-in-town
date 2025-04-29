@@ -26,7 +26,7 @@ public class StandCommand implements Command {
      */
     @Override
     public void execute() {
-        previousIndex = gameManager.getCurrentPlayerIndex();
+        previousIndex = gameManager.getPlayerManager().getCurrentPlayerIndex();
         gameManager.handlePlayerStand();
     }
 
@@ -36,6 +36,6 @@ public class StandCommand implements Command {
      */
     @Override
     public void undo() {
-        gameManager.setCurrentPlayerIndex(previousIndex);
+        gameManager.getPlayerManager().setCurrentPlayerIndex(previousIndex);
     }
 }

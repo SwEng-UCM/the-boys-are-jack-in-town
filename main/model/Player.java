@@ -133,31 +133,6 @@ public class Player {
     }
 
     /**
-     * Awards winnings to the player, adding the winnings and the original bet back to their balance.
-     *
-     * @param winnings the amount won (excluding the original bet)
-     */
-    public void winBet(int winnings) {
-        balance += currentBet + winnings;
-        currentBet = 0;
-    }
-
-    /**
-     * Resolves a lost bet by clearing the current bet (balance already reduced).
-     */
-    public void loseBet() {
-        currentBet = 0; // The bet is already deducted when placed
-    }
-
-    /**
-     * Resolves a tied bet (push) by returning the player's original bet.
-     */
-    public void tieBet() {
-        balance += currentBet; // Return the bet amount
-        currentBet = 0;
-    }
-
-    /**
      * Returns the player's current balance.
      *
      * @return the player's balance

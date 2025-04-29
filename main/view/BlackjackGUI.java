@@ -197,7 +197,7 @@ public class BlackjackGUI extends JFrame {
         mainPanel.add(southContainer, BorderLayout.SOUTH);
 
         add(mainPanel);
-        gameManager.startNewGame();
+        gameManager.getGameFlowController().startNewGame();
         // this is where the game is being started //
     }
 
@@ -454,8 +454,8 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
-        newGameButton.addActionListener(e -> gameManager.startNewGame());
-        placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
+        newGameButton.addActionListener(e -> gameManager.getGameFlowController().startNewGame());
+        placeBetButton.addActionListener(e -> placeBet(gameManager.getPlayerManager().getCurrentPlayer()));
     
         pauseButton.addActionListener(e -> showPauseMenu());
  
@@ -498,7 +498,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         playersPanel.removeAll();
         
         for (int i = 0; i < playerHands.size(); i++) {
-            Player player = gameManager.getPlayers().get(i);
+            Player player = gameManager.getPlayerManager().getPlayers().get(i);
             List<Card> hand = playerHands.get(i);
             
             JPanel playerPanel = new JPanel(new BorderLayout());
@@ -535,7 +535,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     private void updateDealerHand(List<Card> dealerHand) {
         dealerPanel.removeAll();
         
-        if (gameManager.isGameOver()) {
+        if (gameManager.getGameFlowController().isGameOver()) {
             // Show all cards
             for (Card card : dealerHand) {
                 dealerPanel.add(createCardPanel(card));
@@ -556,18 +556,18 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     
     private void updatePlayerScores(List<Integer> playerScores) {
         for (int i = 0; i < playerScores.size(); i++) {
-            Player player = gameManager.getPlayers().get(i);
+            Player player = gameManager.getPlayerManager().getPlayers().get(i);
             player.setScore(playerScores.get(i));
         }
         updatePlayerPanels();
     }
     
     private void updateDealerScore(int dealerScore) {
-        if (gameManager.isGameOver()) {
+        if (gameManager.getGameFlowController().isGameOver()) {
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealerScore);
         } else {
             // Only show first card value during game
-            List<Card> dealerHand = gameManager.getDealer().getHand();
+            List<Card> dealerHand = gameManager.getDealerManager().getDealer().getHand();
             if (!dealerHand.isEmpty()) {
                 int visibleScore = dealerHand.get(0).getValue();
                 dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + visibleScore + " + ?");
@@ -577,7 +577,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     
     private void updatePlayerBalances(List<Integer> playerBalances) {
         for (int i = 0; i < playerBalances.size(); i++) {
-            Player player = gameManager.getPlayers().get(i);
+            Player player = gameManager.getPlayerManager().getPlayers().get(i);
             player.setBalance(playerBalances.get(i));
             JLabel balanceLabel = playerBalanceLabels.get(player);
             if (balanceLabel != null) {
@@ -592,7 +592,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     
     private void updateCurrentBets(List<Integer> currentBets) {
         for (int i = 0; i < currentBets.size(); i++) {
-            Player player = gameManager.getPlayers().get(i);
+            Player player = gameManager.getPlayerManager().getPlayers().get(i);
             player.setCurrentBet(currentBets.get(i));
             JLabel betLabel = playerBetLabels.get(player);
             if (betLabel != null) {
@@ -605,9 +605,9 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         setGameButtonsEnabled(!isGameOver);
         if (isGameOver) {
             // Show dealer's full hand
-            updateDealerHand(gameManager.getDealer().getHand());
+            updateDealerHand(gameManager.getDealerManager().getDealer().getHand());
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + 
-                gameManager.getDealer().calculateScore());
+            gameManager.getDealerManager().getDealer().calculateScore());
         }
     }
 
@@ -668,9 +668,9 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 placeBetButton.setEnabled(false);
                 JOptionPane.showMessageDialog(this, Texts.betConfirmed[language]+" $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
-                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerBalance());
-                dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
-                playersPanel.updatePanel(gameManager.getPlayers());      
+                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerManager().getDealerBalance());
+                dealerBetLabel.setText("Bet: $" + gameManager.getDealerManager().getDealerBet());
+                playersPanel.updatePanel(gameManager.getPlayerManager().getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
@@ -701,12 +701,12 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     }
 
     public void restartGame() {
-        gameManager.startNewGame();
+        gameManager.getGameFlowController().startNewGame();
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         setGameButtonsEnabled(true);
-        gameManager.setGameOver(false);  // Add this line
-        gameManager.resumeGame();
+        gameManager.getGameFlowController().setGameOver(false);  // Add this line
+        gameManager.getGameFlowController().resumeGame();
 
     }
 
@@ -721,7 +721,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     
     
     private void showPauseMenu() {
-        gameManager.pauseGame();
+        gameManager.getGameFlowController().pauseGame();
         setGameButtonsEnabled(false);
     
         JDialog pauseDialog = new JDialog(this, Texts.PAUSE[language], true);
@@ -840,7 +840,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     
 
     private void resumeGame() {
-        gameManager.resumeGame();
+        gameManager.getGameFlowController().resumeGame();
         setGameButtonsEnabled(true);
     }
 
@@ -851,14 +851,14 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
     public void setGameButtonsEnabled(boolean enabled) {
         // Disable all game buttons when paused
-        boolean buttonsEnabled = enabled && !gameManager.isPaused();
+        boolean buttonsEnabled = enabled && !gameManager.getGameFlowController().isPaused();
 
-        hitButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
-        standButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        hitButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
+        standButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
         newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
-        betField.setEnabled(buttonsEnabled && !gameManager.isGameOver());
-        placeBetButton.setEnabled(buttonsEnabled && !gameManager.isGameOver());
+        betField.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
+        placeBetButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
 
         pauseButton.setEnabled(true);
     }
@@ -869,10 +869,10 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
-        betLabel.setText(Texts.bet[language] + " $"+gameManager.getPlayerBet(gameManager.getCurrentPlayer()));
-        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
-        dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
-        dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
+        betLabel.setText(Texts.bet[language] + " $"+ gameManager.getPlayerManager().getPlayerBet(gameManager.getPlayerManager().getCurrentPlayer()));
+        balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerManager().getPlayerBalance(gameManager.getPlayerManager().getCurrentPlayer()));
+        dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerManager().getDealerBalance());
+        dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerManager().getDealerBet());
 
         // Force UI refresh
         balanceLabel.revalidate();
@@ -917,12 +917,12 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
 
     private void nextTurn() {
-        if (gameManager.hasNextPlayer()) {
+        if (gameManager.getPlayerManager().hasNextPlayer()) {
             gameManager.startNextPlayerTurn();
-            updateGameMessage(gameManager.getCurrentPlayer().getName() + Texts.turns[language]);
+            updateGameMessage(gameManager.getPlayerManager().getCurrentPlayer().getName() + Texts.turns[language]);
             enableBetting();
         } else {
-            gameManager.dealerTurn();
+            gameManager.getDealerManager().dealerTurn();
         }
     }    
     
@@ -932,7 +932,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         cardPanel.setBackground(Color.BLACK);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 
-        JLabel hiddenLabel = new JLabel(gameManager.isPaused() ? "⏸" : "?", SwingConstants.CENTER);
+        JLabel hiddenLabel = new JLabel(gameManager.getGameFlowController().isPaused() ? "⏸" : "?", SwingConstants.CENTER);
         hiddenLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
         hiddenLabel.setForeground(Color.WHITE);
 
@@ -1066,12 +1066,12 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     }
  
 public void promptPlayerAction(Player player) {
-        if (!gameManager.isCurrentPlayerStillInRound()) {
-            gameManager.advanceToNextPlayer(); // ✅ Advance the index here
-            if (gameManager.hasNextPlayer()) {
+        if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
+            gameManager.getPlayerManager().advanceToNextPlayer(); // ✅ Advance the index here
+            if (gameManager.getPlayerManager().hasNextPlayer()) {
                 gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
             } else {
-                gameManager.dealerTurn(); // No players left
+                gameManager.getDealerManager().dealerTurn(); // No players left
             }
             return; // 🔒 Important: prevent further code from running
         }
@@ -1080,7 +1080,7 @@ public void promptPlayerAction(Player player) {
         updateGameMessage(player.getName() + "'s turn");
     
         // ✅ Only allow betting if game is not running
-        if (!gameManager.isGameRunning()) {
+        if (!gameManager.getGameFlowController().isGameRunning()) {
             enableBetting();
         }
     }
@@ -1089,7 +1089,7 @@ public void promptPlayerAction(Player player) {
 
     public void updatePlayerPanels() {
         playersPanel.removeAll();
-        for (Player player : gameManager.getPlayers()) {
+        for (Player player : gameManager.getPlayerManager().getPlayers()) {
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);  // ✅ Transparent player panel
             panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg

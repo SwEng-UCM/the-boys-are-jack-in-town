@@ -67,10 +67,15 @@ public class BettingManager {
      * @param playerName The winning player's name.
      */
     public void playerWins(String playerName) {
-        int bet = playerBets.getOrDefault(playerName, 0);
+        Integer bet = playerBets.get(playerName);
+        if (bet == null || bet == 0) {
+            // No bet to pay out => just ignore safely
+            return;
+        }
         playerBalances.put(playerName, playerBalances.get(playerName) + bet + dealerBet);
         resetPlayerBet(playerName);
     }
+    
     
     /**
      * Dealer wins, so the dealer collects the player's bets.
@@ -79,6 +84,13 @@ public class BettingManager {
     public void dealerWins(String playerName) {
         int bet = playerBets.getOrDefault(playerName, 0);
         dealerBalance += bet;
+        resetPlayerBet(playerName);
+    }
+
+    /**
+     * Player loses — no payout.
+     */
+    public void playerLoses(String playerName) {
         resetPlayerBet(playerName);
     }
 

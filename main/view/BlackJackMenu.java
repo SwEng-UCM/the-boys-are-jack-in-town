@@ -213,10 +213,23 @@ public class BlackJackMenu extends JFrame {
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
             GameManager gameManager = GameManager.getInstance();
+        
+            // 1. Create the GUI
             BlackjackGUI gui = new BlackjackGUI(gameManager);
+        
+            // 2. Set the GUI FIRST (re-inits controllers)
+            gameManager.setGui(gui);
+        
+            // 3. THEN call startNewGame()
+            gameManager.getGameFlowController().startNewGame();
+        
+            // 4. Show the GUI
             gui.setVisible(true);
             dispose();
         });
+        
+        
+        
 
         instructionsButton.addActionListener(e -> {
             String message = Texts.instructionsPopup[language][0] + "\n" +

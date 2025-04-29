@@ -1,12 +1,110 @@
 package main.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import main.model.Card;
+import main.model.Deck;
 import main.model.Player;
 
 public class PlayerManager {
-    // private List<Player> players;
-    // public Player getCurrentPlayer();
-    // public void nextPlayer();
-    // public void resetPlayers();
+    private ArrayList<Player> players = new ArrayList<>();
+    private int currentPlayerIndex = 0;
+
+    public ArrayList<Player> getPlayers() {
+        return this.players;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+    public Player getCurrentPlayer() {
+        if (currentPlayerIndex < players.size()) {
+            return players.get(currentPlayerIndex);
+        }
+        return null; // In case there are no players or we've reached the dealer turn
+    }
+
+    public boolean isCurrentPlayerStillInRound() {
+        Player currentPlayer = getCurrentPlayer();
+        if (currentPlayer == null) {
+            return false;
+        }
+        // Player is out of the round if they stood or busted
+        return !currentPlayer.hasStood() && currentPlayer.calculateScore() <= 21;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return this.currentPlayerIndex;
+    }
+    
+    public void setCurrentPlayerIndex(int index) {
+        this.currentPlayerIndex = index;
+    }
+
+    
+    public int getPlayerScore(Player currentPlayer) {
+        return currentPlayer.calculateScore();
+    }
+
+    public int getPlayerBet(Player currentPlayer) {
+        return currentPlayer.getCurrentBet();
+    }
+
+    public void advanceToNextPlayer() {
+        currentPlayerIndex++;
+    }
+
+    
+    public String getPlayerHand(Player player) {
+        return player.getHand().toString();
+    }
+
+    public int getPlayerBalance(Player player) {
+        return player.getBalance();
+    }
+
+    public boolean hasNextPlayer() {
+        return currentPlayerIndex < players.size()-1;
+    }
+
+
+
+    public List<Integer> getPlayerScores() {
+        List<Integer> pScores = new ArrayList<>();
+        for(Player p : players) {
+            pScores.add(p.calculateScore());
+        }
+        return pScores;
+    }
+
+    public List<Integer> getPlayerBalances(){
+        List<Integer> pBalances = new ArrayList<>();
+        for(Player p : players) {
+            pBalances.add(p.getBalance());
+        }
+        return pBalances;
+    }
+
+    public List<Integer> getPlayerBets(){
+        List<Integer> pBets = new ArrayList<>();
+        for(Player p : players) {
+            pBets.add(p.getCurrentBet());
+        }
+        return pBets;
+    }
+
+    public List<List<Card>> getPlayerHands() {
+        List<List<Card>> playerHands = new ArrayList<>();
+        for(Player p : players) {
+            List<Card> playerHand = p.getHand();
+            playerHands.add(playerHand);
+        }
+        return playerHands;
+    }
+
+    public void addPlayer(String name, int initialBalance) {
+        players.add(new Player(name, initialBalance));
+    }
+
+
 }
