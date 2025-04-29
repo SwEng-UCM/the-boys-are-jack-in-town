@@ -61,7 +61,7 @@ public class BlackJackMenu extends JFrame {
         });
         
         // Custom image icon
-        ImageIcon icon = new ImageIcon("img/black.png");
+        ImageIcon icon = new ImageIcon("resources/img/black.png");
         setIconImage(icon.getImage());
 
         initializeComponents();

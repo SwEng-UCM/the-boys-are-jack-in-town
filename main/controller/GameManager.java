@@ -297,6 +297,7 @@ public class GameManager {
         boolean placed = player.placeBet(betAmount);
         if (placed) {
             AchievementManager.getInstance().unlock(Badge.FIRST_BET);
+            AudioManager.getInstance().playSoundEffect("/resources/sounds/bet.wav");
         }
         return placed;
     }

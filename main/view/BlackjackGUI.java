@@ -131,7 +131,7 @@ public class BlackjackGUI extends JFrame {
         achievementButton.setOpaque(false);
 
         // Load your icon
-        ImageIcon achievementIcon = new ImageIcon("resources/img/achievement.png");
+        ImageIcon achievementIcon = new ImageIcon("resources/icons/achievement.png");
         Image scaledIcon = achievementIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         achievementButton.setIcon(new ImageIcon(scaledIcon));
 
@@ -328,7 +328,7 @@ undoButton = new JButton() {
 };
 undoButton.setToolTipText("Undo last action");
 undoButton.setIcon(new ImageIcon(
-    new ImageIcon("img/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
 );
 undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
 undoButton.setFocusPainted(false);
@@ -342,7 +342,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         // Pause button setup
         pauseButton = new JButton();
         pauseButton.setPreferredSize(new Dimension(50, 50));
-        ImageIcon pauseIcon = new ImageIcon("resources/img/pause.png"); // Ensure the file path is correct
+        ImageIcon pauseIcon = new ImageIcon("resources/icons/pause.png"); // Ensure the file path is correct
         Image scaledPauseIcon = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
         pauseButton.setIcon(new ImageIcon(scaledPauseIcon)); // Set the scaled icon
         pauseButton.setBackground(new Color(255, 165, 0));
@@ -672,7 +672,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
-                AudioManager.getInstance().playSoundEffect("resources/sounds/bet.wav");
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }

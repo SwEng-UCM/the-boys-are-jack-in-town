@@ -26,12 +26,12 @@ public class AchievementsWindow extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        ImageIcon icon = new ImageIcon("img/icons/achievement_window.png");
+        ImageIcon icon = new ImageIcon("resources/icons/achievement_window.png");
         setIconImage(icon.getImage());
 
         // Background panel with image
         JPanel backgroundPanel = new JPanel() {
-            private final Image bg = new ImageIcon("img/ach_background.png").getImage();
+            private final Image bg = new ImageIcon("resources/img/ach_background.png").getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
