@@ -58,7 +58,7 @@ public class Texts {
                     "Üdv a játékban", "مرحبًا بك في بلاك جاك!", "Bienvenue au Blackjack!"};
 
     public static String[] guiBackToMain =
-            {"Back to Main Menu.", "Salida al menú principal", "ar ais go dtí an príomh-roghchlár",
+            {"Back to Main Menu.", "Salida al menú principal", "Ar ais go dtí an príomh-roghchlár",
                     "Vissza a főmenübe", "العودة إلى القائمة الرئيسية", "Retour au menu principal"};
 
     public static String[] gameManagerGameOn =
@@ -425,6 +425,52 @@ public class Texts {
             "تم تأكيد الرهان:",        // Arabic
             "Pari Confirmé :"         // French
     };
+
+    public static String[] selectLanguage = {
+            "Select Language",
+            "Seleccionar idioma",
+            "Roghnaigh Teanga",
+            "Válasszon nyelvet",
+            "اختر اللغة",
+            "Choisir la langue"
+    };
+
+    public static String[] selectDifficulty = {
+            "Select Difficulty",
+            "Seleccionar dificultad",
+            "Roghnaigh Deacracht",
+            "Válasszon nehézségi szintet",
+            "اختر مستوى الصعوبة",
+            "Choisir la difficulté"
+    };
+
+    public static String[] easy = {
+            "Easy",
+            "Fácil",
+            "Éasca",
+            "Könnyű",
+            "سهل",
+            "Facile"
+    };
+
+    public static String[] medium = {
+            "Medium",
+            "Medio",
+            "Measartha",
+            "Közepes",
+            "متوسط",
+            "Moyen"
+    };
+
+    public static String[] hard = {
+            "Hard",
+            "Difícil",
+            "Deacair",
+            "Nehéz",
+            "صعب",
+            "Difficile"
+    };
+
 
 
 }

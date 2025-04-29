@@ -7,6 +7,8 @@ import java.awt.*;
 import main.model.*;
 import main.controller.GameManager;
 
+import static main.view.BlackJackMenu.language;
+
 public class OptionsPanel extends JDialog {
     private JComboBox<String> languageDropdown;
     private JComboBox<String> difficultyCombo;
@@ -24,15 +26,15 @@ public class OptionsPanel extends JDialog {
         JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5)); // 4 rows, 1 column, with gaps
 
         // Language selection
-        panel.add(new JLabel("Select Language:"));
+        panel.add(new JLabel(Texts.selectLanguage[language]));
         String[] languages = {"English", "Español", "Gaelige", "Hungarian", "Arabic", "Français"};
         languageDropdown = new JComboBox<>(languages);
-        languageDropdown.setSelectedIndex(BlackJackMenu.language);
+        languageDropdown.setSelectedIndex(language);
         panel.add(languageDropdown);
 
         // Difficulty selection
-        panel.add(new JLabel("Select Difficulty:"));
-        difficultyCombo = new JComboBox<>(new String[]{"Easy", "Medium", "Hard"});
+        panel.add(new JLabel(Texts.selectDifficulty[language]));
+        difficultyCombo = new JComboBox<>(new String[]{Texts.easy[language], Texts.medium[language],Texts.hard[language]});
         
         // Set current difficulty
        // Set current difficulty - updated version
@@ -49,7 +51,7 @@ public class OptionsPanel extends JDialog {
 
         applyButton.addActionListener(e -> {
             // Update language
-            BlackJackMenu.language = languageDropdown.getSelectedIndex();
+            language = languageDropdown.getSelectedIndex();
             
             // Update difficulty
             String selectedDifficulty = (String) difficultyCombo.getSelectedItem();
