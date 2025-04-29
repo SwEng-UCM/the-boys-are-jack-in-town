@@ -1,8 +1,6 @@
 package main.controller;
 
 import main.view.BlackJackMenu;
-
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**

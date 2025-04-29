@@ -40,7 +40,7 @@ public class BlackJackMenu extends JFrame {
         // Load background image
         // Change the image loading to be more robust:
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("img/backgroundimage.png");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("resources/img/backgroundimage.png");
             if (is != null) {
                 backgroundImage = ImageIO.read(is);
                 backgroundLoaded = true;
@@ -64,22 +64,22 @@ public class BlackJackMenu extends JFrame {
 
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
-        startButton.setIcon(loadIcon("img/icons/start.png", 32, 32));
+        startButton.setIcon(loadIcon("resources/img/icons/start.png", 32, 32));
     
         instructionsButton = createStyledButton(Texts.instructions[language]);
-        instructionsButton.setIcon(loadIcon("img/icons/instructions.png", 32, 32));
+        instructionsButton.setIcon(loadIcon("resources/img/icons/instructions.png", 32, 32));
     
         optionsButton = createStyledButton(Texts.options[language]);
-        optionsButton.setIcon(loadIcon("img/icons/options.png", 32, 32));
+        optionsButton.setIcon(loadIcon("resources/img/icons/options.png", 32, 32));
     
         loadGameButton = createStyledButton(Texts.loadGame[language]);
-        loadGameButton.setIcon(loadIcon("img/icons/folder.png", 32, 32));
+        loadGameButton.setIcon(loadIcon("resources/img/icons/folder.png", 32, 32));
     
         exitButton = createStyledButton(Texts.exit[language]);
-        exitButton.setIcon(loadIcon("img/icons/exit.png", 32, 32));
+        exitButton.setIcon(loadIcon("resources/img/icons/exit.png", 32, 32));
     
         // Load and resize the image
-        ImageIcon originalIcon = new ImageIcon("img/blackjack.png");
+        ImageIcon originalIcon = new ImageIcon("resources/img/blackjack.png");
         Image originalImage = originalIcon.getImage();
         Image resizedImage = originalImage.getScaledInstance(500, 300, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
