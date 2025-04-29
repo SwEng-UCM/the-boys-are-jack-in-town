@@ -4,15 +4,27 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * The AudioManager class manages background music and sound effects in the game.
+ * It follows the singleton pattern to ensure consistent audio control across the application.
+ */
 public class AudioManager {
     private static AudioManager instance;
     private Clip backgroundMusic;
-    private float currentVolume = 0.1f; // Default volume (10%)
+    private float currentVolume = 0.1f;
 
+    /**
+     * Private constructor for the singleton pattern.
+     */
     private AudioManager() {
-        // Private constructor for singleton
     }
 
+    /**
+     * Returns the singleton instance of AudioManager.
+     * If the instance does not exist, it initializes it.
+     *
+     * @return the singleton instance of AudioManager
+     */
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
@@ -20,6 +32,11 @@ public class AudioManager {
         return instance;
     }
 
+    /**
+     * Plays background music in a continuous loop.
+     * Loads the audio file from the resource path "/sounds/videoplayback.wav".
+     * If the music is already playing, this method does nothing.
+     */
     public void playBackgroundMusic() {
         try {
             if (backgroundMusic != null && backgroundMusic.isActive()) {
@@ -38,6 +55,11 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Sets the volume for background music.
+     *
+     * @param volume the volume level (range: 0.0 to 1.0)
+     */
     public void setVolume(float volume) {
         currentVolume = volume;
         if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -47,16 +69,29 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Retrieves the current background music volume.
+     *
+     * @return the current volume level (range: 0.0 to 1.0)
+     */
     public float getVolume() {
         return currentVolume;
     }
 
+    /**
+     * Stops the background music playback.
+     */
     public void stopMusic() {
         if (backgroundMusic != null) {
             backgroundMusic.stop();
         }
     }
 
+    /**
+     * Plays a one-time sound effect from the specified resource path.
+     *
+     * @param resourcePath the path to the sound effect resource (e.g., "/sounds/effect.wav")
+     */
     public void playSoundEffect(String resourcePath) {
         try {
             URL url = getClass().getResource(resourcePath);

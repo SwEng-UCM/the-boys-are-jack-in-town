@@ -505,84 +505,131 @@ public class GameManager {
         return this.dealer;
     }
 
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+    
+    public void setDealer(Player dealer) {
+        this.dealer = dealer;
+    }
+    
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+    
+    public void setBettingManager(BettingManager bettingManager) {
+        this.bettingManager = bettingManager;
+    }
+    
+
 
     // SAVE/LOAD
-    public void loadGame(GameState gs) throws IOException {
-        applyGameState(gs);
-    }
+    // public void loadGame(GameState gs) throws IOException {
+    //     applyGameState(gs);
+    // }
 
-    private void applyGameState(GameState state) {
-        System.out.println("Applying game state");
-        this.players = new ArrayList<>(state.getPlayers());
-        this.dealer = state.getDealer();
-        this.deck = state.getDeck();
-        this.currentPlayerIndex = determineCurrentPlayerIndex(state);
-        this.gameOver = false;
-        this.gui = new BlackjackGUI(this);
+    // private void applyGameState(GameState state) {
+    //     System.out.println("Applying game state");
+    //     this.players = new ArrayList<>(state.getPlayers());
+    //     this.dealer = state.getDealer();
+    //     this.deck = state.getDeck();
+    //     this.currentPlayerIndex = determineCurrentPlayerIndex(state);
+    //     this.gameOver = false;
+    //     this.gui = new BlackjackGUI(this);
 
-        // Restore each player's hand and score
-        ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
-        for (int i = 0; i < loadedPlayers.size(); i++) {
-            Player player = loadedPlayers.get(i);
-            player.setHand(state.getPlayerHands().get(i));
-            player.setCurrentScore();
-            player.setCurrentBet(state.getCurrentBets().get(i));
-            player.setBalance(player.getBalance());
-        }
+    //     // Restore each player's hand and score
+    //     ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
+    //     for (int i = 0; i < loadedPlayers.size(); i++) {
+    //         Player player = loadedPlayers.get(i);
+    //         player.setHand(state.getPlayerHands().get(i));
+    //         player.setCurrentScore();
+    //         player.setCurrentBet(state.getCurrentBets().get(i));
+    //         player.setBalance(player.getBalance());
+    //     }
 
-        // Restore dealer's hand, score, and balance
-        this.dealer.setHand(state.getDealerHand());
-        this.dealer.setBalance(state.getDealerBalance());
-        this.dealer.setCurrentBet(state.getDealerBet());
+    //     // Restore dealer's hand, score, and balance
+    //     this.dealer.setHand(state.getDealerHand());
+    //     this.dealer.setBalance(state.getDealerBalance());
+    //     this.dealer.setCurrentBet(state.getDealerBet());
 
-        // Restore deck
-        //this.deck.setCards(state.getDeckCards());
+    //     // Restore deck
+    //     //this.deck.setCards(state.getDeckCards());
 
-        // Set betting manager
-        this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
-        this.bettingManager.placeDealerBet(state.getDealerBet());
+    //     // Set betting manager
+    //     this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
+    //     this.bettingManager.placeDealerBet(state.getDealerBet());
 
-        // Update GUI
+    //     // Update GUI
+    //     SwingUtilities.invokeLater(() -> {
+    //         gui.updateGameMessage("Game loaded successfully!");
+    //         gui.updateGameState(players, dealer, false, false);
+    //         gui.setGameButtonsEnabled(true);
+    //         gui.enableBetting();
+    //         startNextPlayerTurn();
+    //     });
+
+    //     System.out.println("Game loaded successfully!");
+    // }
+
+    // private int determineCurrentPlayerIndex(GameState state) {
+    //    return state.getCurrentPlayerIndex();
+
+    // }
+
+    // In GameManager
+
+    public void loadGame(GameState memento) {
+        this.players = new ArrayList<>(memento.getPlayers());
+        this.dealer = memento.getDealer();
+        this.deck = memento.getDeck();
+        this.currentPlayerIndex = memento.getCurrentPlayerIndex();
+        this.gameOver = memento.isGameOver();
+
         SwingUtilities.invokeLater(() -> {
             gui.updateGameMessage("Game loaded successfully!");
-            gui.updateGameState(players, dealer, false, false);
+            gui.updateGameState(players, dealer, gameOver, isPaused);
             gui.setGameButtonsEnabled(true);
             gui.enableBetting();
             startNextPlayerTurn();
         });
-
-        System.out.println("Game loaded successfully!");
     }
 
-    private int determineCurrentPlayerIndex(GameState state) {
-       return state.getCurrentPlayerIndex();
+    // inside GameManager.java
 
-    }
-
-    public void save() throws IOException {
-        // Save all the relevant data that is used in the .json files
-        GameState saveState = new GameState(this);
-        File saveFile = new File("main\\saveFile.json");
-
-        // Set all the necessary data to the save state
-        saveState.setDealer(this.dealer);
-        saveState.setCurrentPlayerIndex(currentPlayerIndex);
-        saveState.setDealerBalance(dealer.getBalance());
-        saveState.setDealerBet(dealer.getCurrentBet());
-
-        saveState.setPlayers(this.players);
-        List<Integer> playerBalances = new ArrayList<>();
-        List<Integer> playerScores = new ArrayList<>();
-        List<Integer> playerBets = new ArrayList<>();
-        for(Player p : this.players) {
-            playerBalances.add(p.getBalance());
-            playerScores.add(p.calculateScore());
-            playerBets.add(p.getCurrentBet());
+        // Save (Originator -> Memento)
+        public void save() {
+            // Create a GameState object from the current game data
+            GameState gameState = new GameState(this); // Assuming the GameState constructor takes the GameManager
+        
+            // Save the GameState using the GameStateManager
+            GameStateManager gameStateManager = new GameStateManager();
+            try {
+                gameStateManager.saveGame(gameState);  // Save the game state to the file
+                System.out.println("Game saved successfully!");
+            } catch (IOException e) {
+                System.err.println("Error saving game: " + e.getMessage());
+            }
         }
-        saveState.setPlayerBalances(playerBalances);
-        saveState.setPlayerScores(playerScores);
-        saveState.setDealerScore(dealer.calculateScore());
-        saveState.setCurrentBets(playerBets);
+        
+
+        // Restore (Memento -> Originator)
+        public void applyGameState(GameState state) {
+            System.out.println("Applying game state");
+            
+            state.restore(this);
+
+            this.gui = new BlackjackGUI(this);
+
+            SwingUtilities.invokeLater(() -> {
+                gui.updateGameMessage("Game loaded successfully!");
+                gui.updateGameState(players, dealer, gameOver, isPaused);
+                gui.setGameButtonsEnabled(true);
+                gui.enableBetting();
+                startNextPlayerTurn();
+            });
+
+            System.out.println("Game loaded successfully!");
+        }
 
         // Write it to a json file that can be loaded in.
         saveState.saveToFile(saveFile);
@@ -596,5 +643,4 @@ public class GameManager {
     public BlackjackClient getClient() {
         return client;
     }
-
 }
