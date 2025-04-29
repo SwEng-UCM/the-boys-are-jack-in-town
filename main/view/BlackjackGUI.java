@@ -80,7 +80,7 @@ public class BlackjackGUI extends JFrame {
 
 
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/img/backgroundimage.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("/resources/img/backgroundimage.png"));
             backgroundLoaded = true;
         } catch (IOException e) {
             System.err.println("Error loading background image: " + e.getMessage());
@@ -89,7 +89,7 @@ public class BlackjackGUI extends JFrame {
         
         gameManager.setGui(this);
     
-        ImageIcon icon = new ImageIcon("img/black.png");
+        ImageIcon icon = new ImageIcon("resources/img/black.png");
         setIconImage(icon.getImage());
     
         // Correct initialization sequence
@@ -129,7 +129,7 @@ public class BlackjackGUI extends JFrame {
         achievementButton.setOpaque(false);
 
         // Load your icon
-        ImageIcon achievementIcon = new ImageIcon("img/icons/achievement.png");
+        ImageIcon achievementIcon = new ImageIcon("resources/img/achievement.png");
         Image scaledIcon = achievementIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         achievementButton.setIcon(new ImageIcon(scaledIcon));
 
@@ -293,7 +293,7 @@ public class BlackjackGUI extends JFrame {
         // Pause button setup
         pauseButton = new JButton();
         pauseButton.setPreferredSize(new Dimension(50, 50));
-        ImageIcon pauseIcon = new ImageIcon("img/icons/pause.png"); // Ensure the file path is correct
+        ImageIcon pauseIcon = new ImageIcon("resources/img/pause.png"); // Ensure the file path is correct
         Image scaledPauseIcon = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Scale the image
         pauseButton.setIcon(new ImageIcon(scaledPauseIcon)); // Set the scaled icon
         pauseButton.setBackground(new Color(255, 165, 0));
@@ -620,7 +620,7 @@ public class BlackjackGUI extends JFrame {
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
-                AudioManager.getInstance().playSoundEffect("/sounds/bet.wav");
+                AudioManager.getInstance().playSoundEffect("resources/sounds/bet.wav");
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -889,7 +889,7 @@ public class BlackjackGUI extends JFrame {
         cardPanel.add(hiddenLabel, BorderLayout.CENTER);
 
         // Location of custom background
-        ImageIcon cardBackground = new ImageIcon("img/card-background2.jpeg");
+        ImageIcon cardBackground = new ImageIcon("resources/img/card-background2.jpeg");
         hiddenLabel.setIcon(cardBackground);
 
         return cardPanel;
