@@ -53,6 +53,13 @@ public class BlackJackMenu extends JFrame {
             System.err.println("Error loading background image: " + e.getMessage());
             backgroundLoaded = false;
         }
+          
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                titleX = getWidth(); // Reset to full width on resize
+            }
+        });
         
         // Custom image icon
         ImageIcon icon = new ImageIcon("img/black.png");
@@ -97,8 +104,35 @@ public class BlackJackMenu extends JFrame {
         mainTitleLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 60));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
+        mainTitleLabel.setOpaque(false);
+        mainTitleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+
+        JLabel profileLabel = new JLabel("👤 Guest");
+        profileLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        profileLabel.setForeground(Color.WHITE);
+
+        String[] languages = {"🇬🇧", "🇪🇸", "🇫🇷", "🇮🇪", "🇭🇺", "🇸🇦"};
+        JComboBox<String> languageBox = new JComboBox<>(languages);
+        languageBox.setSelectedIndex(language); // sync with current language
+        languageBox.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+
+        languageBox.addActionListener(e -> {
+            language = languageBox.getSelectedIndex();
+            refreshMenu(); // Refresh menu to apply new language
+        });
+
+        topRightBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        topRightBar.setOpaque(false);
+        topRightBar.add(profileLabel);
+        topRightBar.add(languageBox);
+
     
         startTitleAnimation();
+
+        SwingUtilities.invokeLater(() -> {
+            titleX = getWidth(); // Ensure width is valid after window is visible
+            startTitleAnimation();
+        });
     }
     
 

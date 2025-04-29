@@ -3,12 +3,22 @@ package main.view;
 import main.controller.AchievementManager;
 import main.model.Badge;
 
+
 import javax.swing.*;
 import java.awt.*;
 
 import static main.view.BlackJackMenu.language;
 
 public class AchievementsWindow extends JFrame {
+    private static AchievementsWindow instance;
+    private JPanel gridPanel;
+
+    public static AchievementsWindow getInstance() {
+        if (instance == null) {
+            instance = new AchievementsWindow();
+        }
+        return instance;
+    }
 
     public AchievementsWindow() {
         setTitle(Texts.achievements[language]);
@@ -34,6 +44,7 @@ public class AchievementsWindow extends JFrame {
         // Badge grid panel
         JPanel gridPanel = new JPanel(new GridLayout(0, 3, 20, 20)); // 3 badges per row
         gridPanel.setOpaque(false);
+        refreshBadges();
 
         for (Badge badge : Badge.values()) {
             boolean unlocked = AchievementManager.getInstance().isUnlocked(badge);
@@ -65,6 +76,19 @@ public class AchievementsWindow extends JFrame {
 
         backgroundPanel.add(glassPanel, BorderLayout.CENTER);
         setContentPane(backgroundPanel);
+
+        instance = this;
+    }
+
+    public void refreshBadges() {
+        if (gridPanel == null) return;
+        gridPanel.removeAll();
+        for (Badge badge : Badge.values()) {
+            boolean unlocked = AchievementManager.getInstance().isUnlocked(badge);
+            gridPanel.add(createBadgePanel(badge, unlocked));
+        }
+        gridPanel.revalidate();
+        gridPanel.repaint();
     }
 
     private JPanel createBadgePanel(Badge badge, boolean unlocked) {

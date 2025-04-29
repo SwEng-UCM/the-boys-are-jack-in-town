@@ -16,6 +16,7 @@ public class Player {
     private int balance; // Player's balance (chips/money)
     private int currentBet; // Player's current bet
     private int currentScore;
+    private boolean hasStood; // Indicates if the player has stood in the current round
 
     /**
      * Constructs a player with a given name and initial balance.
@@ -233,6 +234,19 @@ public class Player {
     public void setScore(int current){
         this.currentScore = current;
     }
+
+    public void addToBalance(int amount) {
+        this.balance += amount;
+    }
+
+    public boolean hasStood() {
+        return hasStood;
+    }
+    
+    public void setStood(boolean stood) {
+        this.hasStood = stood;
+    }
+    
 
     @Override
     public String toString() {

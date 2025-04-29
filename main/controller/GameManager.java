@@ -48,6 +48,8 @@ public class GameManager {
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
     private BlackjackClient client;
 
+    private CommandManager commandManager = new CommandManager();
+
     private GameManager() {
         this.players = new ArrayList<>();
         this.dealer = new Player("Dealer", INITIAL_BET);
@@ -115,32 +117,43 @@ public class GameManager {
     }
 
     public void startNextPlayerTurn() {
+        // Do NOT increment immediately — just prompt current player
+        if (currentPlayerIndex == 0) {
+            int dealerBet = bettingManager.getDealerBalance() / 10;
+            bettingManager.placeDealerBet(dealerBet);
+        }
+    
         if (currentPlayerIndex < players.size()) {
             gui.promptPlayerAction(players.get(currentPlayerIndex));
-            if (currentPlayerIndex == 0) {
-                int dealerBet = bettingManager.getDealerBalance() / 10;
-                bettingManager.placeDealerBet(dealerBet);
-            }
+        } else {
+            gui.updateGameMessage("Dealer's turn!");
+            dealerTurn();
         }
-        
     }
+    
+    
     
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
             Player currentPlayer = players.get(currentPlayerIndex);
-            currentPlayer.receiveCard(handleSpecialCard(deck.dealCard(), currentPlayer));
+            
+            // NEW: Use Command pattern
+            HitCommand hitCommand = new HitCommand(currentPlayer, this);
+            commandManager.executeCommand(hitCommand);
+    
             gui.updateGameState(players, dealer, gameOver, false);
     
             if (currentPlayer.calculateScore() > 21) {
-                checkPlayerBust(); // already moves to next player
+                checkPlayerBust();
             } else {
-                // 👇 Needed! Re-prompt the same player if still in the round
                 gui.promptPlayerAction(currentPlayer);
             }
+    
             AudioManager.getInstance().playSoundEffect("/resources/sounds/card-sounds.wav");
         }
     }
+    
     
 
     public void handlePlayerStand() {
@@ -359,10 +372,12 @@ public class GameManager {
     public boolean isCurrentPlayerStillInRound() {
         Player currentPlayer = getCurrentPlayer();
         if (currentPlayer == null) {
-            return false; // If no player is available
+            return false;
         }
-        return currentPlayer.calculateScore() <= 21; // Player is still in the round if they haven't busted
+        // Player is out of the round if they stood or busted
+        return !currentPlayer.hasStood() && currentPlayer.calculateScore() <= 21;
     }
+    
 
     /**
      * Handles special cards when drawn.
@@ -635,4 +650,32 @@ public class GameManager {
             this.client = client;
         }
 
+
+        public void undoHit(Player player, Card card) {
+            player.getHand().remove(card);
+            gui.updateGameState(players, dealer, gameOver, false); // refresh GUI
+        }
+        
+        public void undoBet(Player player, int amount) {
+            player.addToBalance(amount); // use new method
+            player.setCurrentBet(player.getCurrentBet() - amount);
+            gui.updateGameState(players, dealer, gameOver, false); // refresh GUI
+        }
+
+        public Card hit(Player player) {
+            Card drawnCard = deck.dealCard();
+            Card processedCard = handleSpecialCard(drawnCard, player);
+            player.receiveCard(processedCard);
+            return processedCard;
+        }
+
+        public CommandManager getCommandManager() {
+            return commandManager;
+        }
+        
+        public void advanceToNextPlayer() {
+            currentPlayerIndex++;
+        }
+        
+        
 }
