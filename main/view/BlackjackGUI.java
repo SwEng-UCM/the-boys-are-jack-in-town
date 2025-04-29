@@ -5,6 +5,7 @@ import main.controller.GameState;
 import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
+import main.controller.BetCommand;
 import main.controller.BettingManager;
 import main.controller.AchievementManager;
 
@@ -57,6 +58,7 @@ public class BlackjackGUI extends JFrame {
     private boolean backgroundLoaded = false;
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
+    private JButton undoButton;
 
 
     private JLabel connectionStatusLabel;
@@ -290,6 +292,53 @@ public class BlackjackGUI extends JFrame {
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
     
+// Styled Undo button with yellow theme
+undoButton = new JButton();
+undoButton.setToolTipText("Undo last action");
+undoButton.setIcon(new ImageIcon(
+    new ImageIcon("img/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+);
+undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
+undoButton.setBorderPainted(false);
+undoButton.setFocusPainted(false);
+undoButton.setContentAreaFilled(false);
+undoButton.setOpaque(false);
+
+// Custom paint for yellow gradient style
+undoButton = new JButton() {
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
+        Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
+        GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
+
+        g2.setPaint(gp);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
+
+        // Optional: shadow
+        g2.setColor(new Color(0, 0, 0, 40));
+        g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
+
+        super.paintComponent(g);
+        g2.dispose();
+    }
+};
+undoButton.setToolTipText("Undo last action");
+undoButton.setIcon(new ImageIcon(
+    new ImageIcon("img/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+);
+undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+undoButton.setFocusPainted(false);
+undoButton.setBorderPainted(false);
+undoButton.setContentAreaFilled(false);
+undoButton.setOpaque(false);
+
+undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
+
+
         // Pause button setup
         pauseButton = new JButton();
         pauseButton.setPreferredSize(new Dimension(50, 50));
@@ -399,6 +448,7 @@ public class BlackjackGUI extends JFrame {
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
+        buttonPanel.add(undoButton);
     }
    
     private void attachEventListeners() {
@@ -607,7 +657,9 @@ public class BlackjackGUI extends JFrame {
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
-            if (betAmount > 0 && player.placeBet(betAmount)) {
+            if (betAmount > 0) {
+                BetCommand betCommand = new BetCommand(player, betAmount, gameManager);
+                gameManager.getCommandManager().executeCommand(betCommand);
                 gameManager.getBettingManager().getPlayerBalance(player.getName());
                 setGameButtonsEnabled(true);
                 betLabel.setText("Bet: $" + betAmount);
@@ -1014,23 +1066,26 @@ public class BlackjackGUI extends JFrame {
         return wildValue;
     }
  
- public void promptPlayerAction(Player player) {
-    if (!gameManager.isCurrentPlayerStillInRound()) {
-        if (gameManager.hasNextPlayer()) {
-            nextTurn();
-        } else {
-            gameManager.dealerTurn();
+    public void promptPlayerAction(Player player) {
+        if (!gameManager.isCurrentPlayerStillInRound()) {
+            gameManager.advanceToNextPlayer(); // ✅ Advance the index here
+            if (gameManager.hasNextPlayer()) {
+                gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
+            } else {
+                gameManager.dealerTurn(); // No players left
+            }
+            return; // 🔒 Important: prevent further code from running
         }
-    } else {
+    
         setGameButtonsEnabled(true);
         updateGameMessage(player.getName() + "'s turn");
-
+    
         // ✅ Only allow betting if game is not running
         if (!gameManager.isGameRunning()) {
             enableBetting();
         }
     }
-}
+    
 
 
     public void updatePlayerPanels() {

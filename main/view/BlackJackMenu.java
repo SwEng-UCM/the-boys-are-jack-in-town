@@ -59,10 +59,6 @@ public class BlackJackMenu extends JFrame {
             backgroundLoaded = false;
         }
         
-        SwingUtilities.invokeLater(() -> {
-            titleX = getWidth(); // Ensure width is valid after window is visible
-            startTitleAnimation();
-        });
     
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -133,9 +129,12 @@ public class BlackJackMenu extends JFrame {
         topRightBar.add(profileLabel);
         topRightBar.add(languageBox);
 
-
-    
         startTitleAnimation();
+
+        SwingUtilities.invokeLater(() -> {
+            titleX = getWidth(); // Ensure width is valid after window is visible
+            startTitleAnimation();
+        });
     }
     
     private void layoutComponents() {

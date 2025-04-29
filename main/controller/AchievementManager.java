@@ -180,4 +180,9 @@ public class AchievementManager {
     public Set<Badge> getUnlockedBadges() {
         return Collections.unmodifiableSet(unlockedBadges);
     }
+
+    public void revoke(Badge badge) {
+        unlockedBadges.remove(badge);
+    }
+    
 }
