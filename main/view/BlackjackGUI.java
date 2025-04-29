@@ -485,7 +485,7 @@ playerBetLabels.put(player, betLabel);
     }
 
     public void showGameOverMessage(String message) {
-        int option = JOptionPane.showOptionDialog(this, message, "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
+        int option = JOptionPane.showOptionDialog(this, message, Texts.gameOverTitle[language], JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
         if (option == JOptionPane.YES_OPTION) {
             restartGame();
         } else {
@@ -578,7 +578,7 @@ playerBetLabels.put(player, betLabel);
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
             }
-            dealerScoreLabel.setText("Dealer Score: " + dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": "+dealer.calculateScore());
         } else {
             // Show one card face-up and a hidden card
             if (!dealer.getHand().isEmpty()) {
