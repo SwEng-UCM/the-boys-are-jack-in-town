@@ -95,6 +95,7 @@ public class BlackJackMenu extends JFrame {
         optionsButton.setIcon(loadIcon("resources/icons/options.png", 32, 32));
     
         loadGameButton = createStyledButton("Load Game");
+        loadGameButton.setIcon(loadIcon("resources/icons/loadgame.png", 32, 32));
         
     
         exitButton = createStyledButton(Texts.exit[language]);
