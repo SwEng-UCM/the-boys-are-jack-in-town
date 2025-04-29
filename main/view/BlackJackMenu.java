@@ -18,7 +18,7 @@ import main.model.HardDifficulty;
 import static main.view.Languages.*;
 
 public class BlackJackMenu extends JFrame {
-    private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton;
+    private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton, multiplayerButton;
     private JLabel imageLabel, mainTitleLabel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
@@ -64,23 +64,23 @@ public class BlackJackMenu extends JFrame {
 
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
-        startButton.setIcon(loadIcon("resources/img/icons/start.png", 32, 32));
+        startButton.setIcon(loadIcon("resources/icons/start.png", 32, 32));
 
         multiplayerButton = createStyledButton("Multiplayer");
         multiplayerButton.setIcon(loadIcon("resources/icons/multiplayer.png", 32, 32));
     
         instructionsButton = createStyledButton(Texts.instructions[language]);
-        instructionsButton.setIcon(loadIcon("resources/img/icons/instructions.png", 32, 32));
+        instructionsButton.setIcon(loadIcon("resources/icons/instructions.png", 32, 32));
     
         optionsButton = createStyledButton(Texts.options[language]);
-        optionsButton.setIcon(loadIcon("resources/img/icons/options.png", 32, 32));
+        optionsButton.setIcon(loadIcon("resources/icons/options.png", 32, 32));
     
         loadGameButton = createStyledButton(Texts.loadGame[language]);
-        loadGameButton.setIcon(loadIcon("resources/img/icons/folder.png", 32, 32));
+        loadGameButton.setIcon(loadIcon("resources/icons/loadgame.png", 32, 32));
 
     
         exitButton = createStyledButton(Texts.exit[language]);
-        exitButton.setIcon(loadIcon("resources/img/icons/exit.png", 32, 32));
+        exitButton.setIcon(loadIcon("resources/icons/exit.png", 32, 32));
     
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("resources/img/blackjack.png");
@@ -136,6 +136,7 @@ public class BlackJackMenu extends JFrame {
     
         buttonPanel.add(startButton, gbc);
         buttonPanel.add(loadGameButton, gbc);
+        buttonPanel.add(multiplayerButton, gbc);
         buttonPanel.add(instructionsButton, gbc);
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
