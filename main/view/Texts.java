@@ -270,6 +270,16 @@ public class Texts {
             "بلاك جاك 2: الأولاد عادوا إلى المدينة.", // Arabic 🇸🇦
             "Blackjack 2: Les garçons sont de retour en ville!!" // French 🇫🇷
     };
+    public static String[] multiplayer = {
+        "Multiplayer",                        // 🇬🇧 English
+        "Multijugador",                      // 🇪🇸 Spanish
+        "Ilbhliantach",                      // 🇮🇪 Irish
+        "Többjátékos mód",                   // 🇭🇺 Hungarian
+        "متعدد اللاعبين",                   // 🇸🇦 Arabic
+        "Multijoueur"                        // 🇫🇷 French
+    };
+    
+    
  
 
   
