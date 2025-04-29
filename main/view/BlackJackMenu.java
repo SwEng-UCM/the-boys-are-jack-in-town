@@ -340,14 +340,15 @@ public class BlackJackMenu extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(320, 80));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
+        button.setHorizontalAlignment(SwingConstants.CENTER);
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15); // space between icon and text
-
+        button.setIconTextGap(15);
+    
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR)); // 🔥 Make cursor a hand when hovering
     
         return button;
     }
+    
 
     private ImageIcon loadIcon(String path, int width, int height) {
         try {
