@@ -2,6 +2,7 @@
 
 package main.view;
 
+import main.controller.BlackjackClient;
 import main.controller.GameManager;
 import javax.swing.*;
 import java.awt.*;
@@ -193,7 +194,75 @@ public class BlackJackMenu extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
             );
         });
-        
+
+        multiplayerButton.addActionListener(e -> {
+            // Show connection dialog
+            JPanel connectionPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+            JTextField ipField = new JTextField("localhost");
+            JTextField portField = new JTextField("12345");
+
+            connectionPanel.add(new JLabel("Server IP:"));
+            connectionPanel.add(ipField);
+            connectionPanel.add(new JLabel("Port:"));
+            connectionPanel.add(portField);
+
+            int result = JOptionPane.showConfirmDialog(
+                    this,
+                    connectionPanel,
+                    "Connect to Server",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (result == JOptionPane.OK_OPTION) {
+                try {
+                    String serverIP = ipField.getText();
+                    int port = Integer.parseInt(portField.getText());
+
+                    // Show connecting message
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Attempting to connect to server...",
+                            "Connecting",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    // Try to connect in a separate thread
+                    new Thread(() -> {
+                        try {
+                            BlackjackClient client = new BlackjackClient();
+                            client.connect(serverIP, port);
+                            GameManager gameManager = GameManager.getInstance();
+                            gameManager.setClient(client); // Connect client to game manager
+
+                            SwingUtilities.invokeLater(() -> {
+                                BlackjackGUI gui = new BlackjackGUI(gameManager);
+                                gui.setVisible(true);
+                                dispose(); // Close the menu
+                            });
+                        } catch (IOException ex) {
+                            SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(
+                                        this,
+                                        "Connection failed: " + ex.getMessage(),
+                                        "Connection Error",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                            });
+                        }
+                    }).start();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Invalid port number",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+
 
         exitButton.addActionListener(e -> System.exit(0));
 
