@@ -198,7 +198,7 @@ public class GameManager {
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {
-            gui.updateGameMessage("Dealer busts!");
+            gui.updateGameMessage(Texts.dealerBusts[language]);
             for (Player player : players) {
                 if (player.calculateScore() <= 21) {
                     int payout = (int)(player.getCurrentBet() * difficultyStrategy.getPayoutMultiplier());
@@ -217,7 +217,7 @@ public class GameManager {
                 int payout = (int)(basePayout * difficultyStrategy.getPayoutMultiplier());
     
                 if (playerScore > 21) {
-                    gui.updateGameMessage(player.getName() + " busts! Dealer wins.");
+                    gui.updateGameMessage(player.getName() + " busts! "+Texts.dealerWins[language]);
                     player.loseBet();
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AudioManager.getInstance().playSoundEffect("/resources/sounds/lose.wav");
@@ -233,7 +233,7 @@ public class GameManager {
                     }
                     AudioManager.getInstance().playSoundEffect("/resources/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
-                    gui.updateGameMessage(player.getName() + " loses! Dealer wins.");
+                    gui.updateGameMessage(player.getName() + " loses! "+ Texts.dealerWins[language]);
                     player.loseBet();
                     bettingManager.dealerWins(player.getName());
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
@@ -259,7 +259,7 @@ public class GameManager {
     private void checkGameOver() {
         for (Player player : players) {
             if (player.getBalance() <= 0) {
-                gui.showGameOverMessage("Game Over! " + player.getName() + " ran out of money! 😢");
+                gui.showGameOverMessage(Texts.gameOverTitle[language]+ player.getName() + " ran out of money! \uD83D\uDE22");
                 return;
             }
         }

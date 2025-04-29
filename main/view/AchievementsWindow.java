@@ -6,10 +6,12 @@ import main.model.Badge;
 import javax.swing.*;
 import java.awt.*;
 
+import static main.view.BlackJackMenu.language;
+
 public class AchievementsWindow extends JFrame {
 
     public AchievementsWindow() {
-        setTitle("Achievements");
+        setTitle(Texts.achievements[language]);
         setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -77,7 +79,7 @@ public class AchievementsWindow extends JFrame {
         JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel titleLabel = new JLabel(badge.title, SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(badge.getTitle(), SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
         titleLabel.setForeground(unlocked ? Color.WHITE : Color.WHITE);
 

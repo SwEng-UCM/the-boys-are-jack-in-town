@@ -380,7 +380,7 @@ public class BlackjackGUI extends JFrame {
         betField.setPreferredSize(new Dimension(350, 40));
         betField.setMaximumSize(new Dimension(300, 30));
         betField.setFont(new Font("Arial", Font.PLAIN, 24));
-        enterBetLabel = new JLabel("Enter Bet");
+        enterBetLabel = new JLabel(Texts.enterBet[language]);
         enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
         enterBetLabel.setForeground(Color.WHITE);
         betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
@@ -614,9 +614,9 @@ public class BlackjackGUI extends JFrame {
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-                JOptionPane.showMessageDialog(this, "Bet Confirmed: $" + betAmount, "Bet", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, Texts.betConfirmed[language]+" $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
-                dealerBalanceLabel.setText("Balance: $" + gameManager.getDealerBalance());
+                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
                 playersPanel.updatePanel(gameManager.getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
@@ -660,7 +660,7 @@ public class BlackjackGUI extends JFrame {
     }
 
     public void showGameOverMessage(String message) {
-        int option = JOptionPane.showOptionDialog(this, message, "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
+        int option = JOptionPane.showOptionDialog(this, message, Texts.gameOverTitle[language], JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
         if (option == JOptionPane.YES_OPTION) {
             restartGame();
         } else {
@@ -673,7 +673,7 @@ public class BlackjackGUI extends JFrame {
         gameManager.pauseGame();
         setGameButtonsEnabled(false);
     
-        JDialog pauseDialog = new JDialog(this, Texts.pauseTitle[language], true);
+        JDialog pauseDialog = new JDialog(this, Texts.PAUSE[language], true);
         pauseDialog.setSize(400, 550);
         pauseDialog.setLocationRelativeTo(this);
         pauseDialog.setUndecorated(true);
@@ -848,7 +848,7 @@ public class BlackjackGUI extends JFrame {
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
             }
-            dealerScoreLabel.setText("Dealer Score: " + dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": "+dealer.calculateScore());
         } else {
             // Show one card face-up and a hidden card
             if (!dealer.getHand().isEmpty()) {
@@ -868,7 +868,7 @@ public class BlackjackGUI extends JFrame {
     private void nextTurn() {
         if (gameManager.hasNextPlayer()) {
             gameManager.startNextPlayerTurn();
-            updateGameMessage(gameManager.getCurrentPlayer().getName() + "'s turn");
+            updateGameMessage(gameManager.getCurrentPlayer().getName() + Texts.turns[language]);
             enableBetting();
         } else {
             gameManager.dealerTurn();
@@ -1023,7 +1023,8 @@ public class BlackjackGUI extends JFrame {
         }
     } else {
         setGameButtonsEnabled(true);
-        updateGameMessage(player.getName() + "'s turn");
+//        updateGameMessage(player.getName() + "'s turn");
+        updateGameMessage(player.getName() + Texts.turns[language]);
 
         // ✅ Only allow betting if game is not running
         if (!gameManager.isGameRunning()) {
@@ -1042,7 +1043,7 @@ public class BlackjackGUI extends JFrame {
 
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
-            JLabel betLabel = new JLabel("Current Bet: $" + player.getCurrentBet());
+            JLabel betLabel = new JLabel( Texts.bet[language]+" $" + player.getCurrentBet());
     
             // ✅ White text for visibility
             scoreLabel.setForeground(Color.WHITE);
