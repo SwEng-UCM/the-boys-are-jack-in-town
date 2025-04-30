@@ -363,33 +363,6 @@ public class GameState implements Serializable {
      */
     public String getCurrentDifficulty() { return currentDifficulty; }
 
-    // === toString ===
-
-    /**
-     * Returns a string representation of the current game state.
-     * Includes details such as players, dealer, deck size, balances, bets, scores, and difficulty.
-     *
-     * @return a string representation of the game state
-     */
-    @Override
-    public String toString() {
-        return String.format("""
-                === Game State ===
-                Players: %s
-                Dealer: %s
-                Deck Size: %d
-                Player Balances: %s
-                Current Bets: %s
-                Player Scores: %s
-                Dealer Balance: %d
-                Dealer Bet: %d
-                Dealer Hand: %s
-                Current Difficulty: %s
-                """, players, dealer, deck.getCards().size(),
-                playerBalances, currentBets, playerScores,
-                dealerBalance, dealerBet, dealerHand, currentDifficulty);
-    }
-
     /**
      * Restores the game state to the given GameManager, including players, dealer, deck, and difficulty.
      * Initializes the betting manager with the current balances and bets.
