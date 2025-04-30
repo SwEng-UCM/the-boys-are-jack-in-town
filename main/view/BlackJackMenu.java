@@ -93,7 +93,7 @@ public class BlackJackMenu extends JFrame {
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("resources/img/blackjack.png");
         Image originalImage = originalIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(500, 300, Image.SCALE_SMOOTH);
+        Image resizedImage = originalImage.getScaledInstance(400, 219, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
         imageLabel = new JLabel(resizedIcon);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -144,12 +144,15 @@ public class BlackJackMenu extends JFrame {
         // Center content panel
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     
         // Image panel
-        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel imagePanel = new JPanel();
         imagePanel.setOpaque(false);
-        imagePanel.add(imageLabel);
+        imagePanel.setLayout(new BorderLayout());
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, -20, 0)); // move image upward
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+
     
         // Title animation panel
         JPanel titlePanel = new JPanel(null);
@@ -168,7 +171,7 @@ public class BlackJackMenu extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(15, 0, 15, 0);
+        gbc.insets = new Insets(2, 0, 2, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
     
         buttonPanel.add(startButton, gbc);
@@ -197,7 +200,7 @@ public class BlackJackMenu extends JFrame {
             }
         };
         glassPanel.setOpaque(false);
-        glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        glassPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 20, 25));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
     
         contentPanel.add(imagePanel, BorderLayout.NORTH);
