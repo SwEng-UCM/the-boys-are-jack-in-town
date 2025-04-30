@@ -62,7 +62,7 @@ public class GameFlowController {
     
         SwingUtilities.invokeLater(() -> {
             gui.setGameButtonsEnabled(true);
-            gameManager.startNextPlayerTurn(); 
+            gui.enableBetting();  
         });
         
     }

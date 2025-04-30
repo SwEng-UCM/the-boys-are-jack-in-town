@@ -22,7 +22,7 @@ public class PausePanel {
     }
 
     public void showPauseMenu() {
-        gameManager.pauseGame();
+        gameManager.getGameFlowController().pauseGame();
         blackjackGUI.setGameButtonsEnabled(false);
 
         JDialog pauseDialog = new JDialog(parent, Texts.PAUSE[language], true);
@@ -158,7 +158,7 @@ public class PausePanel {
     }
 
     private void resumeGame() {
-        gameManager.resumeGame();
+        gameManager.getGameFlowController().resumeGame();
         blackjackGUI.setGameButtonsEnabled(true);
     }
 
