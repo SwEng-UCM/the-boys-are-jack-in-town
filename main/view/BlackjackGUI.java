@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,20 +34,34 @@ public class BlackjackGUI extends JFrame {
     private int cardWidth = (int) (gameWidth * 0.10);
     private int cardHeight = (int) (gameHeight * 0.22);
     private int cardFontSize = gameWidth / 60;
-    private JPanel mainPanel, dealerPanel, dealerScorePanel, buttonPanel, betPanel;
-    private JButton hitButton, standButton, newGameButton, placeBetButton;
-    private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
-    private JTextField betField;
-    private final GameManager gameManager;
+    JPanel mainPanel;
+    JPanel dealerPanel;
+    JPanel dealerScorePanel;
+    JPanel buttonPanel;
+    JPanel betPanel;
+    JButton hitButton;
+    JButton standButton;
+    JButton newGameButton;
+    JButton placeBetButton;
+    JLabel gameMessageLabel;
+    JLabel dealerScoreLabel;
+    JLabel dealerBalanceLabel;
+    JLabel balanceLabel;
+    JLabel dealerBetLabel;
+    JLabel betLabel;
+    JLabel specialMessageLabel;
+    JLabel enterBetLabel;
+    JTextField betField;
+    final GameManager gameManager;
     private final BettingManager bettingManager;
-    private JButton pauseButton;
+    JButton pauseButton;
     private JPopupMenu pauseMenu;
-    private PlayersPanel playersPanel;
-    private BufferedImage backgroundImage;
-    private boolean backgroundLoaded = false;
-    private JScrollPane scrollPane;
-    private JPanel topRightPanel;
-    private JButton undoButton;
+    PlayersPanel playersPanel;
+    private static BufferedImage backgroundImage;
+    private static boolean backgroundLoaded = false;
+    JScrollPane scrollPane;
+    JPanel topRightPanel;
+    JButton undoButton;
     private JLabel connectionStatusLabel;
     private boolean isConnected = false;
     private final Map<String, JLabel> playerBalanceLabels = new HashMap<>();
@@ -77,10 +89,14 @@ public class BlackjackGUI extends JFrame {
         ImageIcon icon = new ImageIcon("resources/img/black.png");
         setIconImage(icon.getImage());
 
+        new GUIComponentInitializer(this).initializeComponents();
+        new GUILayoutBuilder(this).layoutComponents();
+        new GUIEventBinder(this).attachEventListeners();
+
         // Correct initialization sequence
-        initializeComponents();  // Create ALL components first
-        layoutComponents();      // THEN arrange components
-        attachEventListeners();  // FINALLY setup interactions
+//        initializeComponents();  // Create ALL components first
+//        layoutComponents();      // THEN arrange components
+//        attachEventListeners();  // FINALLY setup interactions
 
         setVisible(true);        // Make visible LAST
         AudioManager.getInstance().playBackgroundMusic();
@@ -847,7 +863,7 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
-    private JButton createStyledButton(String text) {
+    JButton createStyledButton(String text) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -881,7 +897,7 @@ public class BlackjackGUI extends JFrame {
         return button;
     }
 
-    private JLabel createStyledLabel(String text) {
+    JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Segoe UI", Font.BOLD, 26));
         label.setForeground(Color.WHITE);
@@ -989,7 +1005,7 @@ public class BlackjackGUI extends JFrame {
         playersPanel.repaint();
     }
 
-    private class BackgroundPanel extends JPanel {
+    static class BackgroundPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -1002,4 +1018,14 @@ public class BlackjackGUI extends JFrame {
             }
         }
     }
+
+    public int getGameWidth(){
+        return gameWidth;
+    }
+
+    public int getGameHeight(){
+        return gameHeight;
+    }
+
+
 }
