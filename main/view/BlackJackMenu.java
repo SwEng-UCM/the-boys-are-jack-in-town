@@ -296,8 +296,6 @@ public class BlackJackMenu extends JFrame {
             }
         });
 
-
-
         exitButton.addActionListener(e -> System.exit(0));
 
         optionsButton.addActionListener(e -> {
@@ -345,7 +343,6 @@ public class BlackJackMenu extends JFrame {
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
         button.setIconTextGap(15); // space between icon and text
 
-    
         return button;
     }
 

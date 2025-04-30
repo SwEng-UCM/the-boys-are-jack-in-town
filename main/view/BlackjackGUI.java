@@ -27,7 +27,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
- import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +37,8 @@ import static main.view.BlackJackMenu.language;
 
 public class BlackjackGUI extends JFrame {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int gameHeight = (int) screenSize.getHeight();
-    private int gameWidth = (int)screenSize.getWidth();
+    private final int gameHeight = (int) screenSize.getHeight();
+    private final int gameWidth = (int) screenSize.getWidth();
     private int buttonWidth = (int) (gameWidth * 0.15);
     private int buttonHeight = (int) (gameHeight * 0.08);
     private int buttonFontSize = gameWidth / 60;
@@ -49,8 +49,8 @@ public class BlackjackGUI extends JFrame {
     private JButton hitButton, standButton, newGameButton, placeBetButton;
     private JLabel gameMessageLabel, dealerScoreLabel, dealerBalanceLabel, balanceLabel, dealerBetLabel, betLabel, specialMessageLabel, enterBetLabel;
     private JTextField betField;
-    private GameManager gameManager;
-    private BettingManager bettingManager;
+    private final GameManager gameManager;
+    private final BettingManager bettingManager;
     private JButton pauseButton;
     private JPopupMenu pauseMenu;
     private PlayersPanel playersPanel;
@@ -59,17 +59,12 @@ public class BlackjackGUI extends JFrame {
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
     private JButton undoButton;
-
-
     private JLabel connectionStatusLabel;
     private boolean isConnected = false;
-    
-
 
     private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
     private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
     private static BlackjackGUI instance;
-
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -80,7 +75,6 @@ public class BlackjackGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-
         try {
             backgroundImage = ImageIO.read(getClass().getResource("/resources/img/backgroundimage.png"));
             backgroundLoaded = true;
@@ -88,17 +82,16 @@ public class BlackjackGUI extends JFrame {
             System.err.println("Error loading background image: " + e.getMessage());
             backgroundLoaded = false;
         }
-        
         gameManager.setGui(this);
-    
+
         ImageIcon icon = new ImageIcon("resources/img/black.png");
         setIconImage(icon.getImage());
-    
+
         // Correct initialization sequence
         initializeComponents();  // Create ALL components first
         layoutComponents();      // THEN arrange components
         attachEventListeners();  // FINALLY setup interactions
-        
+
         setVisible(true);        // Make visible LAST
         AudioManager.getInstance().playBackgroundMusic();
     }
@@ -173,16 +166,14 @@ public class BlackjackGUI extends JFrame {
 
         // Bottom section (players + bet panel)
         JPanel southContainer = new JPanel(new BorderLayout());
-        southContainer.setPreferredSize(new Dimension(gameWidth, (int) (gameHeight/2.4))); // Limit height
+        southContainer.setPreferredSize(new Dimension(gameWidth, (int) (gameHeight / 2.4))); // Limit height
         southContainer.setBackground(new Color(0, 0, 0, 0)); // Transparent
-
         southContainer.setOpaque(false);
-
 
         JPanel playersContainer = new JPanel(new BorderLayout());
         playersContainer.setPreferredSize(new Dimension(
-            Toolkit.getDefaultToolkit().getScreenSize().width,
-            300
+                Toolkit.getDefaultToolkit().getScreenSize().width,
+                300
         ));
         playersContainer.setOpaque(false);
         playersContainer.add(scrollPane, BorderLayout.CENTER);
@@ -198,7 +189,6 @@ public class BlackjackGUI extends JFrame {
 
         add(mainPanel);
         gameManager.startNewGame();
-        // this is where the game is being started //
     }
 
     private void initializeComponents() {
@@ -222,7 +212,7 @@ public class BlackjackGUI extends JFrame {
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         betLabel = createStyledLabel(Texts.bet[language] + " $0");
         balanceLabel = createStyledLabel(Texts.balance[language] + " $1000");
-        
+
 
         // Set properties for main components
         mainPanel.setBackground(new Color(0, 0, 0, 0));
@@ -233,17 +223,15 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.setBackground(new Color(0, 0, 0, 0));
         betPanel.setBackground(new Color(0, 0, 0, 0));
         buttonPanel.setBackground(new Color(0, 0, 0, 0));
-
-
         playersPanel.setOpaque(false);
         dealerPanel.setOpaque(false);
         buttonPanel.setOpaque(false);
-    
+
         // Get screen dimensions
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width;
         int screenHeight = screenSize.height;
-    
+
         // Calculate sizes
         buttonWidth = (int) (screenWidth * 0.15);
         buttonHeight = (int) (screenHeight * 0.08);
@@ -251,34 +239,33 @@ public class BlackjackGUI extends JFrame {
         cardWidth = (int) (screenWidth * 0.09);
         cardHeight = (int) (screenHeight * 0.19);
         cardFontSize = screenWidth / 60;
-    
+
         // Initialize buttons
         hitButton = createStyledButton(Texts.guiHit[language]);
         standButton = createStyledButton(Texts.guiStand[language]);
         newGameButton = createStyledButton(Texts.guiNewGame[language]);
         placeBetButton = createStyledButton(Texts.placeBet[language]);
-    
+
         // Initialize labels
         gameMessageLabel = new JLabel(Texts.welcomeMessage[language], SwingConstants.CENTER);
         gameMessageLabel.setFont(new Font("Arial", Font.BOLD, 26));
         gameMessageLabel.setForeground(Color.WHITE);
-    
+
         specialMessageLabel = new JLabel("", SwingConstants.CENTER);
         specialMessageLabel.setFont(new Font("Arial", Font.BOLD, 32));
         specialMessageLabel.setForeground(Color.WHITE);
-    
+
         // Dealer score panel
         dealerScorePanel = new JPanel(new GridLayout(2, 1));
         dealerScorePanel.setOpaque(false);
         playersPanel.setBackground(new Color(0, 0, 0, 0)); // Fully transparent
 
 
-        
         // Dealer labels
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
         dealerBalanceLabel = createStyledLabel(Texts.dealerBalance[language] + " $1000");
         dealerBetLabel = createStyledLabel(Texts.dealerBet[language] + " $0");
-    
+
         // Assemble dealer score panel
         JPanel scoreRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
         scoreRow.add(dealerScoreLabel);
@@ -291,53 +278,51 @@ public class BlackjackGUI extends JFrame {
 
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
-    
-// Styled Undo button with yellow theme
-undoButton = new JButton();
-undoButton.setToolTipText("Undo last action");
-undoButton.setIcon(new ImageIcon(
-    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
-);
-undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
-undoButton.setBorderPainted(false);
-undoButton.setFocusPainted(false);
-undoButton.setContentAreaFilled(false);
-undoButton.setOpaque(false);
 
-// Custom paint for yellow gradient style
-undoButton = new JButton() {
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Styled Undo button with yellow theme
+        undoButton = new JButton();
+        undoButton.setToolTipText("Undo last action");
+        undoButton.setIcon(new ImageIcon(
+                new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+        );
+        undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
+        undoButton.setBorderPainted(false);
+        undoButton.setFocusPainted(false);
+        undoButton.setContentAreaFilled(false);
+        undoButton.setOpaque(false);
 
-        Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
-        Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
-        GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
+        // Custom paint for yellow gradient style
+        undoButton = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setPaint(gp);
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
+                Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
+                Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
+                GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
 
-        // Optional: shadow
-        g2.setColor(new Color(0, 0, 0, 40));
-        g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
+                g2.setPaint(gp);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
 
-        super.paintComponent(g);
-        g2.dispose();
-    }
-};
-undoButton.setToolTipText("Undo last action");
-undoButton.setIcon(new ImageIcon(
-    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
-);
-undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-undoButton.setFocusPainted(false);
-undoButton.setBorderPainted(false);
-undoButton.setContentAreaFilled(false);
-undoButton.setOpaque(false);
+                // Optional: shadow
+                g2.setColor(new Color(0, 0, 0, 40));
+                g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
 
-undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
-
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        undoButton.setToolTipText("Undo last action");
+        undoButton.setIcon(new ImageIcon(
+                new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+        );
+        undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        undoButton.setFocusPainted(false);
+        undoButton.setBorderPainted(false);
+        undoButton.setContentAreaFilled(false);
+        undoButton.setOpaque(false);
+        undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
 
         // Pause button setup
         pauseButton = new JButton();
@@ -350,46 +335,46 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         pauseButton.setContentAreaFilled(false);
         pauseButton.setOpaque(true);
         pauseButton.setFocusPainted(false);
-    
+
         // Pause button hover effects
         pauseButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 pauseButton.setBackground(new Color(255, 140, 0));
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 pauseButton.setBackground(new Color(255, 165, 0));
             }
         });
-    
+
         // Pause menu setup
         pauseMenu = new JPopupMenu();
         pauseMenu.setBackground(new Color(50, 50, 50));
         pauseMenu.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 2));
-    
+
         // Menu items
         JMenuItem resumeItem = new JMenuItem(Texts.RESUME[language]);
         JMenuItem mainMenuItem = new JMenuItem(Texts.guiBackToMain[language]);
         JMenuItem exitItem = new JMenuItem(Texts.exitGame[language]);
         JMenuItem saveItem = new JMenuItem(Texts.saveGame[language]);
-        
+
         Font menuFont = new Font("Arial", Font.BOLD, 18);
         resumeItem.setFont(menuFont);
         mainMenuItem.setFont(menuFont);
         exitItem.setFont(menuFont);
         saveItem.setFont(menuFont);
-    
+
         // Volume control
         JPanel volumePanel = new JPanel(new BorderLayout(5, 5));
         volumePanel.setBackground(new Color(50, 50, 50));
         volumePanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        
+
         JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
         volumeLabel.setFont(new Font("Arial", Font.BOLD, 16));
         volumeLabel.setForeground(Color.WHITE);
-        
+
         JSlider volumeSlider = new JSlider(0, 100, 50);
         volumeSlider.setMajorTickSpacing(25);
         volumeSlider.setMinorTickSpacing(5);
@@ -397,7 +382,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         volumeSlider.setPaintLabels(true);
         volumeSlider.setForeground(Color.WHITE);
         volumeSlider.setBackground(new Color(50, 50, 50));
-        
+
         volumeSlider.addChangeListener(e -> {
             JSlider source = (JSlider) e.getSource();
             float volume = source.getValue() / 100f;
@@ -407,10 +392,10 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         saveItem.addActionListener(e -> {
             GameManager.getInstance().save();
         });
-        
+
         volumePanel.add(volumeLabel, BorderLayout.NORTH);
         volumePanel.add(volumeSlider, BorderLayout.CENTER);
-    
+
         // Assemble pause menu
         pauseMenu.add(resumeItem);
         pauseMenu.addSeparator();
@@ -422,8 +407,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
 
-        
-    
         // Bet panel components
         betField = new JTextField(5);
         betField.setPreferredSize(new Dimension(350, 40));
@@ -433,9 +416,9 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         enterBetLabel.setFont(new Font("Arial", Font.BOLD, 28));
         enterBetLabel.setForeground(Color.WHITE);
         betField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-    
+
         // Assemble bet panel
-        betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10)); 
+        betPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
         //betPanel.add(Box.createHorizontalGlue());
         betPanel.add(enterBetLabel);
         betPanel.add(betField);
@@ -443,26 +426,25 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         betPanel.add(Box.createHorizontalGlue());
         betPanel.add(betLabel);
         betPanel.add(balanceLabel);
-    
+
         // Assemble button panel
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
         buttonPanel.add(newGameButton);
         buttonPanel.add(undoButton);
     }
-   
+
     private void attachEventListeners() {
         hitButton.addActionListener(e -> gameManager.handlePlayerHit());
         standButton.addActionListener(e -> gameManager.handlePlayerStand());
         newGameButton.addActionListener(e -> gameManager.startNewGame());
         placeBetButton.addActionListener(e -> placeBet(gameManager.getCurrentPlayer()));
-    
+
         pauseButton.addActionListener(e -> showPauseMenu());
- 
+
         // Pause menu listeners
         for (Component component : pauseMenu.getComponents()) {
-            if (component instanceof JMenuItem) {
-                JMenuItem menuItem = (JMenuItem) component;
+            if (component instanceof JMenuItem menuItem) {
                 if (menuItem.getText().equals(Texts.RESUME[language])) {
                     menuItem.addActionListener(e -> {
                         resumeGame();
@@ -496,45 +478,45 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
     private void updatePlayerHands(List<List<Card>> playerHands) {
         playersPanel.removeAll();
-        
+
         for (int i = 0; i < playerHands.size(); i++) {
             Player player = gameManager.getPlayers().get(i);
             List<Card> hand = playerHands.get(i);
-            
+
             JPanel playerPanel = new JPanel(new BorderLayout());
             playerPanel.setOpaque(false);
-            
+
             // Create card panels
             JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
             cardsPanel.setOpaque(false);
             for (Card card : hand) {
                 cardsPanel.add(createCardPanel(card));
             }
-            
+
             // Player info
             JLabel infoLabel = new JLabel(
-                String.format("%s: %d | Bet: $%d | Balance: $%d", 
-                    player.getName(), 
-                    player.calculateScore(),
-                    player.getCurrentBet(),
-                    player.getBalance())
+                    String.format("%s: %d | Bet: $%d | Balance: $%d",
+                            player.getName(),
+                            player.calculateScore(),
+                            player.getCurrentBet(),
+                            player.getBalance())
             );
             infoLabel.setForeground(Color.WHITE);
             infoLabel.setFont(new Font("Arial", Font.BOLD, 16));
-            
+
             playerPanel.add(infoLabel, BorderLayout.NORTH);
             playerPanel.add(cardsPanel, BorderLayout.CENTER);
-            
+
             playersPanel.add(playerPanel);
         }
-        
+
         playersPanel.revalidate();
         playersPanel.repaint();
     }
-    
+
     private void updateDealerHand(List<Card> dealerHand) {
         dealerPanel.removeAll();
-        
+
         if (gameManager.isGameOver()) {
             // Show all cards
             for (Card card : dealerHand) {
@@ -549,11 +531,11 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 }
             }
         }
-        
+
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
-    
+
     private void updatePlayerScores(List<Integer> playerScores) {
         for (int i = 0; i < playerScores.size(); i++) {
             Player player = gameManager.getPlayers().get(i);
@@ -561,7 +543,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         }
         updatePlayerPanels();
     }
-    
+
     private void updateDealerScore(int dealerScore) {
         if (gameManager.isGameOver()) {
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealerScore);
@@ -574,7 +556,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
             }
         }
     }
-    
+
     private void updatePlayerBalances(List<Integer> playerBalances) {
         for (int i = 0; i < playerBalances.size(); i++) {
             Player player = gameManager.getPlayers().get(i);
@@ -585,11 +567,11 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
             }
         }
     }
-    
+
     private void updateDealerBalance(int dealerBalance) {
         dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + dealerBalance);
     }
-    
+
     private void updateCurrentBets(List<Integer> currentBets) {
         for (int i = 0; i < currentBets.size(); i++) {
             Player player = gameManager.getPlayers().get(i);
@@ -600,14 +582,14 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
             }
         }
     }
-    
+
     private void updateGameStatus(boolean isGameOver) {
         setGameButtonsEnabled(!isGameOver);
         if (isGameOver) {
             // Show dealer's full hand
             updateDealerHand(gameManager.getDealer().getHand());
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + 
-                gameManager.getDealer().calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " +
+                    gameManager.getDealer().calculateScore());
         }
     }
 
@@ -627,33 +609,14 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     public void showConnectionError(String message) {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(
-                this,
-                "Connection error: " + message,
-                "Network Error",
-                JOptionPane.ERROR_MESSAGE
+                    this,
+                    "Connection error: " + message,
+                    "Network Error",
+                    JOptionPane.ERROR_MESSAGE
             );
         });
     }
 
-
-
-    public void updatePlayerBalanceAndBet(Player player) {
-        JLabel balanceLabel = playerBalanceLabels.get(player);
-        JLabel betLabel = playerBetLabels.get(player);
-    
-        if (balanceLabel != null) {
-            balanceLabel.setText("Balance: $" + player.getBalance());
-            balanceLabel.revalidate();
-            balanceLabel.repaint();
-        }
-    
-        if (betLabel != null) {
-            betLabel.setText("Bet: $" + player.getCurrentBet());
-            betLabel.revalidate();
-            betLabel.repaint();
-        }
-    }
-    
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
@@ -666,11 +629,11 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 balanceLabel.setText("Balance: $" + player.getBalance());
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-                JOptionPane.showMessageDialog(this, Texts.betConfirmed[language]+" $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, Texts.betConfirmed[language] + " $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
                 placeBetButton.setEnabled(false);
-                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerBalance());
+                dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
                 dealerBetLabel.setText("Bet: $" + gameManager.getDealerBet());
-                playersPanel.updatePanel(gameManager.getPlayers());      
+                playersPanel.updatePanel(gameManager.getPlayers());
                 AchievementManager.getInstance().trackFirstBet(player);
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
@@ -682,7 +645,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
     public void setPlayers(ArrayList<Player> players) {
         playersPanel.removeAll();
-        
+
         for (Player player : players) {
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);
@@ -718,99 +681,102 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
             System.exit(0);
         }
     }
-    
-    
-    private void showPauseMenu() {
-        gameManager.pauseGame();
-        setGameButtonsEnabled(false);
-    
-        JDialog pauseDialog = new JDialog(this, Texts.PAUSE[language], true);
-        pauseDialog.setSize(400, 550);
-        pauseDialog.setLocationRelativeTo(this);
-        pauseDialog.setUndecorated(true);
-        pauseDialog.setLayout(new BorderLayout());
-    
-        // Glass-style container
-        JPanel glassPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setComposite(AlphaComposite.SrcOver.derive(0.75f));
-                g2.setColor(Color.WHITE);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
-                g2.setColor(new Color(0, 0, 0, 50));
-                g2.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
-                g2.dispose();
-            }
-        };
-        glassPanel.setLayout(new BoxLayout(glassPanel, BoxLayout.Y_AXIS));
-        glassPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
-        glassPanel.setOpaque(false);
-    
-        Font font = new Font("Segoe UI", Font.BOLD, 22);
-        Color btnColor = new Color(240, 200, 0);
-    
-        JButton resumeBtn = createPauseButton(Texts.RESUME[language], font, btnColor);
-        JButton saveBtn = createPauseButton(Texts.saveGame[language], font, btnColor);
-        JButton menuBtn = createPauseButton(Texts.guiBackToMain[language], font, btnColor);
-        JButton exitBtn = createPauseButton(Texts.exitGame[language], font, btnColor);
-    
-        resumeBtn.addActionListener(e -> {
-            resumeGame();
-            pauseDialog.dispose();
-        });
-    
-        saveBtn.addActionListener(e -> {
-            gameManager.save();
-            JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
-        });
-    
-        menuBtn.addActionListener(e -> {
-            pauseDialog.dispose();
-            returnToMainMenu();
-        });
-    
-        exitBtn.addActionListener(e -> System.exit(0));
-    
-        // Volume label
-        JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
-        volumeLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        volumeLabel.setForeground(Color.BLACK);
-        volumeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
-        // Volume slider
-        JSlider volumeSlider = new JSlider(0, 100, (int)(AudioManager.getInstance().getVolume() * 100));
-        volumeSlider.setMajorTickSpacing(25);
-        volumeSlider.setMinorTickSpacing(5);
-        volumeSlider.setPaintTicks(true);
-        volumeSlider.setPaintLabels(true);
-        volumeSlider.setOpaque(false);
-        volumeSlider.setForeground(Color.BLACK);
-        volumeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
-        volumeSlider.addChangeListener(e -> {
-            float volume = volumeSlider.getValue() / 100f;
-            AudioManager.getInstance().setVolume(volume);
-        });
-    
-        // Add components to glass panel
-        glassPanel.add(resumeBtn);
-        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        glassPanel.add(saveBtn);
-        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        glassPanel.add(menuBtn);
-        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        glassPanel.add(exitBtn);
-        glassPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-        glassPanel.add(volumeLabel);
-        glassPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        glassPanel.add(volumeSlider);
-    
-        pauseDialog.add(glassPanel, BorderLayout.CENTER);
-        pauseDialog.setBackground(new Color(0, 0, 0, 0)); // transparent background
-        pauseDialog.setVisible(true);
-    }
-    
+
+//    private void showPauseMenu() {
+//        gameManager.pauseGame();
+//        setGameButtonsEnabled(false);
+//
+//        JDialog pauseDialog = new JDialog(this, Texts.PAUSE[language], true);
+//        pauseDialog.setSize(400, 550);
+//        pauseDialog.setLocationRelativeTo(this);
+//        pauseDialog.setUndecorated(true);
+//        pauseDialog.setLayout(new BorderLayout());
+//
+//        // Glass-style container
+//        JPanel glassPanel = new JPanel() {
+//            @Override
+//            protected void paintComponent(Graphics g) {
+//                Graphics2D g2 = (Graphics2D) g.create();
+//                g2.setComposite(AlphaComposite.SrcOver.derive(0.75f));
+//                g2.setColor(Color.WHITE);
+//                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+//                g2.setColor(new Color(0, 0, 0, 50));
+//                g2.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
+//                g2.dispose();
+//            }
+//        };
+//        glassPanel.setLayout(new BoxLayout(glassPanel, BoxLayout.Y_AXIS));
+//        glassPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+//        glassPanel.setOpaque(false);
+//
+//        Font font = new Font("Segoe UI", Font.BOLD, 22);
+//        Color btnColor = new Color(240, 200, 0);
+//
+//        JButton resumeBtn = createPauseButton(Texts.RESUME[language], font, btnColor);
+//        JButton saveBtn = createPauseButton(Texts.saveGame[language], font, btnColor);
+//        JButton menuBtn = createPauseButton(Texts.guiBackToMain[language], font, btnColor);
+//        JButton exitBtn = createPauseButton(Texts.exitGame[language], font, btnColor);
+//
+//        resumeBtn.addActionListener(e -> {
+//            resumeGame();
+//            pauseDialog.dispose();
+//        });
+//
+//        saveBtn.addActionListener(e -> {
+//            gameManager.save();
+//            JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
+//        });
+//
+//        menuBtn.addActionListener(e -> {
+//            pauseDialog.dispose();
+//            returnToMainMenu();
+//        });
+//
+//        exitBtn.addActionListener(e -> System.exit(0));
+//
+//        // Volume label
+//        JLabel volumeLabel = new JLabel(Texts.VOLUME[language]);
+//        volumeLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+//        volumeLabel.setForeground(Color.BLACK);
+//        volumeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        // Volume slider
+//        JSlider volumeSlider = new JSlider(0, 100, (int) (AudioManager.getInstance().getVolume() * 100));
+//        volumeSlider.setMajorTickSpacing(25);
+//        volumeSlider.setMinorTickSpacing(5);
+//        volumeSlider.setPaintTicks(true);
+//        volumeSlider.setPaintLabels(true);
+//        volumeSlider.setOpaque(false);
+//        volumeSlider.setForeground(Color.BLACK);
+//        volumeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        volumeSlider.addChangeListener(e -> {
+//            float volume = volumeSlider.getValue() / 100f;
+//            AudioManager.getInstance().setVolume(volume);
+//        });
+//
+//        // Add components to glass panel
+//        glassPanel.add(resumeBtn);
+//        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+//        glassPanel.add(saveBtn);
+//        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+//        glassPanel.add(menuBtn);
+//        glassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+//        glassPanel.add(exitBtn);
+//        glassPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+//        glassPanel.add(volumeLabel);
+//        glassPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//        glassPanel.add(volumeSlider);
+//
+//        pauseDialog.add(glassPanel, BorderLayout.CENTER);
+//        pauseDialog.setBackground(new Color(0, 0, 0, 0)); // transparent background
+//        pauseDialog.setVisible(true);
+//    }
+private void showPauseMenu() {
+    new PausePanel(this, gameManager,this, language).showPauseMenu();
+}
+
+
     private JButton createPauseButton(String text, Font font, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -820,24 +786,21 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         button.setOpaque(true);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(bgColor.darker());
             }
-    
+
             @Override
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(bgColor);
             }
         });
-    
+
         return button;
     }
-    
-    
-    
 
     private void resumeGame() {
         gameManager.resumeGame();
@@ -863,13 +826,12 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         pauseButton.setEnabled(true);
     }
 
-
     // After the game ended the user should be able to take another bet
     public void enableBetting() {
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         betField.setText(""); // Clear the bet field
-        betLabel.setText(Texts.bet[language] + " $"+gameManager.getPlayerBet(gameManager.getCurrentPlayer()));
+        betLabel.setText(Texts.bet[language] + " $" + gameManager.getPlayerBet(gameManager.getCurrentPlayer()));
         balanceLabel.setText(Texts.balance[language] + " $" + gameManager.getPlayerBalance(gameManager.getCurrentPlayer()));
         dealerBalanceLabel.setText(Texts.balance[language] + " $" + gameManager.getDealerBalance());
         dealerBetLabel.setText(Texts.bet[language] + " $" + gameManager.getDealerBet());
@@ -890,16 +852,16 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
         dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
-    
-        playersPanel.updatePanel(players); 
-    
+
+        playersPanel.updatePanel(players);
+
         // Update dealer panel
         if (gameOver) {
             // Show all dealer's cards
             for (Card card : dealer.getHand()) {
                 dealerPanel.add(createCardPanel(card));
             }
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": "+dealer.calculateScore());
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealer.calculateScore());
         } else {
             // Show one card face-up and a hidden card
             if (!dealer.getHand().isEmpty()) {
@@ -907,7 +869,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 dealerPanel.add(createHiddenCardPanel());
             }
         }
-    
+
         // Revalidate and repaint panels to update the UI
         playersPanel.revalidate();
         playersPanel.repaint();
@@ -915,17 +877,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         dealerPanel.repaint();
     }
 
-
-    private void nextTurn() {
-        if (gameManager.hasNextPlayer()) {
-            gameManager.startNextPlayerTurn();
-            updateGameMessage(gameManager.getCurrentPlayer().getName() + Texts.turns[language]);
-            enableBetting();
-        } else {
-            gameManager.dealerTurn();
-        }
-    }    
-    
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
@@ -950,7 +901,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         gameMessageLabel.setText(message);
     }
 
-
     public void updateSpecialMessage(String message) {
         if (!message.equals("...")) {
             specialMessageLabel.setText(message);
@@ -960,34 +910,29 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         }
     }
 
-    public void resetSpecialMessage() {
-        specialMessageLabel.setText("...");
-    }
-
-
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    
+
                 Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
                 Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
                 GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
-    
+
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-    
+
                 // Optional: shadow effect
                 g2.setColor(new Color(0, 0, 0, 40));
                 g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
-    
+
                 super.paintComponent(g);
                 g2.dispose();
             }
         };
-    
+
         button.setFont(new Font("Segoe UI", Font.BOLD, buttonFontSize));
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
@@ -995,10 +940,9 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-    
+
         return button;
     }
-    
 
     private JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
@@ -1006,7 +950,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         label.setForeground(Color.WHITE);
         return label;
     }
-    
 
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel(new BorderLayout());
@@ -1036,8 +979,8 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         while (!valid) {
             String input = JOptionPane.showInputDialog(
                     this,
-                    Texts.jokerWildMessage[language],  
-                    Texts.jokerWildTitle[language],   
+                    Texts.jokerWildMessage[language],
+                    Texts.jokerWildTitle[language],
                     JOptionPane.QUESTION_MESSAGE
             );
             try {
@@ -1047,8 +990,8 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
                 } else {
                     JOptionPane.showMessageDialog(
                             this,
-                            Texts.invalidJokerInput[language], 
-                            Texts.invalidInputTitle[language], 
+                            Texts.invalidJokerInput[language],
+                            Texts.invalidInputTitle[language],
 
                             JOptionPane.WARNING_MESSAGE
                     );
@@ -1056,16 +999,16 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         this,
-                        Texts.invalidJokerInput[language], 
-                        Texts.invalidInputTitle[language], 
+                        Texts.invalidJokerInput[language],
+                        Texts.invalidInputTitle[language],
                         JOptionPane.WARNING_MESSAGE
                 );
             }
         }
         return wildValue;
     }
- 
-public void promptPlayerAction(Player player) {
+
+    public void promptPlayerAction(Player player) {
         if (!gameManager.isCurrentPlayerStillInRound()) {
             gameManager.advanceToNextPlayer(); // ✅ Advance the index here
             if (gameManager.hasNextPlayer()) {
@@ -1075,17 +1018,15 @@ public void promptPlayerAction(Player player) {
             }
             return; // 🔒 Important: prevent further code from running
         }
-    
+
         setGameButtonsEnabled(true);
         updateGameMessage(player.getName() + "'s turn");
-    
+
         // ✅ Only allow betting if game is not running
         if (!gameManager.isGameRunning()) {
             enableBetting();
         }
     }
-    
-
 
     public void updatePlayerPanels() {
         playersPanel.removeAll();
@@ -1096,13 +1037,13 @@ public void promptPlayerAction(Player player) {
 
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
-            JLabel betLabel = new JLabel( Texts.bet[language]+" $" + player.getCurrentBet());
-    
+            JLabel betLabel = new JLabel(Texts.bet[language] + " $" + player.getCurrentBet());
+
             // ✅ White text for visibility
             scoreLabel.setForeground(Color.WHITE);
             balanceLabel.setForeground(Color.WHITE);
             betLabel.setForeground(Color.WHITE);
-    
+
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);
@@ -1125,6 +1066,4 @@ public void promptPlayerAction(Player player) {
             }
         }
     }
-    
-    
 }
