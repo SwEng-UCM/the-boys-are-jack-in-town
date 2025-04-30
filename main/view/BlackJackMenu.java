@@ -1,5 +1,3 @@
-
-
 package main.view;
 
 import main.controller.BlackjackClient;
@@ -10,15 +8,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-import main.model.EasyDifficulty;
-import main.model.MediumDifficulty;
-import main.model.HardDifficulty;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-
-import static main.view.Languages.*;
-
+/**
+ * The main menu window for the Blackjack game.
+ * Displays buttons for starting the game, loading, multiplayer, and accessing options.
+ * Handles basic language switching and animated background/title.
+ */
 public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton, multiplayerButton;
     private JLabel imageLabel, mainTitleLabel;
@@ -30,6 +27,9 @@ public class BlackJackMenu extends JFrame {
     private Timer titleTimer;
     public static int language = 0;
 
+    /**
+     * Constructs and initializes the Blackjack main menu GUI.
+     */
     public BlackJackMenu() {
         setTitle(Texts.startGame[language]);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -37,8 +37,7 @@ public class BlackJackMenu extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         
-        // Load background image
-        // Change the image loading to be more robust:
+        // Loads the animated background image from resources.
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream("resources/img/backgroundimage.png");
             if (is != null) {
@@ -69,12 +68,14 @@ public class BlackJackMenu extends JFrame {
         attachEventListeners();
     }
 
+    /**
+     * Initializes all GUI components: buttons, title, icons, labels, and language box.
+     */
     private void initializeComponents() {
         startButton = createStyledButton(Texts.startGame[language]);
         startButton.setIcon(loadIcon("resources/icons/start.png", 32, 32));
 
         multiplayerButton = createStyledButton(Texts.multiplayer[language]);
-
         multiplayerButton.setIcon(loadIcon("resources/icons/multiplayer.png", 32, 32));
     
         instructionsButton = createStyledButton(Texts.instructions[language]);
@@ -86,7 +87,6 @@ public class BlackJackMenu extends JFrame {
         loadGameButton = createStyledButton(Texts.loadGame[language]);
         loadGameButton.setIcon(loadIcon("resources/icons/loadgame.png", 32, 32));
 
-    
         exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("resources/icons/exit.png", 32, 32));
     
@@ -125,16 +125,18 @@ public class BlackJackMenu extends JFrame {
         topRightBar.add(profileLabel);
         topRightBar.add(languageBox);
 
-    
-        startTitleAnimation();
-
         SwingUtilities.invokeLater(() -> {
             titleX = getWidth(); // Ensure width is valid after window is visible
             startTitleAnimation();
         });
+
+        startTitleAnimation();
     }
     
 
+    /**
+     * Lays out all components into the main window using custom panels.
+     */
     private void layoutComponents() {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 20));
@@ -205,16 +207,29 @@ public class BlackJackMenu extends JFrame {
         add(mainPanel);
     }
     
-    
-    
-
+    /**
+     * Binds action listeners to each interactive button.
+     */
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
             GameManager gameManager = GameManager.getInstance();
+        
+            // 1. Create the GUI
             BlackjackGUI gui = new BlackjackGUI(gameManager);
+        
+            // 2. Set the GUI FIRST (re-inits controllers)
+            gameManager.setGui(gui);
+        
+            // 3. THEN call startNewGame()
+            gameManager.getGameFlowController().startNewGame();
+        
+            // 4. Show the GUI
             gui.setVisible(true);
-            dispose(); // Close the menu window
+            dispose();
         });
+        
+        
+        
 
         instructionsButton.addActionListener(e -> {
             String message = Texts.instructionsPopup[language][0] + "\n" +
@@ -261,7 +276,6 @@ public class BlackJackMenu extends JFrame {
                             JOptionPane.INFORMATION_MESSAGE
                     );
 
-                    // Try to connect in a separate thread
                     new Thread(() -> {
                         try {
                             BlackjackClient client = new BlackjackClient();
@@ -296,8 +310,6 @@ public class BlackJackMenu extends JFrame {
             }
         });
 
-
-
         exitButton.addActionListener(e -> System.exit(0));
 
         optionsButton.addActionListener(e -> {
@@ -310,6 +322,11 @@ public class BlackJackMenu extends JFrame {
         });
     }
 
+    /**
+     * Creates a styled button with hover gradient and optional icon.
+     * @param text Button label text
+     * @return A customized JButton
+     */
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text) {
             @Override
@@ -340,16 +357,21 @@ public class BlackJackMenu extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(320, 80));
-        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15);
-    
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR)); // 🔥 Make cursor a hand when hovering
-    
+        button.setIconTextGap(15); // space between icon and text
+
         return button;
     }
-    
 
+    /**
+     * Loads and scales an icon image from the resources directory.
+     * @param path Image path relative to classpath
+     * @param width Desired icon width
+     * @param height Desired icon height
+     * @return A scaled ImageIcon, or null if loading fails
+     */
     private ImageIcon loadIcon(String path, int width, int height) {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream(path);
@@ -366,8 +388,10 @@ public class BlackJackMenu extends JFrame {
         return null;
     }
     
-    
-
+    /**
+     * Refreshes all menu texts based on the selected language.
+     * Repaints the UI with updated translations.
+     */
     public void refreshMenu() {
         setTitle(Texts.startGame[language]); // Update window title
 
@@ -379,12 +403,14 @@ public class BlackJackMenu extends JFrame {
         optionsButton.setText(Texts.options[language]);
         multiplayerButton.setText(Texts.multiplayer[language]);
 
-
         // Repaint UI
         revalidate();
         repaint();
     }
 
+    /**
+     * Starts the scrolling animation of the title label across the screen.
+     */
     private void startTitleAnimation() {
         titleX = getWidth();
         titleTimer = new Timer(16, e -> {
@@ -400,6 +426,9 @@ public class BlackJackMenu extends JFrame {
         titleTimer.start();
     }
     
+    /**
+     * Inner class responsible for painting a horizontally scrolling background.
+     */
     private class BackgroundPanel extends JPanel {
         private int xOffset = 0;
         private Timer animationTimer;
@@ -429,7 +458,6 @@ public class BlackJackMenu extends JFrame {
             if (backgroundLoaded && backgroundImage != null) {
                 g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     
-                // ✅ Draw the image twice
                 g2d.drawImage(backgroundImage, xOffset, 0, getWidth(), getHeight(), this);
                 g2d.drawImage(backgroundImage, xOffset + getWidth(), 0, getWidth(), getHeight(), this);
             } else {
@@ -447,13 +475,4 @@ public class BlackJackMenu extends JFrame {
             g2d.dispose();
         }
     }
-    
-    
-
-
-    public static void main(String[] args) {
-        new BlackJackMenu().setVisible(true);
-    }
-    
-
 }

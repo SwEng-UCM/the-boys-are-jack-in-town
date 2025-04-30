@@ -2,17 +2,25 @@ package main.view;
 
 import main.controller.AchievementManager;
 import main.model.Badge;
-
-
 import javax.swing.*;
 import java.awt.*;
-
 import static main.view.BlackJackMenu.language;
 
+/**
+ * {@code AchievementsWindow} is a singleton Swing window that displays a grid of achievement badges,
+ * indicating which ones have been unlocked by the player.
+ * 
+ * It acts as the View in the MVC pattern and retrieves badge data from the {@link AchievementManager}.
+ */
 public class AchievementsWindow extends JFrame {
     private static AchievementsWindow instance;
     private JPanel gridPanel;
 
+    /**
+     * Returns the singleton instance of {@code AchievementsWindow}, creating it if necessary.
+     *
+     * @return the singleton {@code AchievementsWindow} instance
+     */
     public static AchievementsWindow getInstance() {
         if (instance == null) {
             instance = new AchievementsWindow();
@@ -20,6 +28,10 @@ public class AchievementsWindow extends JFrame {
         return instance;
     }
 
+    /**
+     * Constructs the achievements window, sets up UI layout, background image,
+     * scrollable badge grid, and glass panel effects.
+     */
     public AchievementsWindow() {
         setTitle(Texts.achievements[language]);
         setSize(900, 600);
@@ -80,6 +92,10 @@ public class AchievementsWindow extends JFrame {
         instance = this;
     }
 
+    /**
+     * Refreshes the grid of badges to reflect updated unlock status from {@link AchievementManager}.
+     * This method removes all current badges and re-adds them based on their unlock state.
+     */
     public void refreshBadges() {
         if (gridPanel == null) return;
         gridPanel.removeAll();
@@ -91,6 +107,14 @@ public class AchievementsWindow extends JFrame {
         gridPanel.repaint();
     }
 
+    /**
+     * Creates a JPanel containing a single badge's icon and title.
+     * Badge appearance is rendered differently depending on whether it's unlocked.
+     *
+     * @param badge    the badge to render
+     * @param unlocked true if the badge is unlocked, false if it's still locked
+     * @return a JPanel containing the badge image and title label
+     */
     private JPanel createBadgePanel(Badge badge, boolean unlocked) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());

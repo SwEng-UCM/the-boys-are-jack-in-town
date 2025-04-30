@@ -55,23 +55,22 @@ public class GameState implements Serializable {
      */
 
     public GameState(GameManager gm) {
-        this.players = new ArrayList<>(gm.getPlayers());
-        this.dealer = gm.getDealer();
+        this.players = new ArrayList<>(gm.getPlayerManager().getPlayers());
+        this.dealer = gm.getDealerManager().getDealer();
         this.deck = gm.getDeck();
-        this.playerBalances = new ArrayList<>(gm.getPlayerBalances());
-        this.currentBets = new ArrayList<>(gm.getPlayerBets());
-        this.playerScores = new ArrayList<>(gm.getPlayerScores());
-        this.playerHands = new ArrayList<>(gm.getPlayerHands());
-        this.dealerHand = new ArrayList<>(gm.getDealerHand());
+        this.playerBalances = new ArrayList<>(gm.getPlayerManager().getPlayerBalances());
+        this.currentBets = new ArrayList<>(gm.getPlayerManager().getPlayerBets());
+        this.playerScores = new ArrayList<>(gm.getPlayerManager().getPlayerScores());
+        this.playerHands = new ArrayList<>(gm.getPlayerManager().getPlayerHands());
+        this.dealerHand = new ArrayList<>(gm.getDealerManager().getDealerHand());
         this.deckCards = new ArrayList<>(gm.getFilteredDeck());
-        this.dealerBalance = gm.getDealerBalance();
-        this.dealerBet = gm.getDealerBet();
-        this.dealerScore = gm.getDealerScore();
-        this.currentPlayerIndex = gm.getCurrentPlayerIndex();
-        this.gameOver = gm.isGameOver();
+        this.dealerBalance = gm.getDealerManager().getDealerBalance();
+        this.dealerBet = gm.getDealerManager().getDealerBet();
+        this.dealerScore = gm.getDealerManager().getDealerScore();
+        this.currentPlayerIndex = gm.getPlayerManager().getCurrentPlayerIndex();
+        this.gameOver = gm.getGameFlowController().isGameOver();
         this.currentDifficulty = gm.getDifficultyStrategy().getDifficultyName();
     }
-
     /**
      * Constructs a GameState by loading data from a JSON file.
      * The JSON file must be formatted according to the expected game data structure.
@@ -114,12 +113,12 @@ public class GameState implements Serializable {
      * @param manager the GameManager instance to restore the game state to
      */
     public void restoreFullState(GameManager manager) {
-        manager.getPlayers().clear();
-        manager.getPlayers().addAll(players);
-        manager.getDealer().getHand().clear();
-        manager.getDealer().getHand().addAll(dealerHand);
-        manager.setCurrentPlayerIndex(currentPlayerIndex);
-        manager.setGameOver(gameOver);
+        manager.getPlayerManager().getPlayers().clear();
+        manager.getPlayerManager().getPlayers().addAll(players);
+        manager.getDealerManager().getDealer().getHand().clear();
+        manager.getDealerManager().getDealer().getHand().addAll(dealerHand);
+        manager.getPlayerManager().setCurrentPlayerIndex(currentPlayerIndex);
+        manager.getGameFlowController().setGameOver(gameOver);
         manager.getDeck().getCards().clear();
         manager.getDeck().getCards().addAll(deck.getCards());
         restoreDifficulty(manager);
@@ -364,33 +363,6 @@ public class GameState implements Serializable {
      */
     public String getCurrentDifficulty() { return currentDifficulty; }
 
-    // === toString ===
-
-    /**
-     * Returns a string representation of the current game state.
-     * Includes details such as players, dealer, deck size, balances, bets, scores, and difficulty.
-     *
-     * @return a string representation of the game state
-     */
-    @Override
-    public String toString() {
-        return String.format("""
-                === Game State ===
-                Players: %s
-                Dealer: %s
-                Deck Size: %d
-                Player Balances: %s
-                Current Bets: %s
-                Player Scores: %s
-                Dealer Balance: %d
-                Dealer Bet: %d
-                Dealer Hand: %s
-                Current Difficulty: %s
-                """, players, dealer, deck.getCards().size(),
-                playerBalances, currentBets, playerScores,
-                dealerBalance, dealerBet, dealerHand, currentDifficulty);
-    }
-
     /**
      * Restores the game state to the given GameManager, including players, dealer, deck, and difficulty.
      * Initializes the betting manager with the current balances and bets.
@@ -398,11 +370,11 @@ public class GameState implements Serializable {
      * @param manager the GameManager instance to restore the state to
      */
     public void restore(GameManager manager) {
-        manager.setPlayers(new ArrayList<>(players));
-        manager.setDealer(dealer);
+        manager.getPlayerManager().setPlayers(new ArrayList<>(players));
+        manager.getDealerManager().setDealer(dealer);
         manager.setDeck(deck);
-        manager.setCurrentPlayerIndex(currentPlayerIndex);
-        manager.setGameOver(false);
+        manager.getPlayerManager().setCurrentPlayerIndex(currentPlayerIndex);
+        manager.getGameFlowController().setGameOver(false);
 
         BettingManager bettingManager = new BettingManager(players, players.get(0).getBalance(), dealerBalance);
         bettingManager.placeDealerBet(dealerBet);

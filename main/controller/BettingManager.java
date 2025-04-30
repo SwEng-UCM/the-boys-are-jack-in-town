@@ -67,10 +67,15 @@ public class BettingManager {
      * @param playerName The winning player's name.
      */
     public void playerWins(String playerName) {
-        int bet = playerBets.getOrDefault(playerName, 0);
+        Integer bet = playerBets.get(playerName);
+        if (bet == null || bet == 0) {
+            // No bet to pay out => just ignore safely
+            return;
+        }
         playerBalances.put(playerName, playerBalances.get(playerName) + bet + dealerBet);
         resetPlayerBet(playerName);
     }
+    
     
     /**
      * Dealer wins, so the dealer collects the player's bets.
@@ -83,15 +88,29 @@ public class BettingManager {
     }
 
     /**
+     * Player loses — no payout.
+     */
+    public void playerLoses(String playerName) {
+        resetPlayerBet(playerName);
+    }
+
+    /**
      * Handles a tie (push), returning bets to both the player and dealer.
      * @param playerName The player's name who tied.
      */
     public void tie(String playerName) {
-        int bet = playerBets.getOrDefault(playerName, 0);
-        playerBalances.put(playerName, playerBalances.get(playerName) + bet);
-        dealerBalance += dealerBet; // Dealer gets their bet back
+        if (!playerBets.containsKey(playerName)) {
+            return;
+        }
+    
+        int bet = playerBets.get(playerName);
+        if (bet <= 0) return;
+    
+        playerBalances.put(playerName, playerBalances.getOrDefault(playerName, 0) + bet);
+        dealerBalance += dealerBet;
         resetPlayerBet(playerName);
     }
+    
 
     /**
      * Player wins with a Blackjack (3:2 payout).

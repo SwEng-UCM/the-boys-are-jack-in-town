@@ -9,14 +9,11 @@ import main.model.Player;
 import main.view.BlackjackGUI;
 import main.view.Texts;
 import javax.swing.Timer;
-
 import static main.view.BlackJackMenu.language;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.SwingUtilities;
 
 /*
@@ -33,11 +30,9 @@ import javax.swing.SwingUtilities;
 // ORIGINATOR Class
 public class GameManager {
     private static GameManager instance;
-
     private final int INITIAL_BET = 1000;
     private boolean isPaused = false;
     private Timer gameTimer; // If you have any timers running
-
     private ArrayList<Player> players;
     private Player dealer;
     private Deck deck;
@@ -47,8 +42,11 @@ public class GameManager {
     private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
     private BlackjackClient client;
-
+    private GameFlowController gameFlowController;
     private CommandManager commandManager = new CommandManager();
+    private PlayerManager playerManager;
+    private DealerManager dealerManager;
+    
 
     private GameManager() {
         this.players = new ArrayList<>();
@@ -59,6 +57,9 @@ public class GameManager {
         this.currentPlayerIndex = 0;
         players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
         players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
+        
+        this.playerManager = new PlayerManager();
+        playerManager.setPlayers(players); 
     }
 
 
@@ -69,6 +70,16 @@ public class GameManager {
         }
         return instance;
     }
+
+    public PlayerManager getPlayerManager() {
+        return this.playerManager;
+    }
+    
+    public DealerManager getDealerManager() {
+        return this.dealerManager;
+    }
+
+    
     public void setDifficultyStrategy(DifficultyStrategy strategy) {
         this.difficultyStrategy = strategy;
     }
@@ -80,40 +91,22 @@ public class GameManager {
 
     public void setGui(BlackjackGUI gui) {
         this.gui = gui;
-    }
-
-    public void pauseGame() {
-        isPaused = true;
-        if (gameTimer != null && gameTimer.isRunning()) {
-            gameTimer.stop();
+    
+        if (this.dealerManager == null) {
+            this.dealerManager = new DealerManager(dealer, players, deck, difficultyStrategy, gui, bettingManager, this);
         }
-        gui.updateGameMessage(Texts.GAME_PAUSED[language]);
-        gui.updateGameState(players, dealer, false, true); // gameOver=false, isPaused=true
-    }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    public void resumeGame() {
-        isPaused = false;
-        gui.setGameButtonsEnabled(true);
-
-        if (gameTimer != null) {
-            gameTimer.start();
+    
+        if (this.gameFlowController == null) {
+            this.gameFlowController = new GameFlowController(this, playerManager, dealerManager, gui);
         }
-
-        gui.updateGameMessage(Texts.gameManagerGameOn[language]);
-        // Restore the actual game state (hidden card if game isn't over)
-        gui.updateGameState(players, dealer, gameOver, false); // gameOver=actual state, isPaused=false;
     }
-
-    public boolean isGamePaused() {
-        return isPaused;
+    
+    public void setGameFlowController(GameFlowController controller) {
+        this.gameFlowController = controller;
     }
-
-    public void addPlayer(String name, int initialBalance) {
-        players.add(new Player(name, initialBalance));
+    
+    public GameFlowController getGameFlowController() {
+        return gameFlowController;
     }
 
     public void startNextPlayerTurn() {
@@ -127,12 +120,9 @@ public class GameManager {
             gui.promptPlayerAction(players.get(currentPlayerIndex));
         } else {
             gui.updateGameMessage("Dealer's turn!");
-            dealerTurn();
+            dealerManager.dealerTurn();
         }
     }
-    
-    
-    
 
     public void handlePlayerHit() {
         if (!gameOver && !isPaused) {
@@ -165,7 +155,7 @@ public class GameManager {
                 gui.promptPlayerAction(players.get(currentPlayerIndex));
             } else {
                 // all players done, now dealer plays
-                dealerTurn();
+                dealerManager.dealerTurn();
             }
         }
     }
@@ -176,125 +166,70 @@ public class GameManager {
         Player player = players.get(currentPlayerIndex);
         if (player.calculateScore() > 21) {
             gui.updateGameMessage(player.getName() + " busts! 😢");
-            player.loseBet();
+            bettingManager.playerLoses(player.getName());
             bettingManager.dealerWins(null);
             currentPlayerIndex++;
     
             if (currentPlayerIndex < players.size()) {
                 gui.promptPlayerAction(players.get(currentPlayerIndex));
             } else {
-                dealerTurn(); // 👈 only trigger if all players finished
+                dealerManager.dealerTurn();
             }
         }
     }
     
-
-    public void dealerTurn() {
-        Player referencePlayer = players.get(0); // Or choose the strongest player
-        for (Player p : players) {
-            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
-                referencePlayer = p;
-            }
-        }
-    
-        while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
-            dealer.receiveCard(deck.dealCard());
-        }
-        checkDealerBust();
-        determineWinners();
-    }
-    
-    // In GameManager.java
     public DifficultyStrategy getDifficultyStrategy() {
         return this.difficultyStrategy;
     }
 
-    private void checkDealerBust() {
-        if (dealer.calculateScore() > 21) {
-            gui.updateGameMessage(Texts.dealerBusts[language]);
-            for (Player player : players) {
-                if (player.calculateScore() <= 21) {
-                    int payout = (int)(player.getCurrentBet() * difficultyStrategy.getPayoutMultiplier());
-                    player.winBet(payout); // Use dynamic payout instead of hardcoded *2
-                }
-            }
-        }
-    }
-
-    private void determineWinners() {
+    public void determineWinners() {
         if (!gameOver) {
             int dealerScore = dealer.calculateScore();
             for (Player player : players) {
                 int playerScore = player.calculateScore();
                 int basePayout = player.getCurrentBet();
-                int payout = (int)(basePayout * difficultyStrategy.getPayoutMultiplier());
+                int payout = (int) (basePayout * difficultyStrategy.getPayoutMultiplier());
     
                 if (playerScore > 21) {
-                    gui.updateGameMessage(player.getName() + " busts! "+Texts.dealerWins[language]);
-                    player.loseBet();
+                    gui.updateGameMessage(player.getName() + " busts! " + Texts.dealerWins[language]);
+                    bettingManager.playerLoses(player.getName());
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AudioManager.getInstance().playSoundEffect("/resources/sounds/lose.wav");
                 } else if (dealerScore > 21 || playerScore > dealerScore) {
-                    String winMessage = player.getName() + " wins! (Payout: " + payout + ")";
-                    gui.updateGameMessage(winMessage);
-                    int originalBet = player.getCurrentBet();
-                    player.winBet(payout);
+                    gui.updateGameMessage(player.getName() + " wins! (Payout: " + payout + ")");
+                    bettingManager.playerWins(player.getName()); // bettingManager handles all balance changes
                     AchievementManager.getInstance().resetDealerWinStreak();
                     AchievementManager.getInstance().unlock(Badge.FIRST_WIN);
-                    if (originalBet * 2 >= 1000) {
+                    if (basePayout * 2 >= 1000) {
                         AchievementManager.getInstance().unlock(Badge.BIG_WIN);
                     }
                     AudioManager.getInstance().playSoundEffect("/resources/sounds/win.wav");
                 } else if (playerScore < dealerScore) {
-                    gui.updateGameMessage(player.getName() + " loses! "+ Texts.dealerWins[language]);
-                    player.loseBet();
-                    bettingManager.dealerWins(player.getName());
+                    gui.updateGameMessage(player.getName() + " loses! " + Texts.dealerWins[language]);
+                    bettingManager.playerLoses(player.getName());
                     AchievementManager.getInstance().unlock(Badge.FIRST_LOSS);
                     AchievementManager.getInstance().trackDealerWin();
                     AudioManager.getInstance().playSoundEffect("/resources/sounds/lose.wav");
                 } else {
                     gui.updateGameMessage(player.getName() + " ties! Bets returned.");
-                    player.tieBet();
+                    bettingManager.tie(player.getName());
                 }
             }
             gui.updatePlayerPanels();
             gameOver = true;
-            checkGameOver();
+            gameFlowController.checkGameOver();
             SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
-            AchievementManager am = AchievementManager.getInstance();
         }
     }
+    
+    
 
     public void resetBettingManager(int playerBalance, int dealerBalance) {
         this.bettingManager = new BettingManager(players, 1000, 1000);
     }
 
-    private void checkGameOver() {
-        for (Player player : players) {
-            if (player.getBalance() <= 0) {
-                gui.showGameOverMessage(Texts.gameOverTitle[language]+ player.getName() + " ran out of money! \uD83D\uDE22");
-                return;
-            }
-        }
-        if (dealer.getBalance() <= 0) {
-            gui.showGameOverMessage("Congratulations! The dealer ran out of money! 🎉");
-        }
-    }
-
-    public String getPlayerHand(Player player) {
-        return player.getHand().toString();
-    }
-
-//    public String getDealerHand() {
-//        return gameOver ? dealer.getHand().toString() : dealer.getHand().get(0) + " [Hidden]";
-//    }
-
-    /*
-     * Betting system.
-     */
     public boolean placeBet(Player player, int betAmount) {
-        gui.updateGameState(players, dealer, gameOver, false);
-        boolean placed = player.placeBet(betAmount);
+        boolean placed = bettingManager.placeBet(player.getName(), betAmount);
         if (placed) {
             AchievementManager.getInstance().unlock(Badge.FIRST_BET);
             AudioManager.getInstance().playSoundEffect("/resources/sounds/bet.wav");
@@ -302,88 +237,14 @@ public class GameManager {
         return placed;
     }
     
-
-    public int getPlayerBalance(Player player) {
-        return player.getBalance();
-    }
-
-    public boolean canPlaceBet(Player currentPlayer) {
-        return isGameOver() &&
-                !isPaused &&
-                currentPlayer.getBalance() > 0 &&
-                getDealerBalance() > 0;
-    }
-
-    public boolean isGameRunning() {
-        return !isGameOver(); // Or whatever logic determines if game is running
-    }
-
-    public boolean hasNextPlayer() {
-        return currentPlayerIndex < players.size()-1;
-    }
-
-    public Player getCurrentPlayer() {
-        if (currentPlayerIndex < players.size()) {
-            return players.get(currentPlayerIndex);
-        }
-        return null; // In case there are no players or we've reached the dealer turn
-    }
-
-    public void startNewGame() {
-        gameOver = false; // Mark that the game is no longer over
-        isPaused = false;
-        resumeGame();
-        currentPlayerIndex = 0; // Start with the first player
-        deck.shuffle(); // Shuffle the deck for the new game
-
-        // Reset all players' hands and balances
-        for (Player player : players) {
-            player.reset();
-            player.receiveCard(deck.dealCard());
-            player.receiveCard(deck.dealCard());
-            AchievementManager.getInstance().trackFirstBlackjack(player);
-        }
-
-        dealer.reset(); // Reset dealer's hand
-        bettingManager.resetAllBets(); // Reset the bets
-
-        //resumeGame();
-
-        // Dealer receives one face-up and one face-down card
-        dealer.receiveCard(deck.dealCard()); // Visible card
-
-        AchievementManager.getInstance().trackMultiplayerGame(players);
-
-        // Update GUI with the new game state
-        gui.updateGameMessage("Starting a new game!");
-        gui.updateGameState(players, dealer, false, false);
-
-
-        // 🔍 Check if the game is over due to balance depletion
-        //checkGameOver();
-
-        SwingUtilities.invokeLater(() -> {
-            gui.enableBetting();
-            gui.setGameButtonsEnabled(true);
-            startNextPlayerTurn(); // Start the first player's turn
-        });
-        return;
-    }
-
-    public boolean isCurrentPlayerStillInRound() {
-        Player currentPlayer = getCurrentPlayer();
-        if (currentPlayer == null) {
-            return false;
-        }
-        // Player is out of the round if they stood or busted
-        return !currentPlayer.hasStood() && currentPlayer.calculateScore() <= 21;
-    }
     
 
-    /**
-     * Handles special cards when drawn.
-     * //
-     */
+    public boolean canPlaceBet(Player currentPlayer) {
+        return gameFlowController.isGameOver() &&
+                !isPaused &&
+                currentPlayer.getBalance() > 0 &&
+                dealerManager.getDealerBalance() > 0;
+    }
 
     private Card handleSpecialCard(Card card, Player recipient) {
         if (recipient != dealer) { // Display special messages only when the player draws them
@@ -410,82 +271,6 @@ public class GameManager {
         return card;
     }
 
-    /*
-     * Betting system.
-     */
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-    public int getCurrentPlayerIndex() {
-        return this.currentPlayerIndex;
-    }
-    
-    public void setCurrentPlayerIndex(int index) {
-        this.currentPlayerIndex = index;
-    }
-
-    public int getDealerBalance() {
-        return bettingManager.getDealerBalance();
-    }
-
-    public int getDealerBet() {
-        return bettingManager.getDealerBet();
-    }
-
-    public int getDealerScore() {
-        return dealer.calculateScore();
-    }
-
-    public int getPlayerScore(Player currentPlayer) {
-        return currentPlayer.calculateScore();
-    }
-
-    public int getPlayerBet(Player currentPlayer) {
-        return currentPlayer.getCurrentBet();
-    }
-
-    public List<Integer> getPlayerScores() {
-        List<Integer> pScores = new ArrayList<>();
-        for(Player p : players) {
-            pScores.add(p.calculateScore());
-        }
-        return pScores;
-    }
-
-    public List<Integer> getPlayerBalances(){
-        List<Integer> pBalances = new ArrayList<>();
-        for(Player p : players) {
-            pBalances.add(p.getBalance());
-        }
-        return pBalances;
-    }
-
-    public List<Integer> getPlayerBets(){
-        List<Integer> pBets = new ArrayList<>();
-        for(Player p : players) {
-            pBets.add(p.getCurrentBet());
-        }
-        return pBets;
-    }
-
-    public List<List<Card>> getPlayerHands() {
-        List<List<Card>> playerHands = new ArrayList<>();
-        for(Player p : players) {
-            List<Card> playerHand = p.getHand();
-            playerHands.add(playerHand);
-        }
-        return playerHands;
-    }
-
-    public List<Card> getDealerHand(){
-        List<Card> dealerHand = new ArrayList<>();
-        for(Card c: dealer.getHand()) {
-            dealerHand.add(c);
-        }
-        return dealerHand;
-    }
-
     public List<Card> getFilteredDeck(){
         List<Card> deck = new ArrayList<>();
         List<Card> usedCards = new ArrayList<>();
@@ -503,30 +288,8 @@ public class GameManager {
         return deck;
     }
 
-
-
-    public ArrayList<Player> getPlayers() {
-        return this.players;
-    }
-
-    public void setGameOver(boolean b) {
-        this.gameOver=b;
-    }
-
     public Deck getDeck() {
         return this.deck;
-    }
-
-    public Player getDealer() {
-        return this.dealer;
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-    
-    public void setDealer(Player dealer) {
-        this.dealer = dealer;
     }
     
     public void setDeck(Deck deck) {
@@ -537,62 +300,6 @@ public class GameManager {
         this.bettingManager = bettingManager;
     }
     
-
-
-    // SAVE/LOAD
-    // public void loadGame(GameState gs) throws IOException {
-    //     applyGameState(gs);
-    // }
-
-    // private void applyGameState(GameState state) {
-    //     System.out.println("Applying game state");
-    //     this.players = new ArrayList<>(state.getPlayers());
-    //     this.dealer = state.getDealer();
-    //     this.deck = state.getDeck();
-    //     this.currentPlayerIndex = determineCurrentPlayerIndex(state);
-    //     this.gameOver = false;
-    //     this.gui = new BlackjackGUI(this);
-
-    //     // Restore each player's hand and score
-    //     ArrayList<Player> loadedPlayers = new ArrayList<>(state.getPlayers());
-    //     for (int i = 0; i < loadedPlayers.size(); i++) {
-    //         Player player = loadedPlayers.get(i);
-    //         player.setHand(state.getPlayerHands().get(i));
-    //         player.setCurrentScore();
-    //         player.setCurrentBet(state.getCurrentBets().get(i));
-    //         player.setBalance(player.getBalance());
-    //     }
-
-    //     // Restore dealer's hand, score, and balance
-    //     this.dealer.setHand(state.getDealerHand());
-    //     this.dealer.setBalance(state.getDealerBalance());
-    //     this.dealer.setCurrentBet(state.getDealerBet());
-
-    //     // Restore deck
-    //     //this.deck.setCards(state.getDeckCards());
-
-    //     // Set betting manager
-    //     this.bettingManager = new BettingManager(players, state.getPlayers().get(0).getBalance(), state.getDealerBalance());
-    //     this.bettingManager.placeDealerBet(state.getDealerBet());
-
-    //     // Update GUI
-    //     SwingUtilities.invokeLater(() -> {
-    //         gui.updateGameMessage("Game loaded successfully!");
-    //         gui.updateGameState(players, dealer, false, false);
-    //         gui.setGameButtonsEnabled(true);
-    //         gui.enableBetting();
-    //         startNextPlayerTurn();
-    //     });
-
-    //     System.out.println("Game loaded successfully!");
-    // }
-
-    // private int determineCurrentPlayerIndex(GameState state) {
-    //    return state.getCurrentPlayerIndex();
-
-    // }
-
-    // In GameManager
 
     public void loadGame(GameState memento) {
         this.players = new ArrayList<>(memento.getPlayers());
@@ -609,8 +316,6 @@ public class GameManager {
             startNextPlayerTurn();
         });
     }
-
-    // inside GameManager.java
 
         // Save (Originator -> Memento)
         public void save() {
@@ -673,10 +378,4 @@ public class GameManager {
         public CommandManager getCommandManager() {
             return commandManager;
         }
-        
-        public void advanceToNextPlayer() {
-            currentPlayerIndex++;
-        }
-        
-        
 }
