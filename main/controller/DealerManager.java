@@ -91,5 +91,45 @@ public void dealerTurn() {
         this.dealer = dealer;
     }
 
+    public static class DealerCardInfo {
+        public final List<Card> visibleCards;
+        public final int hiddenCardCount;
+    
+        public DealerCardInfo(List<Card> visibleCards, int hiddenCardCount) {
+            this.visibleCards = visibleCards;
+            this.hiddenCardCount = hiddenCardCount;
+        }
+    }
 
+    public DealerCardInfo getVisibleDealerCards(boolean gameOver) {
+        List<Card> hand = dealer.getHand();
+        List<Card> visibleCards = new ArrayList<>();
+        int hiddenCardCount = 0;
+
+        if (gameOver) {
+            visibleCards.addAll(hand);
+        } else {
+            if (!hand.isEmpty()) {
+                visibleCards.add(hand.get(0));
+                hiddenCardCount = hand.size() - 1;
+            }
+        }
+
+        return new DealerCardInfo(visibleCards, hiddenCardCount);
+    }
+    
+    public String getFormattedDealerScore() {
+        if (gameManager.getGameFlowController().isGameOver()) {
+            return Texts.guiDealerScore[language] + ": " + dealer.calculateScore();
+        } else {
+            List<Card> hand = dealer.getHand();
+            if (!hand.isEmpty()) {
+                int visibleScore = hand.get(0).getValue();
+                return Texts.guiDealerScore[language] + ": " + visibleScore + " + ?";
+            } else {
+                return Texts.guiDealerScore[language] + ": ?";
+            }
+        }
+    }
+    
 }

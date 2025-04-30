@@ -2,36 +2,25 @@ package main.view;
 
 import main.controller.GameManager;
 import main.controller.GameState;
+import main.controller.PlayerManager;
 import main.model.Card;
 import main.model.Player;
 import main.controller.AudioManager;
 import main.controller.BetCommand;
 import main.controller.BettingManager;
+import main.controller.DealerManager;
 import main.controller.AchievementManager;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
-
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
- import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static main.view.BlackJackMenu.language;
 
@@ -59,17 +48,11 @@ public class BlackjackGUI extends JFrame {
     private JScrollPane scrollPane;
     private JPanel topRightPanel;
     private JButton undoButton;
-
-
     private JLabel connectionStatusLabel;
     private boolean isConnected = false;
-    
-
-
-    private final HashMap<Player, JLabel> playerBalanceLabels = new HashMap<>();
-    private final HashMap<Player, JLabel> playerBetLabels = new HashMap<>();
+    private final Map<String, JLabel> playerBalanceLabels = new HashMap<>();
+    private final Map<String, JLabel> playerBetLabels = new HashMap<>();
     private static BlackjackGUI instance;
-
 
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -79,7 +62,6 @@ public class BlackjackGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
 
         try {
             backgroundImage = ImageIO.read(getClass().getResource("/resources/img/backgroundimage.png"));
@@ -178,7 +160,6 @@ public class BlackjackGUI extends JFrame {
 
         southContainer.setOpaque(false);
 
-
         JPanel playersContainer = new JPanel(new BorderLayout());
         playersContainer.setPreferredSize(new Dimension(
             Toolkit.getDefaultToolkit().getScreenSize().width,
@@ -271,8 +252,6 @@ public class BlackjackGUI extends JFrame {
         dealerScorePanel = new JPanel(new GridLayout(2, 1));
         dealerScorePanel.setOpaque(false);
         playersPanel.setBackground(new Color(0, 0, 0, 0)); // Fully transparent
-
-
         
         // Dealer labels
         dealerScoreLabel = createStyledLabel(Texts.guiDealerScore[language]);
@@ -292,52 +271,51 @@ public class BlackjackGUI extends JFrame {
         dealerScorePanel.add(scoreRow);
         dealerScorePanel.add(balanceBetRow);
     
-// Styled Undo button with yellow theme
-undoButton = new JButton();
-undoButton.setToolTipText("Undo last action");
-undoButton.setIcon(new ImageIcon(
-    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
-);
-undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
-undoButton.setBorderPainted(false);
-undoButton.setFocusPainted(false);
-undoButton.setContentAreaFilled(false);
-undoButton.setOpaque(false);
+        // Styled Undo button with yellow theme
+        undoButton = new JButton();
+        undoButton.setToolTipText("Undo last action");
+        undoButton.setIcon(new ImageIcon(
+            new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+        );
+        undoButton.setPreferredSize(new Dimension(buttonHeight, buttonHeight));
+        undoButton.setBorderPainted(false);
+        undoButton.setFocusPainted(false);
+        undoButton.setContentAreaFilled(false);
+        undoButton.setOpaque(false);
 
-// Custom paint for yellow gradient style
-undoButton = new JButton() {
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Custom paint for yellow gradient style
+        undoButton = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
-        Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
-        GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
+                Color gradientStart = getModel().isRollover() ? new Color(255, 240, 100) : new Color(255, 215, 0);
+                Color gradientEnd = getModel().isRollover() ? new Color(255, 210, 0) : new Color(240, 180, 0);
+                GradientPaint gp = new GradientPaint(0, 0, gradientStart, 0, getHeight(), gradientEnd);
 
-        g2.setPaint(gp);
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
+                g2.setPaint(gp);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
 
-        // Optional: shadow
-        g2.setColor(new Color(0, 0, 0, 40));
-        g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
+                // Optional: shadow
+                g2.setColor(new Color(0, 0, 0, 40));
+                g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
 
-        super.paintComponent(g);
-        g2.dispose();
-    }
-};
-undoButton.setToolTipText("Undo last action");
-undoButton.setIcon(new ImageIcon(
-    new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
-);
-undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-undoButton.setFocusPainted(false);
-undoButton.setBorderPainted(false);
-undoButton.setContentAreaFilled(false);
-undoButton.setOpaque(false);
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        undoButton.setToolTipText("Undo last action");
+        undoButton.setIcon(new ImageIcon(
+            new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH))
+        );
+        undoButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        undoButton.setFocusPainted(false);
+        undoButton.setBorderPainted(false);
+        undoButton.setContentAreaFilled(false);
+        undoButton.setOpaque(false);
 
-undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
-
+        undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
 
         // Pause button setup
         pauseButton = new JButton();
@@ -421,8 +399,6 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         pauseMenu.add(saveItem);
         pauseMenu.addSeparator();
         pauseMenu.add(volumePanel);
-
-        
     
         // Bet panel components
         betField = new JTextField(5);
@@ -485,131 +461,124 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
     public void applyGameState(GameState gameState) {
         updatePlayerHands(gameState.getPlayerHands());
-        updateDealerHand(gameState.getDealerHand());
+        updateDealerHand(gameManager.getDealerManager().getVisibleDealerCards(true));
+
         updatePlayerScores(gameState.getPlayerScores());
         updateDealerScore(gameState.getDealerScore());
-        updatePlayerBalances(gameState.getPlayerBalances());
+        updatePlayerBalances();
         updateDealerBalance(gameState.getDealerBalance());
-        updateCurrentBets(gameState.getCurrentBets());
+        updateCurrentBets();
         updateGameStatus(gameState.isGameOver());
     }
 
     private void updatePlayerHands(List<List<Card>> playerHands) {
         playersPanel.removeAll();
-        
-        for (int i = 0; i < playerHands.size(); i++) {
-            Player player = gameManager.getPlayerManager().getPlayers().get(i);
-            List<Card> hand = playerHands.get(i);
-            
+
+        List<PlayerManager.PlayerInfo> playerInfos = gameManager.getPlayerManager().getAllPlayerInfo();
+
+        for (PlayerManager.PlayerInfo info : playerInfos) {
             JPanel playerPanel = new JPanel(new BorderLayout());
             playerPanel.setOpaque(false);
-            
-            // Create card panels
+
+            // Card display
             JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
             cardsPanel.setOpaque(false);
-            for (Card card : hand) {
+            for (Card card : info.hand) {
                 cardsPanel.add(createCardPanel(card));
             }
-            
-            // Player info
+
+            // Info display
             JLabel infoLabel = new JLabel(
-                String.format("%s: %d | Bet: $%d | Balance: $%d", 
-                    player.getName(), 
-                    player.calculateScore(),
-                    player.getCurrentBet(),
-                    player.getBalance())
+                String.format("%s: %d | Bet: $%d | Balance: $%d",
+                    info.name, info.score, info.bet, info.balance)
             );
             infoLabel.setForeground(Color.WHITE);
             infoLabel.setFont(new Font("Arial", Font.BOLD, 16));
-            
+
             playerPanel.add(infoLabel, BorderLayout.NORTH);
             playerPanel.add(cardsPanel, BorderLayout.CENTER);
-            
+
             playersPanel.add(playerPanel);
         }
-        
+
         playersPanel.revalidate();
         playersPanel.repaint();
     }
-    
-    private void updateDealerHand(List<Card> dealerHand) {
+
+    private void updateDealerHand(DealerManager.DealerCardInfo cardInfo) {
         dealerPanel.removeAll();
-        
-        if (gameManager.getGameFlowController().isGameOver()) {
-            // Show all cards
-            for (Card card : dealerHand) {
-                dealerPanel.add(createCardPanel(card));
-            }
-        } else {
-            // Show first card and hide others
-            if (!dealerHand.isEmpty()) {
-                dealerPanel.add(createCardPanel(dealerHand.get(0)));
-                for (int i = 1; i < dealerHand.size(); i++) {
-                    dealerPanel.add(createHiddenCardPanel());
-                }
-            }
+
+        boolean gameOver = gameManager.getGameFlowController().isGameOver();
+        DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
+
+        for (Card card : dealerInfo.visibleCards) {
+            dealerPanel.add(createCardPanel(card));
         }
-        
+
+        for (int i = 0; i < dealerInfo.hiddenCardCount; i++) {
+            dealerPanel.add(createHiddenCardPanel());
+        }
+
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
-    
+
     private void updatePlayerScores(List<Integer> playerScores) {
-        for (int i = 0; i < playerScores.size(); i++) {
-            Player player = gameManager.getPlayerManager().getPlayers().get(i);
-            player.setScore(playerScores.get(i));
-        }
-        updatePlayerPanels();
+        gameManager.getPlayerManager().setPlayerScores(playerScores);
+        updatePlayerPanels(); // View updates only
     }
-    
+
     private void updateDealerScore(int dealerScore) {
-        if (gameManager.getGameFlowController().isGameOver()) {
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealerScore);
-        } else {
-            // Only show first card value during game
-            List<Card> dealerHand = gameManager.getDealerManager().getDealer().getHand();
-            if (!dealerHand.isEmpty()) {
-                int visibleScore = dealerHand.get(0).getValue();
-                dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + visibleScore + " + ?");
+        String scoreText = gameManager.getDealerManager().getFormattedDealerScore();
+        dealerScoreLabel.setText(scoreText);
+    }
+    
+    
+    private void updatePlayerBalances() {
+        List<PlayerManager.PlayerInfo> playerInfos = gameManager.getPlayerManager().getAllPlayerInfo();
+        for (PlayerManager.PlayerInfo info : playerInfos) {
+            for (Player player : gameManager.getPlayerManager().getPlayers()) {
+                if (player.getName().equals(info.name)) {
+                    JLabel balanceLabel = playerBalanceLabels.get(info.name);
+                    if (balanceLabel != null) {
+                        balanceLabel.setText("Balance: $" + info.balance);
+                    }
+                    break;
+                }
             }
         }
     }
     
-    private void updatePlayerBalances(List<Integer> playerBalances) {
-        for (int i = 0; i < playerBalances.size(); i++) {
-            Player player = gameManager.getPlayerManager().getPlayers().get(i);
-            player.setBalance(playerBalances.get(i));
-            JLabel balanceLabel = playerBalanceLabels.get(player);
-            if (balanceLabel != null) {
-                balanceLabel.setText("Balance: $" + playerBalances.get(i));
-            }
-        }
-    }
     
     private void updateDealerBalance(int dealerBalance) {
         dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + dealerBalance);
     }
     
-    private void updateCurrentBets(List<Integer> currentBets) {
-        for (int i = 0; i < currentBets.size(); i++) {
-            Player player = gameManager.getPlayerManager().getPlayers().get(i);
-            player.setCurrentBet(currentBets.get(i));
-            JLabel betLabel = playerBetLabels.get(player);
+    private void updateCurrentBets() {
+        List<PlayerManager.PlayerInfo> playerInfos = gameManager.getPlayerManager().getAllPlayerInfo();
+        for (PlayerManager.PlayerInfo info : playerInfos) {
+            JLabel betLabel = playerBetLabels.get(info.name); // Use name as key
             if (betLabel != null) {
-                betLabel.setText("Bet: $" + currentBets.get(i));
+                betLabel.setText("Bet: $" + info.bet);
             }
         }
     }
     
+    
+    
     private void updateGameStatus(boolean isGameOver) {
         setGameButtonsEnabled(!isGameOver);
+    
         if (isGameOver) {
-            // Show dealer's full hand
-            updateDealerHand(gameManager.getDealerManager().getDealer().getHand());
-            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + 
-            gameManager.getDealerManager().getDealer().calculateScore());
+            // Use DealerManager to get visible cards and score
+            DealerManager.DealerCardInfo cardInfo = gameManager.getDealerManager().getVisibleDealerCards(true);
+            updateDealerHand(cardInfo); // <- This version expects DealerCardInfo, not List<Card>
+    
+            int dealerScore = gameManager.getDealerManager().getDealerScore();
+            dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealerScore);
         }
     }
+    
 
     public void setConnected(boolean connected) {
         isConnected = connected;
@@ -638,8 +607,9 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
 
 
     public void updatePlayerBalanceAndBet(Player player) {
-        JLabel balanceLabel = playerBalanceLabels.get(player);
-        JLabel betLabel = playerBetLabels.get(player);
+        JLabel balanceLabel = playerBalanceLabels.get(player.getName());
+        JLabel betLabel = playerBetLabels.get(player.getName());
+        
     
         if (balanceLabel != null) {
             balanceLabel.setText("Balance: $" + player.getBalance());
@@ -657,57 +627,87 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
     private void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
+    
             if (betAmount > 0) {
+                // Use Command pattern
                 BetCommand betCommand = new BetCommand(player, betAmount, gameManager);
                 gameManager.getCommandManager().executeCommand(betCommand);
-                gameManager.getBettingManager().getPlayerBalance(player.getName());
+    
+                // ✅ Update UI via controller/model access only
+                int updatedPlayerBalance = gameManager.getBettingManager().getPlayerBalance(player.getName());
+                int updatedPlayerBet = gameManager.getBettingManager().getPlayerBet(player.getName());
+                int dealerBalance = gameManager.getDealerManager().getDealerBalance();
+                int dealerBet = gameManager.getDealerManager().getDealerBet();
+    
+                // ✅ Update GUI labels
                 setGameButtonsEnabled(true);
-                betLabel.setText("Bet: $" + betAmount);
-                balanceLabel.setText("Balance: $" + player.getBalance());
+                betLabel.setText("Bet: $" + updatedPlayerBet);
+                balanceLabel.setText("Balance: $" + updatedPlayerBalance);
+                dealerBalanceLabel.setText(Texts.balance[language] + " $" + dealerBalance);
+                dealerBetLabel.setText("Bet: $" + dealerBet);
+    
+                // ✅ Lock controls after bet
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
-                JOptionPane.showMessageDialog(this, Texts.betConfirmed[language]+" $" + betAmount, Texts.bet[language], JOptionPane.INFORMATION_MESSAGE);
-                placeBetButton.setEnabled(false);
-                dealerBalanceLabel.setText(Texts.balance[language]+ " $"+ gameManager.getDealerManager().getDealerBalance());
-                dealerBetLabel.setText("Bet: $" + gameManager.getDealerManager().getDealerBet());
+    
+                JOptionPane.showMessageDialog(this,
+                    Texts.betConfirmed[language] + " $" + betAmount,
+                    Texts.bet[language],
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+    
                 playersPanel.updatePanel(gameManager.getPlayerManager().getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
+    
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
+    
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid input. Please enter a valid bet amount.", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                "Invalid input. Please enter a valid bet amount.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+            );
         }
     }
+    
 
-    public void setPlayers(ArrayList<Player> players) {
+    private void setPlayers(List<PlayerManager.PlayerInfo> playerInfos) {
         playersPanel.removeAll();
-        
-        for (Player player : players) {
+        playerBalanceLabels.clear();
+        playerBetLabels.clear();
+    
+        for (PlayerManager.PlayerInfo info : playerInfos) {
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);
-            JLabel scoreLabel = new JLabel(player.getName() + ": " + "Score: 0");
-            JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
-            JLabel betLabel = new JLabel("Bet: $0");
-            playerBalanceLabels.put(player, balanceLabel);
-            playerBetLabels.put(player, betLabel);
+    
+            JLabel scoreLabel = new JLabel(info.name + ": Score: " + info.score);
+            JLabel balanceLabel = new JLabel("Balance: $" + info.balance);
+            JLabel betLabel = new JLabel("Bet: $" + info.bet);
+    
+            // Use player name as key (instead of Player object, which may change)
+            playerBalanceLabels.put(info.name, balanceLabel);
+            playerBetLabels.put(info.name, betLabel);
+    
             panel.add(scoreLabel, BorderLayout.NORTH);
             panel.add(balanceLabel, BorderLayout.CENTER);
             panel.add(betLabel, BorderLayout.SOUTH);
             playersPanel.add(panel);
         }
+    
         playersPanel.revalidate();
         playersPanel.repaint();
     }
+    
 
     public void restartGame() {
         gameManager.getGameFlowController().startNewGame();
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         setGameButtonsEnabled(true);
-        gameManager.getGameFlowController().setGameOver(false);  // Add this line
+        gameManager.getGameFlowController().setGameOver(false);
         gameManager.getGameFlowController().resumeGame();
-
     }
 
     public void showGameOverMessage(String message) {
@@ -836,14 +836,12 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         return button;
     }
     
-    
-    
-
     private void resumeGame() {
         gameManager.getGameFlowController().resumeGame();
         setGameButtonsEnabled(true);
     }
 
+    // TODO:
     private void returnToMainMenu() {
         new BlackJackMenu().setVisible(true);
         dispose();
@@ -913,18 +911,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         playersPanel.repaint();
         dealerPanel.revalidate();
         dealerPanel.repaint();
-    }
-
-
-    private void nextTurn() {
-        if (gameManager.getPlayerManager().hasNextPlayer()) {
-            gameManager.startNextPlayerTurn();
-            updateGameMessage(gameManager.getPlayerManager().getCurrentPlayer().getName() + Texts.turns[language]);
-            enableBetting();
-        } else {
-            gameManager.getDealerManager().dealerTurn();
-        }
-    }    
+    } 
     
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
@@ -1065,28 +1052,25 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         return wildValue;
     }
  
-public void promptPlayerAction(Player player) {
-        if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
-            gameManager.getPlayerManager().advanceToNextPlayer(); // ✅ Advance the index here
-            if (gameManager.getPlayerManager().hasNextPlayer()) {
-                gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
-            } else {
-                gameManager.getDealerManager().dealerTurn(); // No players left
+    public void promptPlayerAction(Player player) {
+            if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
+                gameManager.getPlayerManager().advanceToNextPlayer(); // ✅ Advance the index here
+                if (gameManager.getPlayerManager().hasNextPlayer()) {
+                    gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
+                } else {
+                    gameManager.getDealerManager().dealerTurn(); // No players left
+                }
+                return; // 🔒 Important: prevent further code from running
             }
-            return; // 🔒 Important: prevent further code from running
-        }
-    
-        setGameButtonsEnabled(true);
-        updateGameMessage(player.getName() + "'s turn");
-    
-        // ✅ Only allow betting if game is not running
-        if (!gameManager.getGameFlowController().isGameRunning()) {
-            enableBetting();
-        }
+        
+            setGameButtonsEnabled(true);
+            updateGameMessage(player.getName() + "'s turn");
+        
+            if (!gameManager.getGameFlowController().isGameRunning()) {
+                enableBetting();
+            }
     }
     
-
-
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayerManager().getPlayers()) {
@@ -1125,6 +1109,4 @@ public void promptPlayerAction(Player player) {
             }
         }
     }
-    
-    
 }

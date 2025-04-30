@@ -99,11 +99,18 @@ public class BettingManager {
      * @param playerName The player's name who tied.
      */
     public void tie(String playerName) {
-        int bet = playerBets.getOrDefault(playerName, 0);
-        playerBalances.put(playerName, playerBalances.get(playerName) + bet);
-        dealerBalance += dealerBet; // Dealer gets their bet back
+        if (!playerBets.containsKey(playerName)) {
+            return;
+        }
+    
+        int bet = playerBets.get(playerName);
+        if (bet <= 0) return;
+    
+        playerBalances.put(playerName, playerBalances.getOrDefault(playerName, 0) + bet);
+        dealerBalance += dealerBet;
         resetPlayerBet(playerName);
     }
+    
 
     /**
      * Player wins with a Blackjack (3:2 payout).

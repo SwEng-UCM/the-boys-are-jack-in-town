@@ -54,7 +54,6 @@ public class GameFlowController {
     
         AchievementManager.getInstance().trackMultiplayerGame(playerManager.getPlayers());
     
-        // ✅ Set local references used in checkGameOver()
         this.players = playerManager.getPlayers();
         this.dealer = dealerManager.getDealer();
     
@@ -62,10 +61,10 @@ public class GameFlowController {
         gui.updateGameState(playerManager.getPlayers(), dealerManager.getDealer(), false, false);
     
         SwingUtilities.invokeLater(() -> {
-            gui.enableBetting();
             gui.setGameButtonsEnabled(true);
             gameManager.startNextPlayerTurn(); 
         });
+        
     }
     
 

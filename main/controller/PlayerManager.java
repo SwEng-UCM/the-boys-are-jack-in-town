@@ -106,5 +106,41 @@ public class PlayerManager {
         players.add(new Player(name, initialBalance));
     }
 
+    public static class PlayerInfo {
+        public final String name;
+        public final int score;
+        public final int bet;
+        public final int balance;
+        public final List<Card> hand;
+    
+        public PlayerInfo(String name, int score, int bet, int balance, List<Card> hand) {
+            this.name = name;
+            this.score = score;
+            this.bet = bet;
+            this.balance = balance;
+            this.hand = hand;
+        }
+    }
+    
+    public List<PlayerInfo> getAllPlayerInfo() {
+        List<PlayerInfo> infoList = new ArrayList<>();
+        for (Player p : players) {
+            infoList.add(new PlayerInfo(
+                p.getName(),
+                p.calculateScore(),
+                p.getCurrentBet(),
+                p.getBalance(),
+                new ArrayList<>(p.getHand()) // defensive copy
+            ));
+        }
+        return infoList;
+    }
+    
+    public void setPlayerScores(List<Integer> scores) {
+        for (int i = 0; i < Math.min(scores.size(), players.size()); i++) {
+            players.get(i).setScore(scores.get(i));
+        }
+    }
+    
 
 }
