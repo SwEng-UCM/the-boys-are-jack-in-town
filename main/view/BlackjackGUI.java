@@ -8,6 +8,7 @@ import main.controller.AudioManager;
 import main.controller.BetCommand;
 import main.controller.BettingManager;
 import main.controller.AchievementManager;
+import main.view.CardImageFactory;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -1037,7 +1038,7 @@ undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().
         cardPanel.add(rankLabel, BorderLayout.CENTER);
         cardPanel.add(suitLabel, BorderLayout.SOUTH);
 
-        return cardPanel;
+        return CardImageFactory.createCardPanel(card, cardWidth, cardHeight);
     }
 
     public int promptJokerWildValue() {
