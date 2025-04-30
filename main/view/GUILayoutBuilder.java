@@ -79,6 +79,7 @@ public class GUILayoutBuilder {
         window.mainPanel.add(southContainer, BorderLayout.SOUTH);
         window.add(window.mainPanel);
 
-        window.gameManager.startNewGame();
+        window.gameManager.getGameFlowController().startNewGame();
+
     }
 }
