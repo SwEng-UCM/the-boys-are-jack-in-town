@@ -2,8 +2,6 @@ package main.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
-
 import static main.view.BlackJackMenu.language;
 
 public class InstructionsDialog extends JDialog {
@@ -13,82 +11,71 @@ public class InstructionsDialog extends JDialog {
         setUndecorated(true);
         setSize(600, 500);
         setLocationRelativeTo(parent);
-        setBackground(new Color(0, 0, 0, 0));
 
-        JPanel mainPanel = new JPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
+                Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                RoundRectangle2D rounded = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 40, 40);
-                g2.setColor(new Color(0, 50, 30)); // deep green
-                g2.fill(rounded);
+                g2.setColor(new Color(10, 40, 20)); // Deep casino green
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
+                g2.dispose();
+                super.paintComponent(g);
             }
         };
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
         mainPanel.setOpaque(false);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        JLabel titleLabel = new JLabel("How to Play");
-        titleLabel.setFont(new Font("Lucida Handwriting", Font.BOLD, 36));
-        titleLabel.setForeground(new Color(255, 255, 200));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Title
+        JLabel titleLabel = new JLabel("★ " + Texts.instructions[language].toUpperCase() + " ★");
+        titleLabel.setFont(new Font("Georgia", Font.BOLD, 28));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setForeground(new Color(255, 215, 0)); // Gold
 
-        JLabel gameLabel = new JLabel("♠ BLACKJACK");
-        gameLabel.setFont(new Font("Georgia", Font.BOLD, 24));
-        gameLabel.setForeground(new Color(245, 220, 130));
-        gameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        gameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        // Instructions content
+        String[] instructions = {
+                "✔ 1. " + Texts.instructionsPopup[language][1],
+                "✔ 2. " + Texts.instructionsPopup[language][2],
+                "✔ 3. " + Texts.instructionsPopup[language][3],
+                "✔ 4. Face cards are worth 10, Aces are 1 or 11.",
+                "✔ 5. Place your bet using the 'Place Bet' field.",
+                "✔ 6. You can undo your last bet using the 'Undo' button.",
+                "✔ 7. You can save the game anytime using the Save option."
+        };
 
-        JTextPane instructionsPane = new JTextPane();
-        instructionsPane.setContentType("text/html");
-        instructionsPane.setText(generateStyledHTML());
-        instructionsPane.setEditable(false);
-        instructionsPane.setOpaque(false);
-        instructionsPane.setForeground(Color.WHITE);
-        instructionsPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        instructionsPane.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        StringBuilder html = new StringBuilder("<html><body style='font-size:14px; color: #F0F0F0; font-family:Segoe UI;'>");
+        for (String line : instructions) {
+            html.append("<div style='margin-bottom:10px;'>").append(line).append("</div>");
+        }
+        html.append("</body></html>");
 
-        JScrollPane scrollPane = new JScrollPane(instructionsPane);
+        JLabel contentLabel = new JLabel(html.toString());
+        JScrollPane scrollPane = new JScrollPane(contentLabel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
-        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-        scrollPane.setPreferredSize(new Dimension(500, 260));
+        scrollPane.setPreferredSize(new Dimension(500, 300));
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        JButton closeButton = new JButton("CLOSE");
+        // Close button
+        JButton closeButton = new JButton("✖ " + Texts.exit[language]);
         closeButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
         closeButton.setForeground(Color.WHITE);
-        closeButton.setBackground(new Color(30, 100, 60));
+        closeButton.setBackground(new Color(30, 80, 40));
         closeButton.setFocusPainted(false);
         closeButton.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        closeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         closeButton.addActionListener(e -> dispose());
 
-        mainPanel.add(titleLabel);
-        mainPanel.add(gameLabel);
-        mainPanel.add(scrollPane);
-        mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(closeButton);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(closeButton);
+
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
-    }
-
-    private String generateStyledHTML() {
-        String[] steps = Texts.instructionsPopup[language];
-        StringBuilder html = new StringBuilder("<html><body style='font-family:Segoe UI; font-size:15px; color:white;'>");
-
-        for (int i = 1; i < steps.length; i++) {
-            html.append("<div style='margin-bottom: 15px;'>")
-                .append("<span style='color:#F5DC82; font-weight:bold;'>")
-                .append(i).append(".</span> ")
-                .append(steps[i])
-                .append("</div>");
-        }
-
-        html.append("</body></html>");
-        return html.toString();
     }
 }
