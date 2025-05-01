@@ -344,8 +344,7 @@ public class BlackJackMenu extends JFrame {
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
     
-                // Shadow effect
-                g2.setColor(new Color(0, 0, 0, 40));
+                g2.setColor(new Color(0, 0, 0, 40)); // Shadow
                 g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
     
                 super.paintComponent(g);
@@ -360,13 +359,14 @@ public class BlackJackMenu extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(320, 80));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15); // space between icon and text
-
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setIconTextGap(15);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // ✅ Added line
+    
         return button;
     }
+    
 
     /**
      * Loads and scales an icon image from the resources directory.
