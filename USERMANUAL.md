@@ -35,22 +35,31 @@ This guide will walk you through how to play, configure, and fully enjoy the gam
 
 ---
 
-## ⚙️ Configuration Instructions
+## ⚙️ Project Configuration
 
-To run the game locally:
+To configure and run this project locally:
 
-### ✅ Requirements
-- Java 17 or later
-- Git (optional, for cloning)
-
-### 💻 Setup Steps
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/blackjack-2.0.git
-   cd blackjack-2.0
-2. **Open the project in an IDE**
-   - Recommended: IntelliJ IDEA, Eclipse, or NetBeans
-   - Locate and open the file: `BlackjackGUI.java` in `/src/main/java/blackjack/`
+   git clone https://github.com/SwEng-UCM/the-boys-are-jack-in-town.git
+   ```bash
+   cd the-boys-are-jack-in-town
+2. **Open the project in VS Code, IntelliJ, Eclipse, or any Java IDE**
+3. **Ensure Java 17+ is installed**
+   ```bash
+    java -version
+4. Locate and open the file: `BlackjackGUI.java` in `/src/main/java/blackjack/`
+
+---
+
+## 🚀 Deployment Instructions
+
+1. **Package the project as a JAR file using your IDE or:**
+    ```bash
+   jar cfe BlackjackGame.jar blackjack.BlackjackGUI -C out .
+2. **To run the JAR:**
+    ```bash
+   java -jar BlackjackGame.jar
 
 --- 
 
@@ -60,10 +69,7 @@ To run the game locally:
 You lose the round and your bet.
 
 **Q: What does 'Undo' do?**  
-It reverts your last action if available — including achievements.
-
-**Q: Can I reset progress or achievements?**  
-Not currently. Resetting may be added in a future version.
+It reverts your last action if available.
 
 **Q: Can I play in Spanish?**  
 Yes! Use the Options menu to change the game language.
@@ -74,5 +80,5 @@ Yes! Use the Options menu to change the game language.
 
 Have an issue or suggestion?  
 Open a ticket on our GitHub Issues page:  
-[https://github.com/your-username/blackjack-2.0/issues](https://github.com/your-username/blackjack-2.0/issues)
+[https://github.com/SwEng-UCM/the-boys-are-jack-in-town/issues](https://github.com/SwEng-UCM/the-boys-are-jack-in-town/issues)
 
