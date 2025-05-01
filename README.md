@@ -42,32 +42,6 @@ This project is licensed under the **MIT License**, an open-source license recog
 
 ---
 
-## ⚙️ Project Configuration
-
-To configure and run this project locally:
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/SwEng-UCM/the-boys-are-jack-in-town.git
-   cd the-boys-are-jack-in-town
-2. **Open the project in VS Code, IntelliJ, Eclipse, or any Java IDE**
-3. **Ensure Java 17+ is installed**
-   ```bash
-    java -version
-
----
-
-## 🚀 Deployment Instructions
-
-1. **Package the project as a JAR file using your IDE or:**
-    ```bash
-   jar cfe BlackjackGame.jar blackjack.BlackjackGUI -C out .
-2. **To run the JAR:**
-    ```bash
-   java -jar BlackjackGame.jar
-
----
-
 ## 📊 Git Contribution History
 
 - Full commit history is available under the **[Insights → Contributors](../../graphs/contributors)** tab  
