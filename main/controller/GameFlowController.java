@@ -64,7 +64,8 @@ public class GameFlowController {
             gui.setGameButtonsEnabled(true);
             gui.enableBetting();  
         });
-        
+        gameManager.setCurrentPlayerIndex(0);
+        gameManager.startNextPlayerTurn();
     }
     
 

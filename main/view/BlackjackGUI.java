@@ -305,6 +305,7 @@ public class BlackjackGUI extends JFrame {
                 playersPanel.updatePanel(gameManager.getPlayerManager().getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
     
+                gameManager.startNextPlayerTurn();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -403,8 +404,6 @@ public class BlackjackGUI extends JFrame {
         standButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
         newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
-        betField.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
-        placeBetButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
 
         pauseButton.setEnabled(true);
     }
@@ -605,7 +604,7 @@ public class BlackjackGUI extends JFrame {
             setGameButtonsEnabled(true);
             updateGameMessage(player.getName() + "'s turn");
         
-            if (!gameManager.getGameFlowController().isGameRunning()) {
+            if (!gameManager.getBettingManager().hasPlayerBet(player.getName())) {
                 enableBetting();
             }
     }

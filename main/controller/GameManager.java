@@ -378,4 +378,9 @@ public class GameManager {
         public CommandManager getCommandManager() {
             return commandManager;
         }
+
+        public void setCurrentPlayerIndex(int index) {
+            this.currentPlayerIndex = index;
+        }
+        
 }
