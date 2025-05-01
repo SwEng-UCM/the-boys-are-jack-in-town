@@ -141,29 +141,26 @@ public class BlackJackMenu extends JFrame {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 20));
     
-        // Center content panel
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setOpaque(false);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    
-        // Image panel
-        JPanel imagePanel = new JPanel();
-        imagePanel.setOpaque(false);
-        imagePanel.setLayout(new BorderLayout());
-        imagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, -20, 0)); // move image upward
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
-
-    
-        // Title animation panel
+        // 🌟 Title panel - now directly added to NORTH
         JPanel titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
         mainTitleLabel.setBounds(0, 0, 1, 100);
         titlePanel.add(mainTitleLabel);
+        mainPanel.add(titlePanel, BorderLayout.NORTH); // <<=== Moved here
     
-        contentPanel.add(titlePanel, BorderLayout.CENTER);
+        // Center content panel
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
     
-        // Button panel
+        // Image panel
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        imagePanel.setOpaque(false);
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, -20, 0));
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        contentPanel.add(imagePanel, BorderLayout.NORTH);
+    
+        // Button panel setup
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -181,7 +178,6 @@ public class BlackJackMenu extends JFrame {
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
     
-        // Wrap buttons vertically
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
         lowerPanel.setOpaque(false);
@@ -203,12 +199,12 @@ public class BlackJackMenu extends JFrame {
         glassPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 20, 25));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
     
-        contentPanel.add(imagePanel, BorderLayout.NORTH);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(glassPanel, BorderLayout.SOUTH);
+        contentPanel.add(glassPanel, BorderLayout.SOUTH);
     
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
         add(mainPanel);
     }
+    
     
     /**
      * Binds action listeners to each interactive button.
