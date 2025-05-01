@@ -38,7 +38,7 @@ This project is licensed under the **MIT License**, an open-source license recog
 - TODO: Insert a screenshot of the **Achievements or badges screen**
 - Options Menu	-Language & difficulty selection
 
-🔗 Full user manual available here: [User Manual (PDF)](TODO: insert Drive or GitHub link)
+🔗 Full user manual available here: [User Manual](USERMANUAL.md)
 
 ---
 
