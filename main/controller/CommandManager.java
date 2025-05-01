@@ -16,6 +16,10 @@ public class CommandManager {
         command.execute();
         lastCommand = command;
     }
+    public boolean canUndo() {
+        return lastCommand != null;
+    }
+    
 
     /**
      * Undoes the last executed command, if any, and plays an undo sound effect.

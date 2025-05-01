@@ -131,6 +131,8 @@ public class GameManager {
             // NEW: Use Command pattern
             HitCommand hitCommand = new HitCommand(currentPlayer, this);
             commandManager.executeCommand(hitCommand);
+            gui.updateUndoButtonState();
+
     
             gui.updateGameState(players, dealer, gameOver, false);
     

@@ -278,6 +278,8 @@ public class BlackjackGUI extends JFrame {
                 // Use Command pattern
                 BetCommand betCommand = new BetCommand(player, betAmount, gameManager);
                 gameManager.getCommandManager().executeCommand(betCommand);
+                updateUndoButtonState();
+
     
                 // ✅ Update UI via controller/model access only
                 int updatedPlayerBalance = gameManager.getBettingManager().getPlayerBalance(player.getName());
@@ -554,6 +556,10 @@ public class BlackjackGUI extends JFrame {
 
         return cardPanel;
     }
+    public void updateUndoButtonState() {
+        undoButton.setEnabled(gameManager.getCommandManager().canUndo());
+    }
+    
 
     public int promptJokerWildValue() {
         int wildValue = 0;
