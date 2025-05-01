@@ -1,5 +1,5 @@
 # 📘 Blackjack 2.0 – User Manual
-
+ 
 Welcome to **Blackjack 2.0**, a modern twist on the classic casino game!  
 This guide will walk you through how to play, configure, and fully enjoy the game.
 
