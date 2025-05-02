@@ -31,7 +31,8 @@ public class BlackJackMenu extends JFrame {
      * Constructs and initializes the Blackjack main menu GUI.
      */
     public BlackJackMenu() {
-        setTitle(Texts.startGame[language]);
+        setTitle(Texts.guiTitle[language]);
+
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -93,7 +94,7 @@ public class BlackJackMenu extends JFrame {
         // Load and resize the image
         ImageIcon originalIcon = new ImageIcon("resources/img/blackjack.png");
         Image originalImage = originalIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(500, 300, Image.SCALE_SMOOTH);
+        Image resizedImage = originalImage.getScaledInstance(400, 219, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
         imageLabel = new JLabel(resizedIcon);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -141,26 +142,26 @@ public class BlackJackMenu extends JFrame {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 20));
     
-        // Center content panel
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setOpaque(false);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
-    
-        // Image panel
-        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        imagePanel.setOpaque(false);
-        imagePanel.add(imageLabel);
-    
-        // Title animation panel
+        // 🌟 Title panel - now directly added to NORTH
         JPanel titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
         mainTitleLabel.setBounds(0, 0, 1, 100);
         titlePanel.add(mainTitleLabel);
+        mainPanel.add(titlePanel, BorderLayout.NORTH); // <<=== Moved here
     
-        contentPanel.add(titlePanel, BorderLayout.CENTER);
+        // Center content panel
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
     
-        // Button panel
+        // Image panel
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        imagePanel.setOpaque(false);
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, -20, 0));
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        contentPanel.add(imagePanel, BorderLayout.NORTH);
+    
+        // Button panel setup
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -168,7 +169,7 @@ public class BlackJackMenu extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(15, 0, 15, 0);
+        gbc.insets = new Insets(2, 0, 2, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
     
         buttonPanel.add(startButton, gbc);
@@ -178,7 +179,6 @@ public class BlackJackMenu extends JFrame {
         buttonPanel.add(optionsButton, gbc);
         buttonPanel.add(exitButton, gbc);
     
-        // Wrap buttons vertically
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.Y_AXIS));
         lowerPanel.setOpaque(false);
@@ -197,15 +197,15 @@ public class BlackJackMenu extends JFrame {
             }
         };
         glassPanel.setOpaque(false);
-        glassPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        glassPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 20, 25));
         glassPanel.add(lowerPanel, BorderLayout.CENTER);
     
-        contentPanel.add(imagePanel, BorderLayout.NORTH);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(glassPanel, BorderLayout.SOUTH);
+        contentPanel.add(glassPanel, BorderLayout.SOUTH);
     
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
         add(mainPanel);
     }
+    
     
     /**
      * Binds action listeners to each interactive button.
@@ -232,17 +232,9 @@ public class BlackJackMenu extends JFrame {
         
 
         instructionsButton.addActionListener(e -> {
-            String message = Texts.instructionsPopup[language][0] + "\n" +
-                             "1. " + Texts.instructionsPopup[language][1] + "\n" +
-                             "2. " + Texts.instructionsPopup[language][2] + "\n" +
-                             "3. " + Texts.instructionsPopup[language][3];
-        
-            JOptionPane.showMessageDialog(this, 
-                message, 
-                Texts.instructions[language], 
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            new InstructionsDialog(this).setVisible(true);
         });
+        
 
         multiplayerButton.addActionListener(e -> MultiplayerSetUpDialog.show(this));
 
@@ -277,8 +269,7 @@ public class BlackJackMenu extends JFrame {
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
     
-                // Shadow effect
-                g2.setColor(new Color(0, 0, 0, 40));
+                g2.setColor(new Color(0, 0, 0, 40)); // Shadow
                 g2.fillRoundRect(4, 4, getWidth() - 8, getHeight() - 8, 40, 40);
     
                 super.paintComponent(g);
@@ -293,13 +284,14 @@ public class BlackJackMenu extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(320, 80));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setHorizontalAlignment(SwingConstants.CENTER);            // Center icon + text block
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15); // space between icon and text
-
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setIconTextGap(15);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // ✅ Added line
+    
         return button;
     }
+    
 
     /**
      * Loads and scales an icon image from the resources directory.
@@ -329,8 +321,8 @@ public class BlackJackMenu extends JFrame {
      * Repaints the UI with updated translations.
      */
     public void refreshMenu() {
-        setTitle(Texts.startGame[language]); // Update window title
-
+        setTitle(Texts.guiTitle[language]); // ✅ Correct window banner title
+    
         // Update button texts
         startButton.setText(Texts.startGame[language]);
         loadGameButton.setText(Texts.loadGame[language]);
@@ -338,11 +330,15 @@ public class BlackJackMenu extends JFrame {
         exitButton.setText(Texts.exit[language]);
         optionsButton.setText(Texts.options[language]);
         multiplayerButton.setText(Texts.multiplayer[language]);
-
+    
+        // Optionally update main title if desired:
+        mainTitleLabel.setText(Texts.mainTitle[language]);
+    
         // Repaint UI
         revalidate();
         repaint();
     }
+    
 
     /**
      * Starts the scrolling animation of the title label across the screen.

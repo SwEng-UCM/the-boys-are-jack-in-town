@@ -278,6 +278,8 @@ public class BlackjackGUI extends JFrame {
                 // Use Command pattern
                 BetCommand betCommand = new BetCommand(player, betAmount, gameManager);
                 gameManager.getCommandManager().executeCommand(betCommand);
+                updateUndoButtonState();
+
     
                 // ✅ Update UI via controller/model access only
                 int updatedPlayerBalance = gameManager.getBettingManager().getPlayerBalance(player.getName());
@@ -305,6 +307,7 @@ public class BlackjackGUI extends JFrame {
                 playersPanel.updatePanel(gameManager.getPlayerManager().getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
     
+                gameManager.startNextPlayerTurn();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -403,8 +406,6 @@ public class BlackjackGUI extends JFrame {
         standButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
         newGameButton.setEnabled(buttonsEnabled); // Disable when paused
         pauseButton.setEnabled(true); // Always enabled
-        betField.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
-        placeBetButton.setEnabled(buttonsEnabled && !gameManager.getGameFlowController().isGameOver());
 
         pauseButton.setEnabled(true);
     }
@@ -431,6 +432,11 @@ public class BlackjackGUI extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+    public void refreshLanguage() {
+        setTitle(Texts.guiTitle[BlackJackMenu.language]);
+        // TODO: update other GUI labels/buttons here if needed
+    }
+    
 
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
@@ -555,6 +561,10 @@ public class BlackjackGUI extends JFrame {
 
         return cardPanel;
     }
+    public void updateUndoButtonState() {
+        undoButton.setEnabled(gameManager.getCommandManager().canUndo());
+    }
+    
 
     public int promptJokerWildValue() {
         int wildValue = 0;
@@ -614,7 +624,7 @@ public class BlackjackGUI extends JFrame {
             setGameButtonsEnabled(true);
             updateGameMessage(player.getName() + "'s turn");
         
-            if (!gameManager.getGameFlowController().isGameRunning()) {
+            if (!gameManager.getBettingManager().hasPlayerBet(player.getName())) {
                 enableBetting();
             }
     }

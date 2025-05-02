@@ -18,22 +18,23 @@ public class GUILayoutBuilder {
         topPanel.setOpaque(false);
 
         // Achievement button
-        JButton achievementButton = new JButton();
-        achievementButton.setPreferredSize(new Dimension(50, 50));
+        JButton achievementButton = window.createStyledButton(""); // Styled yellow button with no text
+
+        ImageIcon rawIcon = new ImageIcon("resources/icons/achievement.png");
+        Image scaledImage = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        achievementButton.setIcon(new ImageIcon(scaledImage));
+        
         achievementButton.setToolTipText("View Achievements");
-        achievementButton.setFocusPainted(false);
-        achievementButton.setContentAreaFilled(false);
-        achievementButton.setBorderPainted(false);
-        achievementButton.setOpaque(false);
-
-        ImageIcon achievementIcon = new ImageIcon("resources/icons/achievement.png");
-        Image scaledIcon = achievementIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-        achievementButton.setIcon(new ImageIcon(scaledIcon));
+        achievementButton.setPreferredSize(new Dimension(60, 60)); // smaller size like Undo
+        achievementButton.setHorizontalAlignment(SwingConstants.CENTER);
+        achievementButton.setVerticalAlignment(SwingConstants.CENTER);
+        
         achievementButton.addActionListener(e -> new AchievementsWindow().setVisible(true));
-
-        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10)); // spacing
         topLeftPanel.setOpaque(false);
         topLeftPanel.add(achievementButton);
+        
 
         window.topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         window.topRightPanel.setOpaque(false);

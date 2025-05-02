@@ -255,6 +255,8 @@ public class GameManager {
             // NEW: Use Command pattern
             HitCommand hitCommand = new HitCommand(currentPlayer, this);
             commandManager.executeCommand(hitCommand);
+            gui.updateUndoButtonState();
+
     
             gui.updateGameState(players, dealer, gameOver, false);
     
@@ -539,7 +541,6 @@ public class GameManager {
             return commandManager;
         }
 
-
         public int getCurrentPlayerIndex() {
             return this.currentPlayerIndex;
      }
@@ -548,4 +549,7 @@ public class GameManager {
         public NetworkManager getNetworkManager() {
             return this.networkManager;
          }
-}
+        public void setCurrentPlayerIndex(int index) {
+            this.currentPlayerIndex = index;
+        }
+        

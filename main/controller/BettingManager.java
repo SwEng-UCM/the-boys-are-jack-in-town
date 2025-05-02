@@ -177,4 +177,9 @@ public class BettingManager {
     public int getDealerBet() {
         return dealerBet;
     }
+
+    public boolean hasPlayerBet(String playerName) {
+        return playerBets.getOrDefault(playerName, 0) > 0;
+    }
+    
 }
