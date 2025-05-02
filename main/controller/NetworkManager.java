@@ -2,67 +2,66 @@ package main.controller;
 
 import java.io.*;
 import java.net.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkManager {
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private Thread listenThread;
-    private Consumer<Object> messageHandler;
+    private final List<BlackjackClientHandler> clientHandlers = new CopyOnWriteArrayList<>();
+    private ServerSocket serverSocket;
+    private boolean isServer = false;
 
-    public void connectToServer(String host, int port, Consumer<Object> messageHandler) throws IOException {
-        this.socket = new Socket(host, port);
-        this.messageHandler = messageHandler;
-        setupStreams();
-        startListening();
-    }
-
-    public void startServer(int port, Consumer<Object> messageHandler) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            this.socket = serverSocket.accept(); // Blocking call until a client connects
-        }
-        this.messageHandler = messageHandler;
-        setupStreams();
-        startListening();
-    }
-
-    private void setupStreams() throws IOException {
-        this.out = new ObjectOutputStream(socket.getOutputStream());
-        this.in = new ObjectInputStream(socket.getInputStream());
-    }
-
-    private void startListening() {
-        listenThread = new Thread(() -> {
+    // Server-side methods
+    public void startServer(int port, GameManager gameManager) throws IOException {
+        isServer = true;
+        serverSocket = new ServerSocket(port);
+        new Thread(() -> {
             try {
-                while (true) {
-                    Object message = in.readObject();
-                    if (messageHandler != null) {
-                        messageHandler.accept(message);
-                    }
+                while (!serverSocket.isClosed()) {
+                    Socket clientSocket = serverSocket.accept();
+                    BlackjackClientHandler handler = new BlackjackClientHandler(clientSocket, gameManager);
+                    clientHandlers.add(handler);
+                    new Thread(handler).start();
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Connection closed or error occurred: " + e.getMessage());
+            } catch (IOException e) {
+                if (!serverSocket.isClosed()) {
+                    System.err.println("Server accept error: " + e.getMessage());
+                }
             }
-        });
-        listenThread.start();
+        }).start();
     }
 
-    public void send(Object message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException e) {
-            System.err.println("Failed to send message: " + e.getMessage());
+    public boolean isServerRunning() {
+        return serverSocket != null && !serverSocket.isClosed();
+    }
+
+    // Client-side methods
+    public void connectToServer(String host, int port, GameManager gameManager) throws IOException {
+        Socket socket = new Socket(host, port);
+        BlackjackClientHandler handler = new BlackjackClientHandler(socket, gameManager);
+        clientHandlers.add(handler);
+        new Thread(handler).start();
+    }
+
+    public List<BlackjackClientHandler> getClientHandlers() {
+        return new ArrayList<>(clientHandlers);
+    }
+
+    public void broadcast(Object message) {
+        for (BlackjackClientHandler handler : clientHandlers) {
+            handler.sendMessage(message);
         }
     }
 
     public void close() {
         try {
-            if (listenThread != null) listenThread.interrupt();
-            if (in != null) in.close();
-            if (out != null) out.close();
-            if (socket != null) socket.close();
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+            for (BlackjackClientHandler handler : clientHandlers) {
+                handler.closeConnection();
+            }
+            clientHandlers.clear();
         } catch (IOException e) {
             System.err.println("Error closing network resources: " + e.getMessage());
         }

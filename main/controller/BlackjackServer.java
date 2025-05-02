@@ -1,56 +1,37 @@
+package main.controller;
+
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlackjackServer {
     private final int port;
-    private ServerSocket serverSocket;
-    private boolean running = false;
-    private final List<BlackjackClientHandler> clientHandlers = new ArrayList<>();
+    private NetworkManager networkManager;
+    private GameManager gameManager;
 
     public BlackjackServer(int port) {
         this.port = port;
+        this.gameManager = GameManager.getInstance();
+        this.networkManager = new NetworkManager();
     }
 
     public void start() {
         try {
-            serverSocket = new ServerSocket(port);
-            running = true;
+            gameManager.setMultiplayerMode(true);
+            networkManager.startServer(port, gameManager);
+            
             System.out.println("Blackjack Server started on port " + port);
-
-            GameManager gameManager = GameManager.getInstance();
-            gameManager.setServerMode(true);
-
-            while (running) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
-
-                BlackjackClientHandler handler = new BlackjackClientHandler(clientSocket, gameManager);
-                clientHandlers.add(handler);
-
-                new Thread(handler).start();
-            }
+            System.out.println("Waiting for players...");
 
         } catch (IOException e) {
             System.err.println("Server error: " + e.getMessage());
-        } finally {
-            stop();
         }
     }
 
     public void stop() {
-        running = false;
         try {
-            for (BlackjackClientHandler handler : clientHandlers) {
-                handler.closeConnection();
-            }
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
-            }
+            networkManager.close();
+            gameManager.setMultiplayerMode(false);
             System.out.println("Blackjack Server stopped.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error shutting down server: " + e.getMessage());
         }
     }

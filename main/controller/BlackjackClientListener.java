@@ -2,7 +2,6 @@ package main.controller;
 
 import java.io.ObjectInputStream;
 import main.view.BlackjackGUI;
-import main.controller.GameState;
 
 public class BlackjackClientListener extends Thread {
     private ObjectInputStream in;

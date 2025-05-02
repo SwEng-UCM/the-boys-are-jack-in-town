@@ -1,5 +1,7 @@
 package main.view;
 
+import java.io.IOException;
+
 import javax.swing.*;
 
 import main.controller.BetCommand;
@@ -13,8 +15,20 @@ public class GUIEventBinder {
     }
 
     public void attachEventListeners() {
-        window.hitButton.addActionListener(e -> window.gameManager.handlePlayerHit());
-        window.standButton.addActionListener(e -> window.gameManager.handlePlayerStand());
+        window.hitButton.addActionListener(e -> {
+            try {
+                window.gameManager.handlePlayerHit();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+        window.standButton.addActionListener(e -> {
+            try {
+                window.gameManager.handlePlayerStand();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
         window.newGameButton.addActionListener(e -> window.gameManager.getGameFlowController().startNewGame());
         window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
         window.placeBetButton.addActionListener(e -> {

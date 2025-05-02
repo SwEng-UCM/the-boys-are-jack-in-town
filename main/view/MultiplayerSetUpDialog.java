@@ -50,6 +50,7 @@ public class MultiplayerSetUpDialog {
                 JOptionPane.showMessageDialog(parentFrame, "Server started. Waiting for clients...");
 
                 GameManager gameManager = GameManager.getInstance();
+                gameManager.setMultiplayerMode(true);
                 SwingUtilities.invokeLater(() -> {
                     BlackjackGUI gui = new BlackjackGUI(gameManager);
                     gui.setVisible(true);
@@ -89,9 +90,10 @@ public class MultiplayerSetUpDialog {
 
                 new Thread(() -> {
                     try {
-                        BlackjackClient client = new BlackjackClient();
-                        client.connect(serverIP, port);
                         GameManager gameManager = GameManager.getInstance();
+                        BlackjackClient client = new BlackjackClient(gameManager);
+                        client.connect(serverIP, port);
+                        gameManager.setMultiplayerMode(true);
                         gameManager.setClient(client);
 
                         SwingUtilities.invokeLater(() -> {

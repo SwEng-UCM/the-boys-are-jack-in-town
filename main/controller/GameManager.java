@@ -13,7 +13,10 @@ import static main.view.BlackJackMenu.language;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.SwingUtilities;
 
 /*
@@ -47,6 +50,8 @@ public class GameManager {
     private PlayerManager playerManager;
     private DealerManager dealerManager;
     private NetworkManager networkManager;
+    private boolean multiplayerMode;
+
 
     
 
@@ -57,8 +62,6 @@ public class GameManager {
         this.gameOver = false;
         this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // Initial balance
         this.currentPlayerIndex = 0;
-        players.add(new Player("PLAYER 1", INITIAL_BET)); // At least one player
-        players.add(new Player("PLAYER 2", INITIAL_BET)); // At least one player
         
         this.playerManager = new PlayerManager();
         playerManager.setPlayers(players); 
@@ -105,6 +108,10 @@ public class GameManager {
             this.gameFlowController = new GameFlowController(this, playerManager, dealerManager, gui);
         }
     }
+
+    public BlackjackGUI getGUI(){
+        return this.gui;
+    }
     
     public void setGameFlowController(GameFlowController controller) {
         this.gameFlowController = controller;
@@ -128,8 +135,122 @@ public class GameManager {
         }
     }
 
-    public void handlePlayerHit() {
-        if (!gameOver && !isPaused) {
+    public boolean isMultiplayerMode() {
+        return multiplayerMode;
+    }
+
+    public void setMultiplayerMode(boolean multiplayerMode) {
+        this.multiplayerMode = multiplayerMode;
+        if (multiplayerMode) {
+            this.networkManager = new NetworkManager();
+            // Clear default players in multiplayer mode - they'll join via network
+            this.players.clear();
+        } else {
+            // Initialize with default players for single-player
+            if (players.isEmpty()) {
+                players.add(new Player("PLAYER 1", INITIAL_BET));
+                players.add(new Player("PLAYER 2", INITIAL_BET));
+            }
+        }
+    }
+
+    // In GameManager class
+    public GameStateUpdate createGameStateUpdate() {
+        return new GameStateUpdate(
+            players, 
+            dealer, 
+            currentPlayerIndex, 
+            gameOver
+        );
+    }
+
+    public void playerDisconnected(String playerName) {
+        players.removeIf(p -> p.getName().equals(playerName));
+        broadcastGameState();
+        System.out.println("Player disconnected: " + playerName);
+    }
+
+    public void broadcastGameState() {
+        if (!multiplayerMode) return;
+        
+        GameStateUpdate update = createGameStateUpdate();
+        networkManager.getClientHandlers().forEach(handler -> 
+            handler.sendMessage(update)
+        );
+        if (gui != null) {
+            SwingUtilities.invokeLater(() -> 
+                gui.updateGameState(players, dealer, gameOver, false)
+            );
+        }
+    }
+    
+
+    public void handleCommand(MultiplayerCommand command) {
+        if (!multiplayerMode) return;
+
+        switch (command.getType()) {
+            case JOIN:
+                handlePlayerJoin(command);
+                break;
+            case BET:
+                handleBet(command);
+                break;
+            case HIT:
+                handleHit(command);
+                break;
+            case STAND:
+                handleStand(command);
+                break;
+            default:
+                System.err.println("Unknown command type: " + command.getType());
+        }
+    }
+    private void handlePlayerJoin(MultiplayerCommand command) {
+        String playerName = command.getPlayerName();
+        if (playerManager.getPlayerByName(playerName) == null) {
+            playerManager.addPlayer(playerName, INITIAL_BET);
+            broadcastGameState();
+            System.out.println("Player joined: " + playerName);
+        }
+    }
+
+    private void handleBet(MultiplayerCommand command) {
+        Player player = playerManager.getPlayerByName(command.getPlayerName());
+        if (player != null) {
+            int amount = command.getData(Integer.class);
+            if (placeBet(player, amount)) {
+                broadcastGameState();
+            }
+        }
+    }
+
+    private void handleHit(MultiplayerCommand command) {
+        Player player = playerManager.getPlayerByName(command.getPlayerName());
+        if (player != null && playerManager.isCurrentPlayer(player)) {
+            hit(player);
+            broadcastGameState();
+            if (player.calculateScore() > 21) {
+                checkPlayerBust();
+            }
+        }
+    }
+
+    private void handleStand(MultiplayerCommand command) {
+        Player player = playerManager.getPlayerByName(command.getPlayerName());
+        if (player != null && playerManager.isCurrentPlayer(player)) {
+            currentPlayerIndex++;
+            broadcastGameState();
+        }
+    }
+
+    public void handlePlayerHit() throws IOException {
+        if (multiplayerMode) {
+            if (client != null) {
+                Player current = players.get(currentPlayerIndex);
+                client.sendAction(new MultiplayerCommand(
+                    MultiplayerCommand.Type.HIT, current.getName(), current));
+            }
+        } else if (!gameOver && !isPaused) {
             Player currentPlayer = players.get(currentPlayerIndex);
             
             // NEW: Use Command pattern
@@ -150,16 +271,24 @@ public class GameManager {
     
     
 
-    public void handlePlayerStand() {
-        if (!gameOver) {
-            currentPlayerIndex++; // move to next player
-    
-            if (currentPlayerIndex < players.size()) {
-                // prompt next player's turn
-                gui.promptPlayerAction(players.get(currentPlayerIndex));
-            } else {
-                // all players done, now dealer plays
-                dealerManager.dealerTurn();
+    public void handlePlayerStand() throws IOException {
+        if (multiplayerMode) {
+            if (client != null) {
+                Player current = players.get(currentPlayerIndex);
+                // Use the action factory method
+                client.sendAction(MultiplayerCommand.action(
+                    MultiplayerCommand.Type.STAND, 
+                    current.getName()
+                ));
+            }
+        } else {
+            if (!gameOver) {
+                currentPlayerIndex++; // move to next player
+                if (currentPlayerIndex < players.size()) {
+                    gui.promptPlayerAction(players.get(currentPlayerIndex));
+                } else {
+                    dealerManager.dealerTurn();
+                }
             }
         }
     }
@@ -181,6 +310,8 @@ public class GameManager {
             }
         }
     }
+
+    
     
     public DifficultyStrategy getDifficultyStrategy() {
         return this.difficultyStrategy;
@@ -304,7 +435,7 @@ public class GameManager {
         this.bettingManager = bettingManager;
     }
     
-
+    
     public void loadGame(GameState memento) {
         this.players = new ArrayList<>(memento.getPlayers());
         this.dealer = memento.getDealer();
@@ -338,10 +469,10 @@ public class GameManager {
         
 
         // Restore (Memento -> Originator)
-        public void applyGameState(GameState state) {
+        public void applyGameState(GameState loadedState) {
             System.out.println("Applying game state");
             
-            state.restore(this);
+            loadedState.restore(this);
 
             this.gui = new BlackjackGUI(this);
 
@@ -355,6 +486,32 @@ public class GameManager {
 
             System.out.println("Game loaded successfully!");
         }
+
+        // In your GameManager class
+        public void applyGameStateUpdate(GameStateUpdate update) {
+            // Update core game state
+            this.players = new ArrayList<>(update.getPlayers());
+            this.dealer = new Player(update.getDealer()); // Assume copy constructor
+            this.currentPlayerIndex = update.getCurrentPlayerIndex();
+            this.gameOver = update.isGameOver();
+            
+            // Update UI components
+            if (gui != null) {
+                DealerManager.DealerCardInfo dealerCards = 
+                    dealerManager.getVisibleDealerCards(gameOver);
+                    
+                SwingUtilities.invokeLater(() -> {
+                    gui.updatePlayerPanels();
+                    
+                    if (gameOver) {
+                        
+                    }
+                });
+            }
+        }
+
+
+        
 
         public void setClient(BlackjackClient client) {
             this.client = client;
@@ -382,4 +539,14 @@ public class GameManager {
         public CommandManager getCommandManager() {
             return commandManager;
         }
+
+
+        public int getCurrentPlayerIndex() {
+            return this.currentPlayerIndex;
+     }
+
+
+        public NetworkManager getNetworkManager() {
+            return this.networkManager;
+         }
 }

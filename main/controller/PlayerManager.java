@@ -41,6 +41,23 @@ public class PlayerManager {
         this.currentPlayerIndex = index;
     }
 
+    public boolean isCurrentPlayer(Player player) {
+        return !players.isEmpty() &&
+               currentPlayerIndex >= 0 &&
+               currentPlayerIndex < players.size() &&
+               players.get(currentPlayerIndex).equals(player);
+    }
+    
+    public boolean isCurrentPlayer(String playerName) {
+        if (players.isEmpty() || currentPlayerIndex < 0 || currentPlayerIndex >= players.size()) {
+            return false;
+        }
+        Player currentPlayer = players.get(currentPlayerIndex);
+        
+        return currentPlayer != null && 
+               currentPlayer.getName().equalsIgnoreCase(playerName);
+    }
+
     
     public int getPlayerScore(Player currentPlayer) {
         return currentPlayer.calculateScore();
@@ -54,7 +71,13 @@ public class PlayerManager {
         currentPlayerIndex++;
     }
 
-    
+    public Player getPlayerByName(String name) {
+        return players.stream()
+            .filter(p -> p.getName().equals(name))
+            .findFirst()
+            .orElse(null);
+    }
+
     public String getPlayerHand(Player player) {
         return player.getHand().toString();
     }
@@ -66,8 +89,6 @@ public class PlayerManager {
     public boolean hasNextPlayer() {
         return currentPlayerIndex < players.size()-1;
     }
-
-
 
     public List<Integer> getPlayerScores() {
         List<Integer> pScores = new ArrayList<>();
