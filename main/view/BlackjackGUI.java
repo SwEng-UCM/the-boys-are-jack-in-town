@@ -602,7 +602,16 @@ public class BlackjackGUI extends JFrame {
     }
  
     public void promptPlayerAction(Player player) {
-            if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
+        if(gameManager.isMultiplayerMode()){
+            boolean isCurrentPlayer = player.getName().equals(getCurrentPlayerName());
+            hitButton.setEnabled(isCurrentPlayer);
+            standButton.setEnabled(isCurrentPlayer);
+            
+            if (isCurrentPlayer) {
+                updateGameMessage(player.getName() + ", it's your turn!");
+            }
+        }
+        if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
                 gameManager.getPlayerManager().advanceToNextPlayer(); // ✅ Advance the index here
                 if (gameManager.getPlayerManager().hasNextPlayer()) {
                     gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
@@ -618,6 +627,17 @@ public class BlackjackGUI extends JFrame {
             if (!gameManager.getBettingManager().hasPlayerBet(player.getName())) {
                 enableBetting();
             }
+    }
+
+    private String getCurrentPlayerName() {
+        if (gameManager.isMultiplayerMode()) {
+            List<Player> players = gameManager.getPlayerManager().getPlayers();
+            int index = gameManager.getCurrentPlayerIndex();
+            if (index >= 0 && index < players.size()) {
+                return players.get(index).getName();
+            }
+        }
+        return "";
     }
     
     public void updatePlayerPanels() {

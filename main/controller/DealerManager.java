@@ -31,20 +31,45 @@ public class DealerManager {
     this.gameManager = gameManager;
     }
 
-public void dealerTurn() {
-    Player referencePlayer = players.get(0); // Or choose the strongest player
-    for (Player p : players) {
-        if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
-            referencePlayer = p;
+    public void dealerTurn() {
+        // Reveal dealer's hidden card first
+        
+        // Get initial reference player based on difficulty strategy
+        Player referencePlayer = players.get(0); // Or choose the strongest player
+        for (Player p : players) {
+            if (p.calculateScore() <= 21 && p.calculateScore() > referencePlayer.calculateScore()) {
+                referencePlayer = p;
         }
     }
-
-    while (difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
-        dealer.receiveCard(deck.dealCard());
+        // Dealer decision loop
+        while (true) {
+            
+            // Check if dealer must stop
+            if (!difficultyStrategy.shouldDealerHit(dealer, referencePlayer)) {
+                break;
+            }
+    
+            // Deal new card with animation delay
+            Card newCard = deck.dealCard();
+            dealer.receiveCard(newCard);
+            
+            // Update game state for all players
+            if (gameManager.isMultiplayerMode()) {
+                gameManager.broadcastGameState();
+            } else {
+                gui.updateGameState((ArrayList<Player>) players, dealer, false, false);
+            }
+    
+            // Immediate bust check
+            if (dealer.calculateScore() > 21) {
+                checkDealerBust();
+                return;
+            }
+        }
+        
+        // Final determination after dealer stands
+        gameManager.determineWinners();
     }
-    checkDealerBust();
-    gameManager.determineWinners();
-}
 
     private void checkDealerBust() {
         if (dealer.calculateScore() > 21) {

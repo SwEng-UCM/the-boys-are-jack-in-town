@@ -4,16 +4,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
-import main.view.BlackjackGUI;
+import javax.swing.SwingUtilities;
+
+import main.model.Player;
 
 public class BlackjackClient {
     private Socket socket;
     private ObjectOutputStream output;
     private ObjectInputStream input;
+    private GameManager gameManager;
     
-    public BlackjackClient() {
-        // Empty constructor - no auto-connect
+    public BlackjackClient(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
     
     public void connect(String host, int port) throws IOException {
@@ -22,34 +26,58 @@ public class BlackjackClient {
             this.output = new ObjectOutputStream(socket.getOutputStream());
             this.input = new ObjectInputStream(socket.getInputStream());
             
-            // Start listening for server updates
             new Thread(this::listenForUpdates).start();
         } catch (IOException e) {
-            throw new IOException("Failed to connect: " + e.getMessage());
+            throw new IOException("Connection failed: " + e.getMessage());
         }
     }
     
     private void listenForUpdates() {
         try {
             while (socket.isConnected()) {
-                GameState state = (GameState) input.readObject();
-                // Notify game manager of update
-                GameManager gm = GameManager.getInstance();
-                BlackjackGUI.getInstance(gm).applyGameState(state);
+                Object received = input.readObject();
+                
+                if (received instanceof GameStateUpdate) {
+                    handleGameStateUpdate((GameStateUpdate) received);
+                } else if (received instanceof MultiplayerCommand) {
+                    gameManager.handleCommand((MultiplayerCommand) received);
+                }
             }
         } catch (Exception e) {
-            System.err.println("Connection lost: " + e.getMessage());
+            System.err.println("Connection error: " + e.getMessage());
+        }
+    }
+
+    private void handleGameStateUpdate(GameStateUpdate update) {
+        SwingUtilities.invokeLater(() -> {
+            gameManager.applyGameStateUpdate(update);
+            if (gameManager.getGUI() != null) {
+                gameManager.getGUI().updateGameState(
+                    (ArrayList<Player>) update.getPlayers(),
+                    update.getDealer(),
+                    update.isGameOver(),
+                    false
+                );
+            }
+        });
+    }
+
+    public void sendAction(MultiplayerCommand command) throws IOException {
+        try {
+            output.writeObject(command);
+            output.flush();
+        } catch (IOException e) {
+            throw new IOException("Failed to send command: " + e.getMessage());
         }
     }
     
-    public void sendAction(String action) throws IOException {
-        output.writeObject(action);
-        output.flush();
-    }
-    
-    public void disconnect() throws IOException {
-        if (socket != null) {
-            socket.close();
+    public void disconnect() {
+        try {
+            if (socket != null) socket.close();
+            if (output != null) output.close();
+            if (input != null) input.close();
+        } catch (IOException e) {
+            System.err.println("Error disconnecting: " + e.getMessage());
         }
     }
 }

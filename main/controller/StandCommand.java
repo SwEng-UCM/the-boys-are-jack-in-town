@@ -1,5 +1,7 @@
 package main.controller;
 
+import java.io.IOException;
+
 /**
  * {@code StandCommand} represents a command in the Command pattern that handles
  * the logic for when a player chooses to stand during their turn in Blackjack.
@@ -27,7 +29,11 @@ public class StandCommand implements Command {
     @Override
     public void execute() {
         previousIndex = gameManager.getPlayerManager().getCurrentPlayerIndex();
-        gameManager.handlePlayerStand();
+        try {
+            gameManager.handlePlayerStand();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
