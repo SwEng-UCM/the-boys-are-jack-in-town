@@ -4,6 +4,14 @@ import java.io.*;
 import java.net.Socket;
 import main.model.Player;
 
+/**
+ * Handles communication with a single client in a multiplayer Blackjack game.
+ * This class implements {@link Runnable} so it can be executed in a separate thread.
+ * 
+ * It handles the connection setup, processes commands received from the client,
+ * and sends responses back. It maintains the association with a {@link Player}
+ * and communicates with the {@link GameManager}.
+ */
 public class BlackjackClientHandler implements Runnable {
     private final Socket socket;
     private final GameManager gameManager;
@@ -12,11 +20,22 @@ public class BlackjackClientHandler implements Runnable {
     private boolean connected = true;
     private Player player;  // Track associated player
 
+    /**
+     * Constructs a new handler for a connected client.
+     *
+     * @param socket the client's socket connection
+     * @param gameManager the game manager that controls game logic and state
+     */
     public BlackjackClientHandler(Socket socket, GameManager gameManager) {
         this.socket = socket;
         this.gameManager = gameManager;
     }
 
+    /**
+     * The main loop of the client handler. Sets up the input/output streams,
+     * processes the initial JOIN command, and listens for further commands
+     * from the client until the connection is closed.
+     */
     @Override
     public void run() {
         try {
@@ -53,16 +72,21 @@ public class BlackjackClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends a serialized message to the client.
+     *
+     * @param message the message object to send
+     */
     public void sendMessage(Object message) {
         try {
             if (out == null) {
                 throw new IOException("Output stream not initialized");
             }
-            
+
             synchronized(out) {  // Ensure thread-safe writes
                 out.writeObject(message);
                 out.flush();
-                
+
                 // Optional: Reset for repeated object sending
                 out.reset();  // Clears object cache to prevent reference recycling
             }
@@ -74,22 +98,34 @@ public class BlackjackClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the initial JOIN command from a new player.
+     * Creates the player, associates it with this handler, and sends
+     * the initial game state back to the client.
+     *
+     * @param command the join command containing the player name
+     * @throws IOException if player setup fails
+     */
     private void handleJoinCommand(MultiplayerCommand command) throws IOException {
         String playerName = command.getPlayerName();
         int initialBalance = 1000; // Or get from GameManager
-        
+
         // Create player through PlayerManager
         gameManager.getPlayerManager().addPlayer(playerName, initialBalance);
-        
+
         // Get reference to the created player
         this.player = gameManager.getPlayerManager().getPlayerByName(playerName);
-        
+
         // Send initial game state
         sendMessage(gameManager.createGameStateUpdate());
-        
+
         System.out.println("Player joined: " + playerName);
     }
 
+    /**
+     * Closes the client connection and cleans up associated resources.
+     * Removes the player from the game and unregisters this handler.
+     */
     public void closeConnection() {
         try {
             connected = false;

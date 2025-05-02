@@ -10,13 +10,22 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import java.awt.GridLayout;
 
-
 import main.controller.BlackjackClient;
 import main.controller.GameManager;
 import main.controller.BlackjackServer;
 
+/**
+ * A dialog utility class to configure and launch a multiplayer Blackjack game,
+ * allowing the user to choose to host (as a server) or join (as a client).
+ */
 public class MultiplayerSetUpDialog {
 
+    /**
+     * Displays the multiplayer setup dialog, asking the user if they want to
+     * host or join a multiplayer game.
+     *
+     * @param parentFrame the parent JFrame to use as the dialog anchor
+     */
     public static void show(JFrame parentFrame) {
         Object[] options = {"Host (Server)", "Join (Client)", "Cancel"};
         int choice = JOptionPane.showOptionDialog(
@@ -37,11 +46,18 @@ public class MultiplayerSetUpDialog {
         }
     }
 
+    /**
+     * Prompts the user to enter a port and starts the Blackjack server on that port.
+     * Also launches the game GUI in server mode.
+     *
+     * @param parentFrame the parent JFrame to anchor input dialogs
+     */
     private static void startServer(JFrame parentFrame) {
         String portStr = JOptionPane.showInputDialog(parentFrame, "Enter port number to host on:", "12345");
         if (portStr != null) {
             try {
                 int port = Integer.parseInt(portStr);
+                
                 new Thread(() -> {
                     BlackjackServer server = new BlackjackServer(port);
                     server.start();
@@ -51,6 +67,7 @@ public class MultiplayerSetUpDialog {
 
                 GameManager gameManager = GameManager.getInstance();
                 gameManager.setMultiplayerMode(true);
+
                 SwingUtilities.invokeLater(() -> {
                     BlackjackGUI gui = new BlackjackGUI(gameManager);
                     gui.setVisible(true);
@@ -63,6 +80,12 @@ public class MultiplayerSetUpDialog {
         }
     }
 
+    /**
+     * Prompts the user to enter server IP and port, then connects to the server
+     * as a client and launches the client-side GUI.
+     *
+     * @param parentFrame the parent JFrame to anchor input dialogs
+     */
     private static void connectAsClient(JFrame parentFrame) {
         JPanel connectionPanel = new JPanel(new GridLayout(3, 1, 5, 5));
         JTextField ipField = new JTextField("localhost");
