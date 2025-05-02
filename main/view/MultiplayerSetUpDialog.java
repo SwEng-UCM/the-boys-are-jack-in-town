@@ -15,6 +15,7 @@ import main.controller.GameManager;
 import main.controller.BlackjackServer;
 
 /**
+ * A dialog utility class to configure and launch a multiplayer Blackjack game,
  * allowing the user to choose to host (as a server) or join (as a client).
  */
 public class MultiplayerSetUpDialog {
