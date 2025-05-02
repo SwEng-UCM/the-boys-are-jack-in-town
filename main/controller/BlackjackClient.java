@@ -33,7 +33,6 @@ public class BlackjackClient {
         try {
             while (socket.isConnected()) {
                 GameState state = (GameState) input.readObject();
-                // Notify game manager of update
                 GameManager gm = GameManager.getInstance();
                 BlackjackGUI.getInstance(gm).applyGameState(state);
             }

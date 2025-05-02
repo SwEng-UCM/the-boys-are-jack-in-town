@@ -46,6 +46,8 @@ public class GameManager {
     private CommandManager commandManager = new CommandManager();
     private PlayerManager playerManager;
     private DealerManager dealerManager;
+    private NetworkManager networkManager;
+
     
 
     private GameManager() {
@@ -78,7 +80,10 @@ public class GameManager {
     public DealerManager getDealerManager() {
         return this.dealerManager;
     }
-
+        
+    public void setNetworkManager(NetworkManager networkManager) {
+        this.networkManager = networkManager;
+    }
     
     public void setDifficultyStrategy(DifficultyStrategy strategy) {
         this.difficultyStrategy = strategy;
@@ -110,7 +115,6 @@ public class GameManager {
     }
 
     public void startNextPlayerTurn() {
-        // Do NOT increment immediately — just prompt current player
         if (currentPlayerIndex == 0) {
             int dealerBet = bettingManager.getDealerBalance() / 10;
             bettingManager.placeDealerBet(dealerBet);

@@ -17,7 +17,7 @@ public class GUIEventBinder {
         window.standButton.addActionListener(e -> window.gameManager.handlePlayerStand());
         window.newGameButton.addActionListener(e -> window.gameManager.getGameFlowController().startNewGame());
         window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
-window.placeBetButton.addActionListener(e -> {
+        window.placeBetButton.addActionListener(e -> {
     String betText = window.betField.getText();
     if (!betText.isEmpty()) {
         try {
