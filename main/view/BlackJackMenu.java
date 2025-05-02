@@ -31,7 +31,8 @@ public class BlackJackMenu extends JFrame {
      * Constructs and initializes the Blackjack main menu GUI.
      */
     public BlackJackMenu() {
-        setTitle(Texts.startGame[language]);
+        setTitle(Texts.guiTitle[language]);
+
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -384,8 +385,8 @@ public class BlackJackMenu extends JFrame {
      * Repaints the UI with updated translations.
      */
     public void refreshMenu() {
-        setTitle(Texts.startGame[language]); // Update window title
-
+        setTitle(Texts.guiTitle[language]); // ✅ Correct window banner title
+    
         // Update button texts
         startButton.setText(Texts.startGame[language]);
         loadGameButton.setText(Texts.loadGame[language]);
@@ -393,11 +394,15 @@ public class BlackJackMenu extends JFrame {
         exitButton.setText(Texts.exit[language]);
         optionsButton.setText(Texts.options[language]);
         multiplayerButton.setText(Texts.multiplayer[language]);
-
+    
+        // Optionally update main title if desired:
+        mainTitleLabel.setText(Texts.mainTitle[language]);
+    
         // Repaint UI
         revalidate();
         repaint();
     }
+    
 
     /**
      * Starts the scrolling animation of the title label across the screen.

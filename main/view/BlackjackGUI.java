@@ -432,6 +432,11 @@ public class BlackjackGUI extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+    public void refreshLanguage() {
+        setTitle(Texts.guiTitle[BlackJackMenu.language]);
+        // TODO: update other GUI labels/buttons here if needed
+    }
+    
 
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
