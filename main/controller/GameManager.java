@@ -206,11 +206,10 @@ public class GameManager {
         }
     }
     private void handlePlayerJoin(MultiplayerCommand command) {
-        String playerName = command.getPlayerName();
-        if (playerManager.getPlayerByName(playerName) == null) {
-            playerManager.addPlayer(playerName, INITIAL_BET);
+        if (playerManager.getPlayerByName("PLAYER 2") == null) {
+            playerManager.addPlayer("PLAYER 2", INITIAL_BET);
             broadcastGameState();
-            System.out.println("Player joined: " + playerName);
+            System.out.println("Player joined");
         }
     }
 
