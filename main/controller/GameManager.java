@@ -546,10 +546,13 @@ public class GameManager {
      }
 
 
-        public NetworkManager getNetworkManager() {
-            return this.networkManager;
-         }
-        public void setCurrentPlayerIndex(int index) {
-            this.currentPlayerIndex = index;
-        }
+    public NetworkManager getNetworkManager() {
+        return this.networkManager;
+    }
+
+    public void setCurrentPlayerIndex(int index) {
+        this.currentPlayerIndex = index;
+    }
+}
+
         
