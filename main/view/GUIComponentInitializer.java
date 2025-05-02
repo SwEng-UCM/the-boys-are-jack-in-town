@@ -12,7 +12,7 @@ public class GUIComponentInitializer {
 
     public GUIComponentInitializer(BlackjackGUI window) {
         this.window = window;
- }
+    }
 
     public void initializeComponents() {
         window.mainPanel = new BlackjackGUI.BackgroundPanel();
@@ -38,9 +38,16 @@ public class GUIComponentInitializer {
 
         // Buttons
         window.hitButton = window.createStyledButton(Texts.guiHit[language]);
+        window.hitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         window.standButton = window.createStyledButton(Texts.guiStand[language]);
+        window.standButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         window.newGameButton = window.createStyledButton(Texts.guiNewGame[language]);
+        window.newGameButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         window.placeBetButton = window.createStyledButton(Texts.placeBet[language]);
+        window.placeBetButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         window.undoButton = new JButton() {
             @Override
@@ -57,6 +64,7 @@ public class GUIComponentInitializer {
                 g2.dispose();
             }
         };
+        window.undoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         window.undoButton.setToolTipText("Undo last action");
         window.undoButton.setIcon(new ImageIcon(
                 new ImageIcon("resources/icons/undo.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
@@ -68,6 +76,7 @@ public class GUIComponentInitializer {
         window.undoButton.addActionListener(e -> GameManager.getInstance().getCommandManager().undo());
 
         window.pauseButton = new JButton();
+        window.pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         window.pauseButton.setPreferredSize(new Dimension(50, 50));
         ImageIcon pauseIcon = new ImageIcon("resources/icons/pause.png");
         Image scaledPause = pauseIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -144,5 +153,4 @@ public class GUIComponentInitializer {
         window.buttonPanel.add(window.undoButton);
         window.buttonPanel.add(window.pauseButton);
     }
-
 }

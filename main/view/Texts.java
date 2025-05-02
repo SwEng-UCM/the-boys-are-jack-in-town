@@ -110,44 +110,69 @@ public class Texts {
 
     public static String[] dealerBet =
             {"Dealer Bet:", "Apuesta del crupier:", "Geall an déileálaí:", "Osztó tétje:", "رهان الموزع:", "Mise du croupier:"};
-    public static String[][] instructionsPopup = {
-            { // English
-                    "Instructions:",
+            public static String[][] instructionsPopup = {
+                { // English 🇬🇧
+                    "How to Play:",
                     "1. Click 'Hit' to draw a card.",
                     "2. Click 'Stand' to end your turn.",
-                    "3. Try to get as close to 21 without going over."
-            },
-            { // Spanish 🇪🇸
-                    "Instrucciones:",
+                    "3. Try to get as close to 21 without going over.",
+                    "4. Face cards are worth 10, Aces are 1 or 11.",
+                    "5. Place your bet using the 'Place Bet' field before starting.",
+                    "6. You can undo your last bet using the 'Undo' button.",
+                    "7. Track your progress in the Achievements panel."
+                },
+                { // Spanish 🇪🇸
+                    "Cómo jugar:",
                     "1. Haz clic en 'Robar' para sacar una carta.",
                     "2. Haz clic en 'Plantarse' para terminar tu turno.",
-                    "3. Intenta acercarte a 21 sin pasarte."
-            },
-            { // Irish (Gaeilge) 🇮🇪
-                    "Treoracha:",
+                    "3. Intenta acercarte a 21 sin pasarte.",
+                    "4. Las figuras valen 10, los Ases valen 1 u 11.",
+                    "5. Introduce tu apuesta antes de empezar la ronda.",
+                    "6. Puedes deshacer tu apuesta con el botón 'Deshacer'.",
+                    "7. Consulta tus logros en el panel de Logros."
+                },
+                { // Irish (Gaeilge) 🇮🇪
+                    "Conas a Imirt:",
                     "1. Cliceáil 'Buail' chun cárta a tharraingt.",
                     "2. Cliceáil 'Fanacht' chun do sheal a chríochnú.",
-                    "3. Déan iarracht teacht chomh gar do 21 agus is féidir gan dul thar fóir."
-            },
-            { // Hungarian 🇭🇺
-                    "Utasítások:",
+                    "3. Déan iarracht teacht chomh gar do 21 agus is féidir.",
+                    "4. Is fiú 10 na cártaí aghaidhe, is fiú 1 nó 11 an tAs.",
+                    "5. Cuir isteach do gheall sula dtosaíonn tú.",
+                    "6. Is féidir leat an geall deireanach a chealú le 'Cealaigh'.",
+                    "7. Féach ar do dhul chun cinn sa phainéal Gaisce."
+                },
+                { // Hungarian 🇭🇺
+                    "Hogyan játssz:",
                     "1. Kattints a 'Lapkérés' gombra egy lap húzásához.",
                     "2. Kattints az 'Állj' gombra a köröd befejezéséhez.",
-                    "3. Próbálj meg minél közelebb kerülni a 21-hez anélkül, hogy túllépnéd."
-            },
-            { // Arabic 🇸🇦
-                    "التعليمات:",
+                    "3. Próbálj meg minél közelebb kerülni a 21-hez anélkül, hogy túllépnéd.",
+                    "4. A képes lapok értéke 10, az Ász 1 vagy 11.",
+                    "5. Add meg a tétet a 'Tét' mezőben a kör kezdete előtt.",
+                    "6. Az utolsó tét visszavonható a 'Visszavonás' gombbal.",
+                    "7. Kövesd a haladásodat az Eredmények panelen."
+                },
+                { // Arabic 🇸🇦
+                    "كيفية اللعب:",
                     "1. اضغط على 'سحب' لسحب بطاقة.",
                     "2. اضغط على 'توقف' لإنهاء دورك.",
-                    "3. حاول الاقتراب من 21 دون تجاوزها."
-            },
-            { // French 🇫🇷
-                    "Instructions :",
+                    "3. حاول الاقتراب من 21 دون تجاوزها.",
+                    "4. البطاقات الوجهية تساوي 10، والآس يساوي 1 أو 11.",
+                    "5. أدخل رهانك في الحقل قبل بدء الجولة.",
+                    "6. يمكنك التراجع عن الرهان باستخدام زر 'تراجع'.",
+                    "7. راقب إنجازاتك في لوحة الإنجازات."
+                },
+                { // French 🇫🇷
+                    "Comment jouer :",
                     "1. Cliquez sur 'Tirer' pour piocher une carte.",
                     "2. Cliquez sur 'Rester' pour terminer votre tour.",
-                    "3. Essayez d'atteindre 21 sans le dépasser."
-            }
-    };
+                    "3. Essayez d’atteindre 21 sans le dépasser.",
+                    "4. Les figures valent 10, l’As vaut 1 ou 11.",
+                    "5. Saisissez votre mise avant de commencer le tour.",
+                    "6. Vous pouvez annuler votre dernière mise avec le bouton 'Annuler'.",
+                    "7. Suivez vos progrès dans le panneau Succès."
+                }
+            };
+            
 
     public static String[] betError = {
             "Invalid bet amount or insufficient balance.",  // English 🇬🇧
