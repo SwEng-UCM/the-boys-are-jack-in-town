@@ -10,13 +10,9 @@ import main.view.BlackjackGUI;
 import main.view.Texts;
 import javax.swing.Timer;
 import static main.view.BlackJackMenu.language;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.swing.SwingUtilities;
 
 /*
@@ -65,6 +61,9 @@ public class GameManager {
         
         this.playerManager = new PlayerManager();
         playerManager.setPlayers(players); 
+        this.playerManager.addPlayer("PLAYER 1", INITIAL_BET);
+        this.playerManager.addPlayer("PLAYER 2", INITIAL_BET);
+
     }
 
 
