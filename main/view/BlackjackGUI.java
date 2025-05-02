@@ -24,7 +24,16 @@ import java.util.Map;
 
 import static main.view.BlackJackMenu.language;
 
+
+/**
+ * The main graphical user interface for the Blackjack game. Handles all visual components,
+ * user interactions, and game state updates. Manages player displays, dealer information,
+ * and game controls while coordinating with the GameManager for game logic.
+ */
+
 public class BlackjackGUI extends JFrame {
+
+    // Screen size and layout configuration
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final int gameHeight = (int) screenSize.getHeight();
     private final int gameWidth = (int) screenSize.getWidth();
@@ -34,6 +43,8 @@ public class BlackjackGUI extends JFrame {
     private int cardWidth = (int) (gameWidth * 0.10);
     private int cardHeight = (int) (gameHeight * 0.22);
     private int cardFontSize = gameWidth / 60;
+
+    // UI components
     JPanel mainPanel;
     JPanel dealerPanel;
     JPanel dealerScorePanel;
@@ -68,6 +79,12 @@ public class BlackjackGUI extends JFrame {
     private final Map<String, JLabel> playerBetLabels = new HashMap<>();
     private static BlackjackGUI instance;
 
+    /**
+     * Constructor for the BlackjackGUI.
+     * Initializes the graphical components, background, and sets up the game environment.
+     *
+     * @param gameManager The GameManager that controls the game logic.
+     */
     public BlackjackGUI(GameManager gameManager) {
         this.gameManager = gameManager;
         this.bettingManager = gameManager.getBettingManager();
@@ -97,6 +114,12 @@ public class BlackjackGUI extends JFrame {
         AudioManager.getInstance().playBackgroundMusic();
     }
 
+    /**
+     * Returns the singleton instance of the BlackjackGUI.
+     *
+     * @param gm The GameManager to associate with the instance.
+     * @return The singleton instance of BlackjackGUI.
+     */
     public static BlackjackGUI getInstance(GameManager gm) {
         if (instance == null) {
             instance = new BlackjackGUI(gm);
@@ -104,6 +127,11 @@ public class BlackjackGUI extends JFrame {
         return instance;
     }
 
+    /**
+     * Applies the current game state to update the GUI elements.
+     *
+     * @param gameState The current game state to reflect in the GUI.
+     */
     public void applyGameState(GameState gameState) {
         updatePlayerHands(gameState.getPlayerHands());
         updateDealerHand(gameManager.getDealerManager().getVisibleDealerCards(true));
@@ -116,6 +144,11 @@ public class BlackjackGUI extends JFrame {
         updateGameStatus(gameState.isGameOver());
     }
 
+    /**
+     * Updates the hands of all players in the GUI.
+     *
+     * @param playerHands The hands of all players to display.
+     */
     private void updatePlayerHands(List<List<Card>> playerHands) {
         playersPanel.removeAll();
 
@@ -150,6 +183,11 @@ public class BlackjackGUI extends JFrame {
         playersPanel.repaint();
     }
 
+    /**
+     * Updates the dealer's hand in the GUI.
+     *
+     * @param cardInfo The dealer's visible card information to display.
+     */
     private void updateDealerHand(DealerManager.DealerCardInfo cardInfo) {
         dealerPanel.removeAll();
 
@@ -168,18 +206,29 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.repaint();
     }
 
+    /**
+     * Updates the scores of all players in the GUI.
+     *
+     * @param playerScores The scores of all players to display.
+     */
     private void updatePlayerScores(List<Integer> playerScores) {
         gameManager.getPlayerManager().setPlayerScores(playerScores);
         updatePlayerPanels(); // View updates only
     }
 
-
+     /**
+     * Updates the dealer's score in the GUI.
+     *
+     * @param dealerScore The dealer's score to display.
+     */
     private void updateDealerScore(int dealerScore) {
         String scoreText = gameManager.getDealerManager().getFormattedDealerScore();
         dealerScoreLabel.setText(scoreText);
     }
     
-    
+    /**
+     * Updates the balances of all players in the GUI.
+     */
     private void updatePlayerBalances() {
         List<PlayerManager.PlayerInfo> playerInfos = gameManager.getPlayerManager().getAllPlayerInfo();
         for (PlayerManager.PlayerInfo info : playerInfos) {
@@ -195,11 +244,18 @@ public class BlackjackGUI extends JFrame {
         }
     }
     
-    
+    /**
+     * Updates the dealer's balance in the GUI.
+     *
+     * @param dealerBalance The dealer's balance to display.
+     */
     private void updateDealerBalance(int dealerBalance) {
         dealerBalanceLabel.setText(Texts.dealerBalance[language] + " $" + dealerBalance);
     }
     
+    /**
+     * Updates the current bets of all players in the GUI.
+     */
     private void updateCurrentBets() {
         List<PlayerManager.PlayerInfo> playerInfos = gameManager.getPlayerManager().getAllPlayerInfo();
         for (PlayerManager.PlayerInfo info : playerInfos) {
@@ -210,8 +266,11 @@ public class BlackjackGUI extends JFrame {
         }
     }
     
-    
-    
+    /**
+     * Updates the game status and dealer's information when the game is over.
+     * 
+     * @param isGameOver Indicates if the game has ended or not.
+     */
     private void updateGameStatus(boolean isGameOver) {
         setGameButtonsEnabled(!isGameOver);
     
@@ -225,7 +284,11 @@ public class BlackjackGUI extends JFrame {
         }
     }
     
-
+    /**
+     * Updates the connection status in the GUI.
+     * 
+     * @param connected A boolean value indicating whether the connection is established or not.
+     */
     public void setConnected(boolean connected) {
         isConnected = connected;
         SwingUtilities.invokeLater(() -> {
@@ -239,6 +302,11 @@ public class BlackjackGUI extends JFrame {
         });
     }
 
+    /**
+     * Displays an error message when a connection error occurs.
+     * 
+     * @param message The error message to display.
+     */
     public void showConnectionError(String message) {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(
@@ -250,8 +318,11 @@ public class BlackjackGUI extends JFrame {
         });
     }
 
-
-
+    /**
+     * Updates the player's balance and current bet in the GUI.
+     * 
+     * @param player The player whose balance and bet need to be updated.
+     */
     public void updatePlayerBalanceAndBet(Player player) {
         JLabel balanceLabel = playerBalanceLabels.get(player.getName());
         JLabel betLabel = playerBetLabels.get(player.getName());
@@ -270,6 +341,11 @@ public class BlackjackGUI extends JFrame {
         }
     }
     
+    /**
+     * Places a bet for the player after validating the bet amount.
+     * 
+     * @param player The player placing the bet.
+     */
     public void placeBet(Player player) {
         try {
             int betAmount = Integer.parseInt(betField.getText());
@@ -280,21 +356,20 @@ public class BlackjackGUI extends JFrame {
                 gameManager.getCommandManager().executeCommand(betCommand);
                 updateUndoButtonState();
 
-    
-                // ✅ Update UI via controller/model access only
+                // Update UI via controller/model access only
                 int updatedPlayerBalance = gameManager.getBettingManager().getPlayerBalance(player.getName());
                 int updatedPlayerBet = gameManager.getBettingManager().getPlayerBet(player.getName());
                 int dealerBalance = gameManager.getDealerManager().getDealerBalance();
                 int dealerBet = gameManager.getDealerManager().getDealerBet();
     
-                // ✅ Update GUI labels
+                // Update GUI labels
                 setGameButtonsEnabled(true);
                 betLabel.setText("Bet: $" + updatedPlayerBet);
                 balanceLabel.setText("Balance: $" + updatedPlayerBalance);
                 dealerBalanceLabel.setText(Texts.balance[language] + " $" + dealerBalance);
                 dealerBetLabel.setText("Bet: $" + dealerBet);
     
-                // ✅ Lock controls after bet
+                // Lock controls after bet
                 betField.setEnabled(false);
                 placeBetButton.setEnabled(false);
     
@@ -322,6 +397,11 @@ public class BlackjackGUI extends JFrame {
     }
     
 
+    /**
+     * Sets the player panels with updated information.
+     * 
+     * @param playerInfos The list of player information to display on the panel.
+     */
     private void setPlayers(List<PlayerManager.PlayerInfo> playerInfos) {
         playersPanel.removeAll();
         playerBalanceLabels.clear();
@@ -350,6 +430,9 @@ public class BlackjackGUI extends JFrame {
     }
     
 
+    /**
+     * Restarts the game by resetting necessary parameters and enabling relevant buttons.
+     */
     public void restartGame() {
         gameManager.getGameFlowController().startNewGame();
         betField.setEnabled(true);
@@ -359,6 +442,12 @@ public class BlackjackGUI extends JFrame {
         gameManager.getGameFlowController().resumeGame();
     }
 
+
+    /**
+     * Shows a game over message with options to restart or exit the game.
+     * 
+     * @param message The game over message to display.
+     */
     public void showGameOverMessage(String message) {
         int option = JOptionPane.showOptionDialog(this, message, Texts.gameOverTitle[language], JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Restart Game", "Exit"}, "Restart Game");
         if (option == JOptionPane.YES_OPTION) {
@@ -367,7 +456,16 @@ public class BlackjackGUI extends JFrame {
             System.exit(0);
         }
     }
-    
+ 
+
+    /**
+     * Creates a styled pause button with mouse interaction effects.
+     * 
+     * @param text The text to display on the button.
+     * @param font The font to use for the button text.
+     * @param bgColor The background color of the button.
+     * @return The created pause button.
+     */
     private JButton createPauseButton(String text, Font font, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -393,11 +491,19 @@ public class BlackjackGUI extends JFrame {
         return button;
     }
 
+    /**
+     * Returns to the main menu by creating a new instance of the BlackJackMenu and disposing of the current window.
+     */
     private void returnToMainMenu() {
         new BlackJackMenu().setVisible(true);
         dispose();
     }
 
+    /**
+     * Enables or disables all game-related buttons based on the provided condition.
+     * 
+     * @param enabled Indicates whether to enable or disable the buttons.
+     */
     public void setGameButtonsEnabled(boolean enabled) {
         // Disable all game buttons when paused
         boolean buttonsEnabled = enabled && !gameManager.getGameFlowController().isPaused();
@@ -410,7 +516,9 @@ public class BlackjackGUI extends JFrame {
         pauseButton.setEnabled(true);
     }
 
-    // After the game ended the user should be able to take another bet
+    /**
+     * Enables betting after the game ends and updates the player and dealer information in the GUI.
+     */
     public void enableBetting() {
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
@@ -432,12 +540,22 @@ public class BlackjackGUI extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+
+    /**
+    * Refreshes the language of the GUI to reflect the selected language.
+    */
     public void refreshLanguage() {
         setTitle(Texts.guiTitle[BlackJackMenu.language]);
-        // TODO: update other GUI labels/buttons here if needed
     }
     
-
+    /**
+     * Updates the game state with the provided list of players and dealer information.
+     * 
+     * @param players The list of players.
+     * @param dealer The dealer player.
+     * @param gameOver Indicates whether the game is over.
+     * @param isPaused Indicates whether the game is paused.
+     */
     public void updateGameState(ArrayList<Player> players, Player dealer, boolean gameOver, boolean isPaused) {
         dealerPanel.removeAll();
         dealerScoreLabel.setText(Texts.guiDealerScore[language] + " ???");
@@ -466,6 +584,11 @@ public class BlackjackGUI extends JFrame {
         dealerPanel.repaint();
     } 
     
+    /**
+     * Creates a hidden card panel to represent the dealer's hidden card.
+     * 
+     * @return The created panel representing the hidden card.
+     */
     private JPanel createHiddenCardPanel() {
         JPanel cardPanel = new JPanel();
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
@@ -486,10 +609,20 @@ public class BlackjackGUI extends JFrame {
         return cardPanel;
     }
 
+    /**
+     * Updates the game message displayed on the screen.
+     * 
+     * @param message The message to display in the game.
+     */
     public void updateGameMessage(String message) {
         gameMessageLabel.setText(message);
     }
 
+    /**
+     * Updates the special message displayed on the screen, hiding it after 2 seconds.
+     * 
+     * @param message The special message to display.
+     */
     public void updateSpecialMessage(String message) {
         if (!message.equals("...")) {
             specialMessageLabel.setText(message);
@@ -499,6 +632,12 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
+    /**
+     * Creates a styled button with gradient effects and shadow.
+     * 
+     * @param text The text of the button.
+     * @return The styled button.
+     */
     JButton createStyledButton(String text) {
         JButton button = new JButton(text) {
             @Override
@@ -533,6 +672,13 @@ public class BlackjackGUI extends JFrame {
         return button;
     }
 
+    /**
+     * Creates a styled label with the given text.
+     * The label is centered and uses a bold font with white text color.
+     *
+     * @param text The text to display on the label.
+     * @return A JLabel with the given text and styling.
+     */
     JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(new Font("Segoe UI", Font.BOLD, 26));
@@ -540,6 +686,13 @@ public class BlackjackGUI extends JFrame {
         return label;
     }
 
+    /**
+     * Creates a panel to display a card with its rank and suit.
+     * The panel uses a border and displays the card's rank in bold and suit in normal font.
+     *
+     * @param card The card to display in the panel.
+     * @return A JPanel representing the card, with its rank and suit displayed.
+     */
     private JPanel createCardPanel(Card card) {
         JPanel cardPanel = new JPanel(new BorderLayout());
 
@@ -561,11 +714,20 @@ public class BlackjackGUI extends JFrame {
 
         return cardPanel;
     }
+
+    /**
+     * Updates the state of the undo button based on whether an undo action is possible.
+     */
     public void updateUndoButtonState() {
         undoButton.setEnabled(gameManager.getCommandManager().canUndo());
     }
     
-
+    /**
+     * Prompts the user to input a value for the Joker Wild card.
+     * The input is validated to ensure it is an integer between 1 and 11.
+     * 
+     * @return The selected value for the Joker Wild card.
+     */
     public int promptJokerWildValue() {
         int wildValue = 0;
         boolean valid = false;
@@ -601,6 +763,13 @@ public class BlackjackGUI extends JFrame {
         return wildValue;
     }
  
+    /**
+     * Prompts the user for the player's action based on whether they are in a multiplayer game.
+     * It enables/disables game buttons based on the current player's turn.
+     * Also, if the player has already made a bet, it handles the state of the betting system.
+     *
+     * @param player The player whose action is being prompted.
+     */
     public void promptPlayerAction(Player player) {
         if(gameManager.isMultiplayerMode()){
             boolean isCurrentPlayer = player.getName().equals(getCurrentPlayerName());
@@ -629,6 +798,13 @@ public class BlackjackGUI extends JFrame {
             }
     }
 
+    /**
+     * Returns the name of the current player in a multiplayer game.
+     * If the game is in multiplayer mode, it retrieves the name of the player
+     * based on the current player's index in the game.
+     *
+     * @return The name of the current player, or an empty string if the game is not in multiplayer mode.
+     */
     private String getCurrentPlayerName() {
         if (gameManager.isMultiplayerMode()) {
             List<Player> players = gameManager.getPlayerManager().getPlayers();
@@ -640,18 +816,21 @@ public class BlackjackGUI extends JFrame {
         return "";
     }
     
+     /**
+     * Updates the player panels on the GUI, displaying each player's name, score, balance, and current bet.
+     * This method clears and revalidates the `playersPanel` to reflect the updated player information.
+     */
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayerManager().getPlayers()) {
             JPanel panel = new JPanel(new BorderLayout());
-            panel.setOpaque(false);  // ✅ Transparent player panel
-            panel.setBackground(new Color(0, 0, 0, 0));  // ✅ Explicitly set transparent bg
+            panel.setOpaque(false);  // Transparent player panel
+            panel.setBackground(new Color(0, 0, 0, 0));  // Explicitly set transparent bg
 
             JLabel scoreLabel = new JLabel(player.getName() + ": Score: " + player.calculateScore());
             JLabel balanceLabel = new JLabel("Balance: $" + player.getBalance());
             JLabel betLabel = new JLabel(Texts.bet[language] + " $" + player.getCurrentBet());
 
-            // ✅ White text for visibility
             scoreLabel.setForeground(Color.WHITE);
             balanceLabel.setForeground(Color.WHITE);
             betLabel.setForeground(Color.WHITE);
@@ -665,6 +844,11 @@ public class BlackjackGUI extends JFrame {
         playersPanel.repaint();
     }
 
+    /**
+     * Custom JPanel that draws a background image or a fallback color.
+     * The background image is drawn if it is loaded successfully; otherwise, 
+     * a dark color is used as a fallback.
+     */
     static class BackgroundPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -679,10 +863,20 @@ public class BlackjackGUI extends JFrame {
         }
     }
 
+    /**
+     * Returns the width of the game window.
+     *
+     * @return The width of the game window.
+     */
     public int getGameWidth(){
         return gameWidth;
     }
 
+    /**
+     * Returns the height of the game window.
+     *
+     * @return The height of the game window.
+     */
     public int getGameHeight(){
         return gameHeight;
     }
