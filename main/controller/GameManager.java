@@ -312,6 +312,9 @@ public class GameManager {
                 gui.promptPlayerAction(players.get(currentPlayerIndex));
             } else {
                 dealerManager.dealerTurn();
+                gameOver = true;
+                gameFlowController.setGameOver(true);
+                gui.enableBetting(); // allow next round
             }
         }
     }
@@ -379,13 +382,6 @@ public class GameManager {
         
             AchievementManager.getInstance().unlock(Badge.FIRST_BET);
             AudioManager.getInstance().playSoundEffect("/resources/sounds/bet.wav");
-        
-            System.out.println("DEBUG: " + player.getName() + " placed $" + betAmount +
-                ", new balance: " + player.getBalance());
-                System.out.println("✅ SYNCHRONIZED: " + player.getName() + " now has $" + player.getBalance() + " | Bet: $" + player.getCurrentBet());
-                System.out.println("BetManager balance: " + bettingManager.getPlayerBalance(player.getName()));
-                System.out.println("Player object balance: " + player.getBalance());
-                
             }
         
         return placed;
