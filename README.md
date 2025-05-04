@@ -33,10 +33,19 @@ This project is licensed under the **MIT License**, an open-source license recog
 5. Change language and difficulty via the Options menu.
 
 📸 **Screenshots**:  
-- TODO: Insert a screenshot of the **Main Menu**  
-- TODO: Insert a screenshot of the **Gameplay screen with cards dealt**  
-- TODO: Insert a screenshot of the **Achievements or badges screen**
-- Options Menu	-Language & difficulty selection
+
+- **Main Menu**  
+  ![Main Menu](resources/doc%20pics/menu.png)
+
+- **Gameplay screen with cards dealt**  
+  ![Gameplay](resources/doc%20pics/mainpage.png)
+
+- **Achievements or badges screen**  
+  ![Achievements](resources/doc%20pics/achievements.png)
+
+- **Options Menu – Language & Difficulty Selection**  
+  ![Options Menu](resources/doc%20pics/options.png)
+
 
 🔗 Full user manual available here: [User Manual](USERMANUAL.md)
 
