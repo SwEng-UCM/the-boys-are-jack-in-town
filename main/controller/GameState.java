@@ -380,5 +380,4 @@ public class GameState implements Serializable {
         bettingManager.placeDealerBet(dealerBet);
         manager.setBettingManager(bettingManager);
     }
-
 }

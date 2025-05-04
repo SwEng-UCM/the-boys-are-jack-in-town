@@ -10,8 +10,6 @@ import main.controller.BetCommand;
 import main.controller.BettingManager;
 import main.controller.DealerManager;
 import main.controller.AchievementManager;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static main.view.BlackJackMenu.language;
 
 
@@ -30,9 +27,7 @@ import static main.view.BlackJackMenu.language;
  * user interactions, and game state updates. Manages player displays, dealer information,
  * and game controls while coordinating with the GameManager for game logic.
  */
-
 public class BlackjackGUI extends JFrame {
-
     // Screen size and layout configuration
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final int gameHeight = (int) screenSize.getHeight();
@@ -66,7 +61,6 @@ public class BlackjackGUI extends JFrame {
     final GameManager gameManager;
     private final BettingManager bettingManager;
     JButton pauseButton;
-    private JPopupMenu pauseMenu;
     PlayersPanel playersPanel;
     private static BufferedImage backgroundImage;
     private static boolean backgroundLoaded = false;
@@ -461,48 +455,6 @@ public class BlackjackGUI extends JFrame {
             System.exit(0);
         }
     }
- 
-
-    /**
-     * Creates a styled pause button with mouse interaction effects.
-     * 
-     * @param text The text to display on the button.
-     * @param font The font to use for the button text.
-     * @param bgColor The background color of the button.
-     * @return The created pause button.
-     */
-    private JButton createPauseButton(String text, Font font, Color bgColor) {
-        JButton button = new JButton(text);
-        button.setFont(font);
-        button.setFocusPainted(false);
-        button.setForeground(Color.BLACK);
-        button.setBackground(bgColor);
-        button.setOpaque(true);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent evt) {
-                button.setBackground(bgColor.darker());
-            }
-
-            @Override
-            public void mouseExited(MouseEvent evt) {
-                button.setBackground(bgColor);
-            }
-        });
-
-        return button;
-    }
-
-    /**
-     * Returns to the main menu by creating a new instance of the BlackJackMenu and disposing of the current window.
-     */
-    private void returnToMainMenu() {
-        new BlackJackMenu().setVisible(true);
-        dispose();
-    }
 
     /**
      * Enables or disables all game-related buttons based on the provided condition.
@@ -888,6 +840,4 @@ public class BlackjackGUI extends JFrame {
     public int getGameHeight(){
         return gameHeight;
     }
-
-
 }

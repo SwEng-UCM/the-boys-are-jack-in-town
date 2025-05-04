@@ -76,7 +76,6 @@ public class BettingManager {
         resetPlayerBet(playerName);
     }
     
-    
     /**
      * Dealer wins, so the dealer collects the player's bets.
      * @param playerName The losing player's name.
@@ -178,8 +177,13 @@ public class BettingManager {
         return dealerBet;
     }
 
+    /**
+     * Checks if a player has placed a bet.
+     *
+     * @param playerName the name of the player
+     * @return true if the player has placed a bet, false otherwise
+     */
     public boolean hasPlayerBet(String playerName) {
         return playerBets.getOrDefault(playerName, 0) > 0;
     }
-    
 }

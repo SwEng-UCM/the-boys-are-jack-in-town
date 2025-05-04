@@ -5,7 +5,6 @@ import java.awt.*;
 import main.model.*;
 import main.controller.GameManager;
 import main.controller.OptionsController;
-
 import static main.view.BlackJackMenu.language;
 
 /**
@@ -70,11 +69,9 @@ public class OptionsPanel extends JDialog {
         buttonPanel.add(applyButton);
         buttonPanel.add(cancelButton);
 
-        // Add components to dialog
         add(panel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add some padding
         ((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 }

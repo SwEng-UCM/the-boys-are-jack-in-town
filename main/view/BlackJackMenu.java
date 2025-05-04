@@ -1,6 +1,5 @@
 package main.view;
 
-import main.controller.BlackjackClient;
 import main.controller.GameManager;
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +17,9 @@ import java.awt.event.ComponentEvent;
  */
 public class BlackJackMenu extends JFrame {
     private JButton startButton, instructionsButton, exitButton, optionsButton, loadGameButton, multiplayerButton;
-    private JLabel imageLabel, mainTitleLabel;
+    private JLabel mainTitleLabel;
     private BufferedImage backgroundImage;
     private boolean backgroundLoaded = false;
-    private JComboBox<String> difficultyComboBox;
     private JPanel topRightBar;
     private int titleX = 0;
     private Timer titleTimer;
@@ -133,13 +131,13 @@ public class BlackJackMenu extends JFrame {
         BackgroundPanel mainPanel = new BackgroundPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 20));
     
-        // 🌟 Title panel - now directly added to NORTH
+        // Title panel
         JPanel titlePanel = new JPanel(null);
         titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(getWidth(), 100));
         mainTitleLabel.setBounds(0, 0, 1, 100);
         titlePanel.add(mainTitleLabel);
-        mainPanel.add(titlePanel, BorderLayout.NORTH); // <<=== Moved here
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
     
         // Center content panel
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -205,32 +203,19 @@ public class BlackJackMenu extends JFrame {
             GameManager.resetInstance();
             GameManager gameManager = GameManager.getInstance();
         
-            // 1. Create the GUI
             BlackjackGUI gui = new BlackjackGUI(gameManager);
-        
-            // 2. Set the GUI FIRST (re-inits controllers)
             gameManager.setGui(gui);
-        
-            // 3. THEN call startNewGame()
             gameManager.getGameFlowController().startNewGame();
-        
-            // 4. Show the GUI
             gui.setVisible(true);
             dispose();
         });
         
-        
-        
-
         instructionsButton.addActionListener(e -> {
             new InstructionsDialog(this).setVisible(true);
         });
         
-
         multiplayerButton.addActionListener(e -> MultiplayerSetUpDialog.show(this));
-
         exitButton.addActionListener(e -> System.exit(0));
-
         optionsButton.addActionListener(e -> {
             new OptionsPanel(this).setVisible(true);
         });
@@ -278,7 +263,7 @@ public class BlackJackMenu extends JFrame {
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
         button.setHorizontalAlignment(SwingConstants.CENTER);
         button.setIconTextGap(15);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // ✅ Added line
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     
         return button;
     }
@@ -312,9 +297,8 @@ public class BlackJackMenu extends JFrame {
      * Repaints the UI with updated translations.
      */
     public void refreshMenu() {
-        setTitle(Texts.guiTitle[language]); // ✅ Correct window banner title
+        setTitle(Texts.guiTitle[language]);
     
-        // Update button texts
         startButton.setText(Texts.startGame[language]);
         loadGameButton.setText(Texts.loadGame[language]);
         instructionsButton.setText(Texts.instructions[language]);
@@ -322,7 +306,6 @@ public class BlackJackMenu extends JFrame {
         optionsButton.setText(Texts.options[language]);
         multiplayerButton.setText(Texts.multiplayer[language]);
     
-        // Optionally update main title if desired:
         mainTitleLabel.setText(Texts.mainTitle[language]);
     
         // Repaint UI
@@ -344,7 +327,7 @@ public class BlackJackMenu extends JFrame {
             int titleWidth = mainTitleLabel.getPreferredSize().width;
             mainTitleLabel.setBounds(titleX, 0, titleWidth, 100);
             mainTitleLabel.setForeground(new Color(255, 255, 255, 230));
-            repaint(); // Full repaint - less efficient but guaranteed to work
+            repaint();
         });
         titleTimer.start();
     }
@@ -361,41 +344,50 @@ public class BlackJackMenu extends JFrame {
             setOpaque(false);
             startAnimation();
         }
-    
-        private void startAnimation() {
-            animationTimer = new Timer(30, e -> {
-                xOffset -= 1; // adjust speed here
-                if (Math.abs(xOffset) >= getWidth()) {
-                    xOffset = 0;
-                }
-                repaint();
-            });
-            animationTimer.start();
-        }
-    
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g.create();
-    
-            if (backgroundLoaded && backgroundImage != null) {
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    
-                g2d.drawImage(backgroundImage, xOffset, 0, getWidth(), getHeight(), this);
-                g2d.drawImage(backgroundImage, xOffset + getWidth(), 0, getWidth(), getHeight(), this);
-            } else {
-                // fallback gradient
-                GradientPaint gp = new GradientPaint(0, 0, new Color(0, 100, 0),
-                        getWidth(), getHeight(), new Color(0, 60, 0));
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+    /**
+     * Starts the scrolling animation of the background image.
+     * The animation moves the background horizontally to create a seamless scrolling effect.
+     */
+    private void startAnimation() {
+        animationTimer = new Timer(30, e -> {
+            xOffset -= 1;
+            if (Math.abs(xOffset) >= getWidth()) {
+                xOffset = 0;
             }
-    
-            // overlay
-            g2d.setColor(new Color(0, 0, 0, 100));
+            repaint();
+        });
+        animationTimer.start();
+    }
+
+    /**
+     * Paints the background component of the menu.
+     * If a background image is loaded, it is drawn with a scrolling effect.
+     * Otherwise, a fallback gradient is used as the background.
+     *
+     * @param g The Graphics object used for painting.
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        if (backgroundLoaded && backgroundImage != null) {
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+            g2d.drawImage(backgroundImage, xOffset, 0, getWidth(), getHeight(), this);
+            g2d.drawImage(backgroundImage, xOffset + getWidth(), 0, getWidth(), getHeight(), this);
+        } else {
+            // fallback gradient
+            GradientPaint gp = new GradientPaint(0, 0, new Color(0, 100, 0),
+                    getWidth(), getHeight(), new Color(0, 60, 0));
+            g2d.setPaint(gp);
             g2d.fillRect(0, 0, getWidth(), getHeight());
-    
-            g2d.dispose();
+        }
+
+        g2d.setColor(new Color(0, 0, 0, 100));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
         }
     }
 }

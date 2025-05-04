@@ -4,11 +4,20 @@ import javax.swing.*;
 import java.awt.*;
 import static main.view.BlackJackMenu.language;
 
+/**
+ * The InstructionsDialog class represents a custom dialog window that displays
+ * the game instructions. It is styled with a casino-themed design and supports
+ * multiple languages.
+ */
 public class InstructionsDialog extends JDialog {
-
     private JLabel titleLabel;
     private JLabel contentLabel;
 
+    /**
+     * Constructs an InstructionsDialog instance.
+     *
+     * @param parent The parent JFrame that owns this dialog.
+     */
     public InstructionsDialog(JFrame parent) {
         super(parent, Texts.instructions[language], true);
         setUndecorated(true);
@@ -71,6 +80,10 @@ public class InstructionsDialog extends JDialog {
         refreshLanguage(); // Load current language on creation
     }
 
+    /**
+     * Refreshes the dialog's content based on the current language setting.
+     * Updates the title and instructions text dynamically.
+     */
     public void refreshLanguage() {
         setTitle(Texts.instructions[language]);
         titleLabel.setText("★ " + Texts.instructions[language].toUpperCase() + " ★");

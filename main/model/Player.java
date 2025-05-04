@@ -170,6 +170,23 @@ public class Player {
         return name;
     }
 
+    /**
+     * Adds the specified amount to the player's balance.
+     *
+     * @param amount The amount to add to the player's balance.
+     */
+    public void addToBalance(int amount) {
+        this.balance += amount;
+    }
+
+    /**
+     * Checks if the player has stood in the current round.
+     *
+     * @return {@code true} if the player has stood, {@code false} otherwise.
+     */
+    public boolean hasStood() {
+        return hasStood;
+    }
 
     /*
      * -------------------------------------------------------
@@ -198,31 +215,20 @@ public class Player {
         this.currentScore = this.calculateScore();
     }
 
-    /**
-     * Returns a string representation of the player, showing the name and balance.
-     * 
-     * This method is **safe in the Model layer** because it provides **basic data output** 
-     * without formatting for a specific View.
-     *
-     * @return the player's name and balance as a string
-     */
     public void setScore(int current){
         this.currentScore = current;
     }
 
-    public void addToBalance(int amount) {
-        this.balance += amount;
-    }
-
-    public boolean hasStood() {
-        return hasStood;
-    }
-    
     public void setStood(boolean stood) {
         this.hasStood = stood;
     }
-    
 
+    /**
+     * Returns a string representation of the player, including their name and balance.
+     *
+     * @return A string in the format "name balance", where "name" is the player's name
+     *         and "balance" is the player's current balance.
+     */
     @Override
     public String toString() {
         return this.name + " " + this.balance;
