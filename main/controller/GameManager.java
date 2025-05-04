@@ -48,9 +48,6 @@ public class GameManager {
     private NetworkManager networkManager;
     private boolean multiplayerMode;
 
-
-    
-
     private GameManager() {
         this.players = new ArrayList<>();
         this.dealer = new Player("Dealer", INITIAL_BET);
@@ -65,6 +62,8 @@ public class GameManager {
         this.playerManager.addPlayer("PLAYER 2", INITIAL_BET);
 
     }
+
+
 
 
     // Public method to provide access to the singleton instance
@@ -552,6 +551,9 @@ public class GameManager {
     public void setCurrentPlayerIndex(int index) {
         this.currentPlayerIndex = index;
     }
-}
 
-        
+    public static void resetInstance() {
+        instance = null;
+    }
+    
+}

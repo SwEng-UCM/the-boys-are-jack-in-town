@@ -202,6 +202,7 @@ public class BlackJackMenu extends JFrame {
      */
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
+            GameManager.resetInstance();
             GameManager gameManager = GameManager.getInstance();
         
             // 1. Create the GUI
