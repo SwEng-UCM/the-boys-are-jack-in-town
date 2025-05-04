@@ -141,6 +141,8 @@ public class PausePanel {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {

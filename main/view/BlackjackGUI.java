@@ -669,6 +669,8 @@ public class BlackjackGUI extends JFrame {
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
 
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         return button;
     }
 
