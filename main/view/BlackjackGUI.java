@@ -352,7 +352,9 @@ public class BlackjackGUI extends JFrame {
     
             if (betAmount > 0) {
                 // Use Command pattern
-                BetCommand betCommand = new BetCommand(player, betAmount, gameManager);
+                Player actualPlayer = gameManager.getPlayerManager().getPlayerByName(player.getName());
+                BetCommand betCommand = new BetCommand(actualPlayer, betAmount, gameManager);
+                
                 gameManager.getCommandManager().executeCommand(betCommand);
                 updateUndoButtonState();
 
@@ -368,10 +370,13 @@ public class BlackjackGUI extends JFrame {
                 balanceLabel.setText("Balance: $" + updatedPlayerBalance);
                 dealerBalanceLabel.setText(Texts.balance[language] + " $" + dealerBalance);
                 dealerBetLabel.setText("Bet: $" + dealerBet);
+
+                System.out.println("DEBUG: " + player.getName() + " placed $" + betAmount + ", new balance: " + player.getBalance());
+
     
-                // Lock controls after bet
-                betField.setEnabled(false);
-                placeBetButton.setEnabled(false);
+                // // Lock controls after bet
+                // betField.setEnabled(false);
+                // placeBetButton.setEnabled(false);
     
                 JOptionPane.showMessageDialog(this,
                     Texts.betConfirmed[language] + " $" + betAmount,
@@ -381,8 +386,15 @@ public class BlackjackGUI extends JFrame {
     
                 playersPanel.updatePanel(gameManager.getPlayerManager().getPlayers());      
                 AchievementManager.getInstance().trackFirstBet(player);
-    
+
                 gameManager.startNextPlayerTurn();
+                updateGameState(gameManager.getPlayerManager().getPlayers(), 
+                gameManager.getDealerManager().getDealer(), 
+                false, 
+                gameManager.getGameFlowController().isPaused());
+
+                updatePlayerBalanceAndBet(player);
+
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Bet", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -783,20 +795,20 @@ public class BlackjackGUI extends JFrame {
             }
         }
         if (!gameManager.getPlayerManager().isCurrentPlayerStillInRound()) {
-                gameManager.getPlayerManager().advanceToNextPlayer(); // ✅ Advance the index here
+                gameManager.getPlayerManager().advanceToNextPlayer();
                 if (gameManager.getPlayerManager().hasNextPlayer()) {
-                    gameManager.startNextPlayerTurn(); // This will call promptPlayerAction again with a new player
-                } else {
-                    gameManager.getDealerManager().dealerTurn(); // No players left
+                    gameManager.startNextPlayerTurn();
+                    gameManager.getDealerManager().dealerTurn();
                 }
-                return; // 🔒 Important: prevent further code from running
+                return;
             }
         
             setGameButtonsEnabled(true);
             updateGameMessage(player.getName() + "'s turn");
         
-            if (!gameManager.getBettingManager().hasPlayerBet(player.getName())) {
+            if (!gameManager.getBettingManager().hasPlayerBet(player.getName()) && !gameManager.getGameFlowController().isGameOver()) {
                 enableBetting();
+            } else {
             }
     }
 
@@ -825,6 +837,8 @@ public class BlackjackGUI extends JFrame {
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayerManager().getPlayers()) {
+            System.out.println("DEBUG: Updating panel for " + player.getName() + " | Balance: " + player.getBalance() + " | Bet: " + player.getCurrentBet());
+
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);  // Transparent player panel
             panel.setBackground(new Color(0, 0, 0, 0));  // Explicitly set transparent bg
@@ -844,6 +858,16 @@ public class BlackjackGUI extends JFrame {
         }
         playersPanel.revalidate();
         playersPanel.repaint();
+        if (playerBalanceLabels.isEmpty() || playerBetLabels.isEmpty()) {
+            setPlayers(gameManager.getPlayerManager().getAllPlayerInfo());
+        }
+        System.out.println("DEBUG: Players: " + gameManager.getPlayerManager().getPlayers().size());
+System.out.println("DEBUG: Labels map keys: " + playerBalanceLabels.keySet());
+
+        
+        System.out.println("DEBUG: playerBalanceLabels: " + playerBalanceLabels);
+System.out.println("DEBUG: playerBetLabels: " + playerBetLabels);
+
     }
 
     /**

@@ -52,15 +52,18 @@ public class GameManager {
         this.players = new ArrayList<>();
         this.dealer = new Player("Dealer", INITIAL_BET);
         this.deck = new Deck();
-        this.gameOver = false;
-        this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // Initial balance
-        this.currentPlayerIndex = 0;
+        
+        // ✅ Add players directly to shared list
+        Player p1 = new Player("PLAYER 1", INITIAL_BET);
+        Player p2 = new Player("PLAYER 2", INITIAL_BET);
+        this.players.add(p1);
+        this.players.add(p2);
+        
+        this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // ✅ after player creation
         
         this.playerManager = new PlayerManager();
-        playerManager.setPlayers(players); 
-        this.playerManager.addPlayer("PLAYER 1", INITIAL_BET);
-        this.playerManager.addPlayer("PLAYER 2", INITIAL_BET);
-
+        playerManager.setPlayers(players); // ✅ Use same list
+        
     }
 
 
@@ -285,6 +288,9 @@ public class GameManager {
                 currentPlayerIndex++; // move to next player
                 if (currentPlayerIndex < players.size()) {
                     gui.promptPlayerAction(players.get(currentPlayerIndex));
+                if (currentPlayerIndex == 1) {
+                    gui.enableBetting(); // custom method to show betting UI
+                }                    
                 } else {
                     dealerManager.dealerTurn();
                 }
@@ -365,11 +371,26 @@ public class GameManager {
     public boolean placeBet(Player player, int betAmount) {
         boolean placed = bettingManager.placeBet(player.getName(), betAmount);
         if (placed) {
+            // 🔄 Synchronize Player object with BettingManager data
+            int updatedBalance = bettingManager.getPlayerBalance(player.getName());
+            int updatedBet = bettingManager.getPlayerBet(player.getName());
+            player.setBalance(updatedBalance);
+            player.setCurrentBet(updatedBet);
+        
             AchievementManager.getInstance().unlock(Badge.FIRST_BET);
             AudioManager.getInstance().playSoundEffect("/resources/sounds/bet.wav");
-        }
+        
+            System.out.println("DEBUG: " + player.getName() + " placed $" + betAmount +
+                ", new balance: " + player.getBalance());
+                System.out.println("✅ SYNCHRONIZED: " + player.getName() + " now has $" + player.getBalance() + " | Bet: $" + player.getCurrentBet());
+                System.out.println("BetManager balance: " + bettingManager.getPlayerBalance(player.getName()));
+                System.out.println("Player object balance: " + player.getBalance());
+                
+            }
+        
         return placed;
     }
+    
     
     
 
