@@ -16,6 +16,12 @@ public class CommandManager {
         command.execute();
         lastCommand = command;
     }
+
+    /**
+     * Checks if there is a command available to undo.
+     *
+     * @return true if there is a command to undo, false otherwise
+     */
     public boolean canUndo() {
         return lastCommand != null;
     }

@@ -7,7 +7,6 @@ import main.model.Player;
 /**
  * Handles communication with a single client in a multiplayer Blackjack game.
  * This class implements {@link Runnable} so it can be executed in a separate thread.
- * 
  * It handles the connection setup, processes commands received from the client,
  * and sends responses back. It maintains the association with a {@link Player}
  * and communicates with the {@link GameManager}.

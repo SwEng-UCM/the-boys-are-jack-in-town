@@ -99,7 +99,6 @@ public class AudioManager {
                 System.err.println("Sound not found: " + resourcePath);
                 return;
             }
-
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);

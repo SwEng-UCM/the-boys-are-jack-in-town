@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 public class LoadGamePanel extends JDialog {
     private final JFileChooser fileChooser; // File chooser for selecting saved game file
-    private BlackJackMenu menu;
 
     /**
      * Constructs a LoadGamePanel to allow the user to load a saved game.
@@ -27,7 +26,6 @@ public class LoadGamePanel extends JDialog {
      */
     public LoadGamePanel(BlackJackMenu parent) {
         super();
-        this.menu = parent;
         setTitle("Load Saved Game");
         setModal(true); // Block input to other windows until closed
         setSize(400, 300);
@@ -63,7 +61,6 @@ public class LoadGamePanel extends JDialog {
         } else {
             System.out.println("Load cancelled.");
         }
-
         // Close the dialog
         dispose();
     }

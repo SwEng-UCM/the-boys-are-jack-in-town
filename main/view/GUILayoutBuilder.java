@@ -35,7 +35,6 @@ public class GUILayoutBuilder {
         topLeftPanel.setOpaque(false);
         topLeftPanel.add(achievementButton);
         
-
         window.topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         window.topRightPanel.setOpaque(false);
         window.topRightPanel.add(window.pauseButton);
@@ -81,6 +80,5 @@ public class GUILayoutBuilder {
         window.add(window.mainPanel);
 
         window.gameManager.getGameFlowController().startNewGame();
-
     }
 }

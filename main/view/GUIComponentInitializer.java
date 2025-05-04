@@ -1,10 +1,8 @@
 package main.view;
 
 import main.controller.GameManager;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static main.view.BlackJackMenu.language;
 
 /**

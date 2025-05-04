@@ -3,7 +3,6 @@ package main.controller;
 import java.util.ArrayList;
 import java.util.List;
 import main.model.Card;
-import main.model.Deck;
 import main.model.Player;
 
 /**

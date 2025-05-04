@@ -2,8 +2,6 @@ package main.view;
 
 import java.io.IOException;
 import javax.swing.*;
-
-import main.controller.BetCommand;
 import main.model.Player;
 
 /**

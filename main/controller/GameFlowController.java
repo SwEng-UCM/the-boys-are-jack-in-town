@@ -36,7 +36,6 @@ public class GameFlowController {
      */
     public GameFlowController(GameManager gameManager, PlayerManager playerManager, DealerManager dealerManager, BlackjackGUI gui) {
         this.gui = gui;
-        this.gameTimer = gameTimer;
         this.gameManager = gameManager;
         this.playerManager = playerManager;
         this.dealerManager = dealerManager;

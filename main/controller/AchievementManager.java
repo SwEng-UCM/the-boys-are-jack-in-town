@@ -11,7 +11,6 @@ import main.model.Player;
  */
 public class AchievementManager {
     private static AchievementManager instance;
-    private final Map<String, Integer> dealerStats = new HashMap<>();
     private final Map<Player, Map<String, Integer>> playerStats = new HashMap<>();
     private final Set<Badge> unlockedBadges = EnumSet.noneOf(Badge.class);
     private int dealerWinStreak = 0;
@@ -181,8 +180,12 @@ public class AchievementManager {
         return Collections.unmodifiableSet(unlockedBadges);
     }
 
+    /**
+     * Revokes a badge, removing it from the unlocked badges set.
+     *
+     * @param badge the badge to revoke
+     */
     public void revoke(Badge badge) {
         unlockedBadges.remove(badge);
     }
-    
 }

@@ -2,25 +2,39 @@ package main.view;
 
 import main.controller.AudioManager;
 import main.controller.GameManager;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+/**
+ * The PausePanel class represents the pause menu in the game.
+ * It provides options to resume the game, save the game, return to the main menu, or exit the game.
+ * The menu also includes a volume slider for adjusting the game's audio volume.
+ */
 public class PausePanel {
-
     private final JFrame parent;
     private final GameManager gameManager;
     private final int language;
-    private  BlackjackGUI blackjackGUI;
 
+    /**
+     * Constructs a PausePanel instance.
+     *
+     * @param parent The parent JFrame that owns this pause panel.
+     * @param gameManager The GameManager instance for managing game state.
+     * @param gui The BlackjackGUI instance for updating the game UI.
+     * @param language The current language setting for the game.
+     */
     public PausePanel(JFrame parent, GameManager gameManager, BlackjackGUI gui, int language) {
         this.parent = parent;
-        this.blackjackGUI = gui;
         this.gameManager = gameManager;
         this.language = language;
     }
 
+    /**
+     * Displays the pause menu dialog.
+     * The menu includes options to resume the game, save the game, return to the main menu, or exit the game.
+     * It also includes a volume slider for adjusting the game's audio volume.
+     */
     public void showPauseMenu() {
         gameManager.getGameFlowController().pauseGame();
 
@@ -92,25 +106,11 @@ public class PausePanel {
         pauseDialog.setVisible(true);
     }
 
-//    private JPanel createGlassPanel() {
-//        return new JPanel() {
-//            @Override
-//            protected void paintComponent(Graphics g) {
-//                Graphics2D g2 = (Graphics2D) g.create();
-//                g2.setComposite(AlphaComposite.SrcOver.derive(0.75f));
-//                g2.setColor(Color.WHITE);
-//                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
-//                g2.setColor(new Color(0, 0, 0, 50));
-//                g2.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
-//                g2.dispose();
-//            }
-//         {
-//            setLayout(new BorderLayout());
-//            setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
-//            setOpaque(false);
-//        }};
-//    }
-
+    /**
+     * Creates a custom glass panel with a semi-transparent background and rounded corners.
+     *
+     * @return A JPanel with a custom painted background.
+     */
     private JPanel createGlassPanel() {
         JPanel panel = new JPanel() {
             @Override
@@ -131,6 +131,14 @@ public class PausePanel {
         return panel;
     }
 
+    /**
+     * Creates a custom-styled button for the pause menu.
+     *
+     * @param text The text to display on the button.
+     * @param font The font to use for the button text.
+     * @param bgColor The background color of the button.
+     * @return A JButton with custom styling and hover effects.
+     */
     private JButton createPauseButton(String text, Font font, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -154,14 +162,20 @@ public class PausePanel {
                 button.setBackground(bgColor);
             }
         });
-
         return button;
     }
 
+    /**
+     * Resumes the game by unpausing the game flow controller.
+     */
     private void resumeGame() {
         gameManager.getGameFlowController().resumeGame();
     }
 
+    /**
+     * Returns to the main menu by disposing of the current game window
+     * and opening the main menu.
+     */
     private void returnToMainMenu() {
         new BlackJackMenu().setVisible(true);
         parent.dispose();
