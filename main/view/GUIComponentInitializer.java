@@ -112,8 +112,6 @@ public class GUIComponentInitializer {
         window.betPanel.add(window.betField);
         window.betPanel.add(window.placeBetButton);
         window.betPanel.add(Box.createHorizontalGlue());
-        window.betPanel.add(window.betLabel);
-        window.betPanel.add(window.balanceLabel);
 
         // Assemble button panel
         window.buttonPanel.setOpaque(false);

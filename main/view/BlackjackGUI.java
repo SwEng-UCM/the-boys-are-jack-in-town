@@ -370,13 +370,6 @@ public class BlackjackGUI extends JFrame {
                 balanceLabel.setText("Balance: $" + updatedPlayerBalance);
                 dealerBalanceLabel.setText(Texts.balance[language] + " $" + dealerBalance);
                 dealerBetLabel.setText("Bet: $" + dealerBet);
-
-                System.out.println("DEBUG: " + player.getName() + " placed $" + betAmount + ", new balance: " + player.getBalance());
-
-    
-                // // Lock controls after bet
-                // betField.setEnabled(false);
-                // placeBetButton.setEnabled(false);
     
                 JOptionPane.showMessageDialog(this,
                     Texts.betConfirmed[language] + " $" + betAmount,
@@ -636,13 +629,11 @@ public class BlackjackGUI extends JFrame {
      * @param message The special message to display.
      */
     public void updateSpecialMessage(String message) {
-        if (!message.equals("...")) {
-            specialMessageLabel.setText(message);
             Timer timer = new Timer(2000, e -> specialMessageLabel.setText("...")); // Reset after 2 sec
             timer.setRepeats(false);
             timer.start();
-        }
     }
+    
 
     /**
      * Creates a styled button with gradient effects and shadow.
@@ -837,8 +828,6 @@ public class BlackjackGUI extends JFrame {
     public void updatePlayerPanels() {
         playersPanel.removeAll();
         for (Player player : gameManager.getPlayerManager().getPlayers()) {
-            System.out.println("DEBUG: Updating panel for " + player.getName() + " | Balance: " + player.getBalance() + " | Bet: " + player.getCurrentBet());
-
             JPanel panel = new JPanel(new BorderLayout());
             panel.setOpaque(false);  // Transparent player panel
             panel.setBackground(new Color(0, 0, 0, 0));  // Explicitly set transparent bg
@@ -861,13 +850,6 @@ public class BlackjackGUI extends JFrame {
         if (playerBalanceLabels.isEmpty() || playerBetLabels.isEmpty()) {
             setPlayers(gameManager.getPlayerManager().getAllPlayerInfo());
         }
-        System.out.println("DEBUG: Players: " + gameManager.getPlayerManager().getPlayers().size());
-System.out.println("DEBUG: Labels map keys: " + playerBalanceLabels.keySet());
-
-        
-        System.out.println("DEBUG: playerBalanceLabels: " + playerBalanceLabels);
-System.out.println("DEBUG: playerBetLabels: " + playerBetLabels);
-
     }
 
     /**
