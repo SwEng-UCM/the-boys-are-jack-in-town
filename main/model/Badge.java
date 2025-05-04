@@ -5,14 +5,14 @@ import main.view.Texts;
 import static main.view.BlackJackMenu.language;
 
 public enum Badge {
-    FIRST_WIN("First Win!", "resources/img/badges/first_win.png", "resources/img/badges/first_win_grey.png"),
-    FIRST_LOSS("First Loss", "resources/img/badges/first_loss.png", "resources/img/badges/first_loss_grey.png"),
-    FIRST_BET("First Bet!", "resources/img/badges/first_bet.png", "resources/img/badges/first_bet_grey.png"),
-    FIRST_BLACKJACK("First Blackjack!", "resources/img/badges/first_blackjack.png", "resources/img/badges/first_blackjack_grey.png"),
-    FIVE_WINS("5 Wins", "resources/img/badges/five_wins.png", "resources/img/badges/five_wins_grey.png"),
-    BIG_WIN("Big Winner", "resources/img/badges/big_win.png", "resources/img/badges/big_win_grey.png"),
-    DEALER_STREAK("Dealer: 3-Win Streak", "resources/img/badges/dealer_streak.png", "resources/img/badges/dealer_streak_grey.png"),
-    MULTIPLAYER("Multiplayer Madness", "resources/img/badges/multiplayer.png", "resources/img/badges/multiplayer_grey.png");
+    FIRST_WIN("firstWin", "resources/img/badges/first_win.png", "resources/img/badges/first_win_grey.png"),
+    FIRST_LOSS("firstLoss", "resources/img/badges/first_loss.png", "resources/img/badges/first_loss_grey.png"),
+    FIRST_BET("firstBet", "resources/img/badges/first_bet.png", "resources/img/badges/first_bet_grey.png"),
+    FIRST_BLACKJACK("firstBlackjack", "resources/img/badges/first_blackjack.png", "resources/img/badges/first_blackjack_grey.png"),
+    FIVE_WINS("fiveWins", "resources/img/badges/five_wins.png", "resources/img/badges/five_wins_grey.png"),
+    BIG_WIN("bigWin", "resources/img/badges/big_win.png", "resources/img/badges/big_win_grey.png"),
+    DEALER_STREAK("dealerStreak", "resources/img/badges/dealer_streak.png", "resources/img/badges/dealer_streak_grey.png"),
+    MULTIPLAYER("multiplayerAchievement", "resources/img/badges/multiplayer.png", "resources/img/badges/multiplayer_grey.png");
 
     public final String title;
     public final String coloredPath;
