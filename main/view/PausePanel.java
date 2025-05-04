@@ -23,7 +23,6 @@ public class PausePanel {
 
     public void showPauseMenu() {
         gameManager.getGameFlowController().pauseGame();
-        blackjackGUI.setGameButtonsEnabled(false);
 
         JDialog pauseDialog = new JDialog(parent, Texts.PAUSE[language], true);
         pauseDialog.setSize(400, 550);
@@ -142,6 +141,8 @@ public class PausePanel {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {
@@ -159,7 +160,6 @@ public class PausePanel {
 
     private void resumeGame() {
         gameManager.getGameFlowController().resumeGame();
-        blackjackGUI.setGameButtonsEnabled(true);
     }
 
     private void returnToMainMenu() {

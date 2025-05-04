@@ -90,16 +90,7 @@ public class BlackJackMenu extends JFrame {
 
         exitButton = createStyledButton(Texts.exit[language]);
         exitButton.setIcon(loadIcon("resources/icons/exit.png", 32, 32));
-    
-        // Load and resize the image
-        ImageIcon originalIcon = new ImageIcon("resources/img/blackjack.png");
-        Image originalImage = originalIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(400, 219, Image.SCALE_SMOOTH);
-        ImageIcon resizedIcon = new ImageIcon(resizedImage);
-        imageLabel = new JLabel(resizedIcon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-    
+
         mainTitleLabel = new JLabel(Texts.mainTitle[language]);
         mainTitleLabel.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 60));
         mainTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -158,7 +149,6 @@ public class BlackJackMenu extends JFrame {
         JPanel imagePanel = new JPanel(new BorderLayout());
         imagePanel.setOpaque(false);
         imagePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, -20, 0));
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
         contentPanel.add(imagePanel, BorderLayout.NORTH);
     
         // Button panel setup
@@ -212,6 +202,7 @@ public class BlackJackMenu extends JFrame {
      */
     private void attachEventListeners() {
         startButton.addActionListener(e -> {
+            GameManager.resetInstance();
             GameManager gameManager = GameManager.getInstance();
         
             // 1. Create the GUI
