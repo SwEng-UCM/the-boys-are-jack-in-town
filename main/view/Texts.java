@@ -117,7 +117,7 @@ public class Texts {
                     "3. Try to get as close to 21 without going over.",
                     "4. Face cards are worth 10, Aces are 1 or 11.",
                     "5. Place your bet using the 'Place Bet' field before starting.",
-                    "6. You can undo your last bet using the 'Undo' button.",
+                    "6. You can undo your last step using the 'Undo' button.",
                     "7. Track your progress in the Achievements panel."
                 },
                 { // Spanish 🇪🇸
@@ -157,7 +157,7 @@ public class Texts {
                     "3. حاول الاقتراب من 21 دون تجاوزها.",
                     "4. البطاقات الوجهية تساوي 10، والآس يساوي 1 أو 11.",
                     "5. أدخل رهانك في الحقل قبل بدء الجولة.",
-                    "6. يمكنك التراجع عن الرهان باستخدام زر 'تراجع'.",
+                    "6. يمكنك التراجع عن الخطوة باستخدام زر 'تراجع'.",
                     "7. راقب إنجازاتك في لوحة الإنجازات."
                 },
                 { // French 🇫🇷
@@ -167,7 +167,7 @@ public class Texts {
                     "3. Essayez d’atteindre 21 sans le dépasser.",
                     "4. Les figures valent 10, l’As vaut 1 ou 11.",
                     "5. Saisissez votre mise avant de commencer le tour.",
-                    "6. Vous pouvez annuler votre dernière mise avec le bouton 'Annuler'.",
+                    "6. Vous pouvez annuler votre dernière etape avec le bouton 'Annuler'.",
                     "7. Suivez vos progrès dans le panneau Succès."
                 }
             };
@@ -229,6 +229,8 @@ public class Texts {
             "جوكر البري! اختر قيمة بين 1 و 11: 🤡", // Arabic 🇸🇦
             "Joker Sauvage ! Choisissez une valeur entre 1 et 11 : 🤡" // French 🇫🇷
     };
+
+    
 
     public static String[] jokerWildTitle = {
             "Joker Wild",  // English 🇬🇧
