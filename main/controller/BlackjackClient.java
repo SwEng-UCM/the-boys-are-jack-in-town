@@ -37,57 +37,20 @@ public class BlackjackClient {
      * @throws IOException if connection or stream setup fails
      */
     public void connect(String host, int port) throws IOException {
-        try {
-            this.socket = new Socket(host, port);
-            this.output = new ObjectOutputStream(socket.getOutputStream());
-            this.input = new ObjectInputStream(socket.getInputStream());
+        socket = new Socket(host, port);
+        output = new ObjectOutputStream(socket.getOutputStream());
+        input = new ObjectInputStream(socket.getInputStream());
 
-            // Start a separate thread to listen for server updates
-            new Thread(this::listenForUpdates).start();
-        } catch (IOException e) {
-            throw new IOException("Connection failed: " + e.getMessage());
-        }
+        String playerName = "Player" + System.currentTimeMillis(); 
+        MultiplayerCommand join = new MultiplayerCommand(MultiplayerCommand.Type.JOIN, playerName, null);
+        output.writeObject(join);
+        output.flush();
+
+        new Thread(new BlackjackClientListener(input)).start();
+
+        System.out.println("Connected to server as " + playerName);
     }
 
-    /**
-     * Continuously listens for incoming messages from the server.
-     * Handles {@link GameStateUpdate} and {@link MultiplayerCommand} messages.
-     */
-    private void listenForUpdates() {
-        try {
-            while (socket.isConnected()) {
-                Object received = input.readObject();
-
-                if (received instanceof GameStateUpdate) {
-                    handleGameStateUpdate((GameStateUpdate) received);
-                } else if (received instanceof MultiplayerCommand) {
-                    gameManager.handleCommand((MultiplayerCommand) received);
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Connection error: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Applies a game state update received from the server and refreshes the GUI.
-     * GUI updates are dispatched to the EDT using {@link SwingUtilities#invokeLater(Runnable)}.
-     *
-     * @param update the {@link GameStateUpdate} received from the server
-     */
-    private void handleGameStateUpdate(GameStateUpdate update) {
-        SwingUtilities.invokeLater(() -> {
-            gameManager.applyGameStateUpdate(update);
-            if (gameManager.getGUI() != null) {
-                gameManager.getGUI().updateGameState(
-                    (ArrayList<Player>) update.getPlayers(),
-                    update.getDealer(),
-                    update.isGameOver(),
-                    false
-                );
-            }
-        });
-    }
 
     /**
      * Sends a {@link MultiplayerCommand} to the server.

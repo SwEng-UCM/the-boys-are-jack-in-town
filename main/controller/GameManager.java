@@ -264,6 +264,7 @@ public class GameManager {
         if (!multiplayerMode) return;
         
         GameStateUpdate update = createGameStateUpdate();
+        System.out.println("Sending update with players: " + update.getPlayers().size());
         networkManager.getClientHandlers().forEach(handler -> 
             handler.sendMessage(update)
         );
@@ -717,6 +718,7 @@ public class GameManager {
             });
         }
     }
+    
     
     
 
