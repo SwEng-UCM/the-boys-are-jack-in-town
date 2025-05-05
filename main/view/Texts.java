@@ -230,6 +230,41 @@ public class Texts {
             "Joker Sauvage ! Choisissez une valeur entre 1 et 11 : 🤡" // French 🇫🇷
     };
 
+    public static String[] apply = {
+        "Apply",       // English
+        "Aplicar",     // Spanish
+        "Cuir i bhFeidhm", // Irish
+        "Alkalmaz",    // Hungarian
+        "تطبيق",       // Arabic
+        "Appliquer"    // French
+    };
+    
+    public static String[] cancel = {
+        "Cancel",
+        "Cancelar",
+        "Cealaigh",
+        "Mégse",
+        "إلغاء",
+        "Annuler"
+    };
+    
+    public static String[] tooltipDifficulty = {
+        "Easy: 1.5x payout\nMedium: 2x payout\nHard: 2.5x payout",       // English
+        "Fácil: 1.5x ganancia\nMedia: 2x ganancia\nDifícil: 2.5x ganancia", // Spanish
+        "Éasca: 1.5x íocaíocht\nMeánach: 2x íocaíocht\nDeacair: 2.5x íocaíocht", // Irish
+        "Könnyű: 1.5x nyeremény\nKözepes: 2x nyeremény\nNehéz: 2.5x nyeremény", // Hungarian
+        "سهل: 1.5x ربح\nمتوسط: 2x ربح\nصعب: 2.5x ربح", // Arabic
+        "Facile : gain 1.5x\nMoyen : gain 2x\nDifficile : gain 2.5x" // French
+    };
+    
+    public static String[] optionsTitle = {
+        "Options",
+        "Opciones",
+        "Roghanna",
+        "Beállítások",
+        "الإعدادات",
+        "Options"
+    };
     
 
     public static String[] jokerWildTitle = {
