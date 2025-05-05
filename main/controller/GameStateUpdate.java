@@ -31,7 +31,11 @@ public class GameStateUpdate implements Serializable {
      */
     public GameStateUpdate(List<Player> players, Player dealer, 
                            int currentPlayerIndex, boolean gameOver) {
-        this.players = new ArrayList<>(players); // Defensive copy
+                            this.players = new ArrayList<>();
+                            for (Player p : players) {
+                                this.players.add(new Player(p));
+                            }
+                            
         this.dealer = new Player(dealer);        // Defensive copy
         this.currentPlayerIndex = currentPlayerIndex;
         this.gameOver = gameOver;
@@ -42,9 +46,15 @@ public class GameStateUpdate implements Serializable {
      *
      * @return a new list containing copies of the players
      */
-    public List<Player> getPlayers() {
-        return new ArrayList<>(players); // Return a new list for immutability
-    }
+        public List<Player> getPlayers() {
+            List<Player> copy = new ArrayList<>();
+            for (Player p : players) {
+                copy.add(new Player(p)); // deep copy
+            }
+            return copy;
+        }
+        
+    
 
     /**
      * Returns a copy of the dealer to maintain immutability.
