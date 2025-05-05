@@ -107,19 +107,25 @@ public class BlackjackClientHandler implements Runnable {
      */
     private void handleJoinCommand(MultiplayerCommand command) throws IOException {
         String playerName = command.getPlayerName();
-        int initialBalance = 1000; // Or get from GameManager
-
-        // Create player through PlayerManager
+        int initialBalance = 1000;
+    
+        // Add player FIRST
         gameManager.getPlayerManager().addPlayer(playerName, initialBalance);
-
-        // Get reference to the created player
         this.player = gameManager.getPlayerManager().getPlayerByName(playerName);
-
-        // Send initial game state
-        sendMessage(gameManager.createGameStateUpdate());
-
+    
         System.out.println("Player joined: " + playerName);
+        System.out.println("Total players: " + gameManager.getPlayerManager().getPlayers().size());
+    
+        // THEN create and send the update
+        GameStateUpdate update = gameManager.createGameStateUpdate();
+        System.out.println("Sending update with players: " + update.getPlayers().size());
+    
+        sendMessage(update);
+    
+        // Optionally broadcast to all other clients
+        gameManager.broadcastGameState();
     }
+    
 
     /**
      * Closes the client connection and cleans up associated resources.
