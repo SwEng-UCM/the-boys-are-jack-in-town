@@ -21,10 +21,10 @@ public class OptionsPanel extends JDialog {
 
         setSize(400, 300);
         setLocationRelativeTo(parent);
-        setUndecorated(true); // Remove window borders
+        setUndecorated(true); // Clean borderless look
         setLayout(new BorderLayout());
 
-        // Glassmorphism background
+        // Glassmorphism-like panel
         JPanel glassPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -40,16 +40,16 @@ public class OptionsPanel extends JDialog {
         glassPanel.setLayout(new BoxLayout(glassPanel, BoxLayout.Y_AXIS));
         glassPanel.setOpaque(false);
 
-        // Dropdown styling
+        // UIManager styling for combo boxes
         UIManager.put("ComboBox.background", new Color(44, 44, 44));
         UIManager.put("ComboBox.foreground", Color.WHITE);
         UIManager.put("ComboBox.buttonBackground", new Color(60, 60, 60));
         UIManager.put("ComboBox.selectionBackground", new Color(100, 100, 100));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        Font titleFont = new Font("Segoe UI", Font.BOLD, 16);
         Font labelFont = new Font("Segoe UI", Font.PLAIN, 14);
 
+        // Language section
         JLabel languageLabel = new JLabel(Texts.selectLanguage[language]);
         languageLabel.setForeground(Color.WHITE);
         languageLabel.setFont(labelFont);
@@ -59,11 +59,17 @@ public class OptionsPanel extends JDialog {
         languageDropdown.setSelectedIndex(language);
         languageDropdown.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
+        // Difficulty section
         JLabel difficultyLabel = new JLabel(Texts.selectDifficulty[language]);
         difficultyLabel.setForeground(Color.WHITE);
         difficultyLabel.setFont(labelFont);
 
-        difficultyCombo = new JComboBox<>(new String[]{Texts.easy[language], Texts.medium[language], Texts.hard[language]});
+        difficultyCombo = new JComboBox<>(new String[]{
+            Texts.easy[language],
+            Texts.medium[language],
+            Texts.hard[language]
+        });
+
         DifficultyStrategy current = GameManager.getInstance().getDifficultyStrategy();
         difficultyCombo.setSelectedItem(current.getDifficultyName());
         difficultyCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
@@ -95,7 +101,7 @@ public class OptionsPanel extends JDialog {
 
         cancelButton.addActionListener(e -> dispose());
 
-        // Assemble layout
+        // Build layout
         glassPanel.add(languageLabel);
         glassPanel.add(Box.createVerticalStrut(5));
         glassPanel.add(languageDropdown);
