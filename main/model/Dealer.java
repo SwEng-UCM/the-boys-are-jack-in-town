@@ -10,7 +10,6 @@ import java.util.ArrayList;
  * and controlling the game flow.
  */
 public class Dealer implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private Deck deck; // The deck of cards used in the game
