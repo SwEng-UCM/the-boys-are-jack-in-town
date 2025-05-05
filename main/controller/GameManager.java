@@ -702,7 +702,7 @@ public class GameManager {
      * @param update The GameStateUpdate object containing the updated state.
      */
     public void applyGameStateUpdate(GameStateUpdate update) {
-        this.players = new ArrayList<>(update.getPlayers());
+        this.playerManager.setPlayers(new ArrayList<>(update.getPlayers()));
         this.dealer = new Player(update.getDealer());
         
         // ✅ CRITICAL — must update player manager
