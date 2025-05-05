@@ -119,6 +119,7 @@ public class MultiplayerSetUpDialog {
 
                         SwingUtilities.invokeLater(() -> {
                             BlackjackGUI gui = new BlackjackGUI(gameManager);
+                            gui.setConnected(true);
                             gui.setVisible(true);
                             parentFrame.dispose();
                         });
