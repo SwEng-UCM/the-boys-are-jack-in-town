@@ -265,6 +265,9 @@ public class GameManager {
         
         GameStateUpdate update = createGameStateUpdate();
         System.out.println("Sending update with players: " + update.getPlayers().size());
+        for (Player p : playerManager.getPlayers()) {
+            System.out.println("Player " + p.getName() + " has " + p.getHand().size() + " cards");
+        }
         networkManager.getClientHandlers().forEach(handler -> 
             handler.sendMessage(update)
         );

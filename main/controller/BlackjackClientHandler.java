@@ -116,6 +116,12 @@ public class BlackjackClientHandler implements Runnable {
         System.out.println("Player joined: " + playerName);
         System.out.println("Total players: " + gameManager.getPlayerManager().getPlayers().size());
     
+        // Deal initial hand (example logic — adapt to your flow)
+        player.receiveCard(gameManager.getDeck().dealCard());
+        player.receiveCard(gameManager.getDeck().dealCard());
+
+        System.out.println("Dealt " + player.getHand().size() + " cards to " + player.getName());
+
         // THEN create and send the update
         GameStateUpdate update = gameManager.createGameStateUpdate();
         System.out.println("Sending update with players: " + update.getPlayers().size());
