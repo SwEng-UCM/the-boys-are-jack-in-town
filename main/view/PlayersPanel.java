@@ -135,6 +135,8 @@ class PlayersPanel extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     
+        System.out.println("Rendering hand for " + player.getName() + " with " + player.getHand().size() + " cards");
+
         return scrollPane;
     }
 

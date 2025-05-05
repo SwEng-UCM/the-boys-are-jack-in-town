@@ -45,11 +45,17 @@ public class Player implements Serializable{
      */
     public Player(Player other) {
         this.name = other.name;
-        this.hand = new ArrayList<>(other.hand); // Create new list with same cards
+        this.hand = new ArrayList<>();
+        for (Card c : other.hand) {
+            this.hand.add(new Card(c));  // Ensure Card is also Serializable & has a copy constructor
+        }
         this.scoreMultiplier = other.scoreMultiplier;
         this.balance = other.balance;
         this.currentBet = other.currentBet;
+        this.currentScore = other.currentScore;
+        this.hasStood = other.hasStood;
     }
+    
 
     /**
      * Adds a card to the player's hand and applies any card-specific effects.
