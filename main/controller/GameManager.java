@@ -351,7 +351,7 @@ public class GameManager {
     private void handleHit(String playerName) {
         Player player = playerManager.getPlayerByName(playerName);
         if (player != null && playerManager.isCurrentPlayer(player)) {
-            this.hit(player);
+            Card drawnCard = hit(player);
             broadcastGameState();
     
             if (player.calculateScore() > 21) {
@@ -710,6 +710,7 @@ public class GameManager {
         
         // ✅ CRITICAL — must update player manager
         this.playerManager.setPlayers(this.players);
+
     
         this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
