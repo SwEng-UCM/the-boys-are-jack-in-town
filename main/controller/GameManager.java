@@ -284,89 +284,92 @@ public class GameManager {
      * @param command The MultiplayerCommand to handle.
      */
     public void handleCommand(MultiplayerCommand command) {
-        if (!multiplayerMode) return;
-
+        if (!multiplayerMode || command == null || command.getType() == null) {
+            return;
+        }
+    
+        String playerName = command.getPlayerName();
+        if (playerName == null && command.getType() != MultiplayerCommand.Type.START_NEW_GAME) {
+            System.err.println("Command missing player name: " + command.getType());
+            return;
+        }
+    
         switch (command.getType()) {
-            case JOIN:
-                handlePlayerJoin(command);
-                break;
-            case BET:
-                handleBet(command);
-                break;
-            case HIT:
-                handleHit(command);
-                break;
-            case STAND:
-                handleStand(command);
-                break;
-                case START_NEW_GAME:
-                if (!isMultiplayerMode()) return;
+            case JOIN -> handlePlayerJoin(playerName);
+            case BET -> handleBet(playerName, command.getData(Integer.class));
+            case HIT -> handleHit(playerName);
+            case STAND -> handleStand(playerName);
+            case START_NEW_GAME -> {
                 if (isServer()) {
                     gameFlowController.startNewGame();
                     broadcastGameState();
                 }
-                break;
-            default:
-                System.err.println("Unknown command type: " + command.getType());
+            }
+            default -> System.err.println("Unknown command type: " + command.getType());
         }
     }
+    
 
     /**
      * Handles a player joining the game in multiplayer mode.
      *
      * @param command The MultiplayerCommand containing the join request.
      */
-    private void handlePlayerJoin(MultiplayerCommand command) {
-        if (playerManager.getPlayerByName("PLAYER 2") == null) {
-            playerManager.addPlayer("PLAYER 2", INITIAL_BET);
-            broadcastGameState();
-            System.out.println("Player joined");
+    private void handlePlayerJoin(String playerName) {
+        if (playerManager.getPlayerByName(playerName) == null) {
+            playerManager.addPlayer(playerName, 1000);
+            System.out.println("Player joined: " + playerName);
+            broadcastGameState(); // Send current state to all clients
         }
     }
+    
 
     /**
      * Handles a player's bet in multiplayer mode.
      *
      * @param command The MultiplayerCommand containing the bet details.
      */
-    private void handleBet(MultiplayerCommand command) {
-        Player player = playerManager.getPlayerByName(command.getPlayerName());
-        if (player != null) {
-            int amount = command.getData(Integer.class);
+    private void handleBet(String playerName, int amount) {
+        Player player = playerManager.getPlayerByName(playerName);
+        if (player != null && amount > 0) {
             if (placeBet(player, amount)) {
                 broadcastGameState();
             }
         }
     }
+    
 
     /**
      * Handles a player's "hit" action in multiplayer mode.
      *
      * @param command The MultiplayerCommand containing the hit action.
      */
-    private void handleHit(MultiplayerCommand command) {
-        Player player = playerManager.getPlayerByName(command.getPlayerName());
+    private void handleHit(String playerName) {
+        Player player = playerManager.getPlayerByName(playerName);
         if (player != null && playerManager.isCurrentPlayer(player)) {
-            hit(player);
+            this.hit(player);
             broadcastGameState();
+    
             if (player.calculateScore() > 21) {
                 checkPlayerBust();
             }
         }
     }
+    
 
     /**
      * Handles a player's "stand" action in multiplayer mode.
      *
      * @param command The MultiplayerCommand containing the stand action.
      */
-    private void handleStand(MultiplayerCommand command) {
-        Player player = playerManager.getPlayerByName(command.getPlayerName());
+    private void handleStand(String playerName) {
+        Player player = playerManager.getPlayerByName(playerName);
         if (player != null && playerManager.isCurrentPlayer(player)) {
             playerManager.incrementCurrentPlayerIndex();
             broadcastGameState();
         }
     }
+    
 
     /**
      * Handles a player's "hit" action in single-player mode.
@@ -698,22 +701,23 @@ public class GameManager {
      * @param update The GameStateUpdate object containing the updated state.
      */
     public void applyGameStateUpdate(GameStateUpdate update) {
-        // ✅ 1. Update internal game state
         this.players = new ArrayList<>(update.getPlayers());
-        this.dealer = new Player(update.getDealer()); // Clone the dealer
-        this.playerManager.setPlayers(this.players);  // ✅ IMPORTANT: PlayerManager needs the updated list
+        this.dealer = new Player(update.getDealer());
+        
+        // ✅ CRITICAL — must update player manager
+        this.playerManager.setPlayers(this.players);
+    
         this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
     
-        // ✅ 2. Update the GUI safely on the Swing thread
         if (gui != null) {
             SwingUtilities.invokeLater(() -> {
-                // Update the main game screen
-                gui.updateGameState(players, dealer, gameOver, isPaused); // Use your current paused state
-                gui.setGameButtonsEnabled(!gameOver); // Disable game actions if game is over
+                gui.updateGameState(players, dealer, gameOver, false);
+                gui.setGameButtonsEnabled(!gameOver);
             });
         }
     }
+    
     
 
     /**
