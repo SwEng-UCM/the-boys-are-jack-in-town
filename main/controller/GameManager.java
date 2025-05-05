@@ -698,26 +698,23 @@ public class GameManager {
      * @param update The GameStateUpdate object containing the updated state.
      */
     public void applyGameStateUpdate(GameStateUpdate update) {
-        // Update core game state
+        // ✅ 1. Update internal game state
         this.players = new ArrayList<>(update.getPlayers());
-        this.dealer = new Player(update.getDealer());
+        this.dealer = new Player(update.getDealer()); // Clone the dealer
+        this.playerManager.setPlayers(this.players);  // ✅ IMPORTANT: PlayerManager needs the updated list
         this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
-        
-        // Update UI components
+    
+        // ✅ 2. Update the GUI safely on the Swing thread
         if (gui != null) {
-            DealerManager.DealerCardInfo dealerCards = 
-                dealerManager.getVisibleDealerCards(gameOver);
-                
             SwingUtilities.invokeLater(() -> {
-                gui.updatePlayerPanels();
-                
-                if (gameOver) {
-                    
-                }
+                // Update the main game screen
+                gui.updateGameState(players, dealer, gameOver, isPaused); // Use your current paused state
+                gui.setGameButtonsEnabled(!gameOver); // Disable game actions if game is over
             });
         }
     }
+    
 
     /**
      * Sets the BlackjackClient instance for multiplayer communication.
