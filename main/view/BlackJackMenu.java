@@ -222,7 +222,6 @@ public class BlackJackMenu extends JFrame {
 
         loadGameButton.addActionListener(e -> {
             new LoadGamePanel(this);
-            dispose();
         });
     }
 
