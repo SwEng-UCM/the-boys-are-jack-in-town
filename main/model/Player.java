@@ -2,6 +2,8 @@ package main.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,9 @@ import java.util.List;
  * Represents a Blackjack player, managing their hand, bets, and balance.
  * It also integrates with Jackson for JSON serialization/deserialization.
  */
-public class Player {
+public class Player implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     private final String name; // Player's name
     private final List<Card> hand; // Stores the player's current hand
     private double scoreMultiplier; // Multiplier for score calculations (default 1.0)

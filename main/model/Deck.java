@@ -1,12 +1,15 @@
 package main.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Represents a standard deck of playing cards, including special cards like Blackjack Bomb, Split Ace, and Joker Wild.
  * This class manages card storage, shuffling, and dealing but does not handle serialization logic.
  */
-public class Deck {
+public class Deck implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final List<Card> cards;
     private final Random random;
 

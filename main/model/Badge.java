@@ -3,12 +3,14 @@ package main.model;
 import main.view.Texts;
 import static main.view.BlackJackMenu.language;
 
+import java.io.Serializable;
+
 /**
  * The Badge enum represents various achievements that players can unlock during the game.
  * Each badge has a title, a path to its colored image, and a path to its greyed-out image.
  * The badges are used to track player progress and accomplishments.
  */
-public enum Badge {
+public enum Badge implements Serializable {
     FIRST_WIN("firstWin", "resources/img/badges/first_win.png", "resources/img/badges/first_win_grey.png"),
     FIRST_LOSS("firstLoss", "resources/img/badges/first_loss.png", "resources/img/badges/first_loss_grey.png"),
     FIRST_BET("firstBet", "resources/img/badges/first_bet.png", "resources/img/badges/first_bet_grey.png"),

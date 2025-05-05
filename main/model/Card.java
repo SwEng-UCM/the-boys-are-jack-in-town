@@ -1,5 +1,7 @@
 package main.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +12,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * It also integrates with JSON serialization using Jackson annotations.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Card {
+public class Card implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
 
     /**
      * Enum representing different types of cards in the game, including special cards.

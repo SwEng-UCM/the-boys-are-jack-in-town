@@ -1,5 +1,6 @@
 package main.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -8,7 +9,10 @@ import java.util.ArrayList;
  * It is responsible for managing the deck of cards, dealing cards to players,
  * and controlling the game flow.
  */
-public class Dealer {
+public class Dealer implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Deck deck; // The deck of cards used in the game
     private final Player dealer; // The dealer 
     private Card hiddenCard; // Stores the dealer's hidden card
