@@ -708,7 +708,7 @@ public class GameManager {
     public void applyGameStateUpdate(GameStateUpdate update) {
         this.players = new ArrayList<>(update.getPlayers());
         this.playerManager.setPlayers(this.players);
-        this.dealer = new Player(update.getDealer());
+        this.dealerManager.setDealer(new Player(update.getDealer()));
         this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
     

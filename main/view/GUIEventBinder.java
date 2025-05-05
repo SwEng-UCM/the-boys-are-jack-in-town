@@ -34,11 +34,27 @@ public class GUIEventBinder {
     public void attachEventListeners() {
         window.hitButton.addActionListener(e -> {
             try {
-                window.gameManager.handlePlayerHit();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                if (window.gameManager.isMultiplayerMode()) {
+                    Player current = window.gameManager
+                        .getPlayerManager()
+                        .getCurrentPlayer();
+        
+                    // Send command to server, don't run locally!
+                    window.gameManager.getClient().sendAction(
+                        new MultiplayerCommand(
+                            MultiplayerCommand.Type.HIT,
+                            current.getName(),
+                            null
+                        )
+                    );
+                } else {
+                    window.gameManager.handlePlayerHit(); // single player
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         });
+        
 
         // Action listener for the "Stand" button
         window.standButton.addActionListener(e -> {
