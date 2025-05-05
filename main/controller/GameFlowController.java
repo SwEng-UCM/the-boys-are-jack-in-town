@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import main.view.BlackjackGUI;
+import main.view.GUIEventBinder;
 import main.view.Texts;
 import main.model.Player;
+import main.model.Deck;
 
 /**
  * Controls the flow of the Blackjack game, including starting new games,
@@ -37,8 +39,10 @@ public class GameFlowController {
     public GameFlowController(GameManager gameManager, PlayerManager playerManager, DealerManager dealerManager, BlackjackGUI gui) {
         this.gui = gui;
         this.gameManager = gameManager;
-        this.playerManager = playerManager;
+        this.playerManager = gameManager.getPlayerManager();
         this.dealerManager = dealerManager;
+        this.players = playerManager.getPlayers();
+        this.dealer = dealerManager.getDealer();
     }
 
     /**
@@ -46,38 +50,24 @@ public class GameFlowController {
      * enabling GUI buttons, and preparing the game state.
      */
     public void startNewGame() {
-        setGameOver(false); 
+        setGameOver(false);
         isPaused = false;
-        resumeGame();
+        
+        this.playerManager.setCurrentPlayerIndex(0);
     
-        playerManager.setCurrentPlayerIndex(0); 
-        gameManager.getDeck().shuffle(); 
+        gameManager.setDeck(new Deck());
+        gameManager.getDeck().shuffle();
     
-        // Reset all players and deal initial cards
         for (Player player : playerManager.getPlayers()) {
             player.reset();
             player.receiveCard(gameManager.getDeck().dealCard());
             player.receiveCard(gameManager.getDeck().dealCard());
-            AchievementManager.getInstance().trackFirstBlackjack(player);
         }
     
-        dealerManager.getDealer().reset(); 
-        gameManager.getBettingManager().resetAllBets(); 
-        dealerManager.getDealer().receiveCard(gameManager.getDeck().dealCard()); 
+        dealer.reset();
+        dealer.receiveCard(gameManager.getDeck().dealCard());
     
-        AchievementManager.getInstance().trackMultiplayerGame(playerManager.getPlayers());
-    
-        this.players = playerManager.getPlayers();
-        this.dealer = dealerManager.getDealer();
-    
-        gui.updateGameMessage("Starting a new game!");
-        gui.updateGameState(players, dealer, false, false);
-    
-        SwingUtilities.invokeLater(() -> {
-            gui.setGameButtonsEnabled(true);
-        });
-        gameManager.setCurrentPlayerIndex(0);
-        gameManager.startNextPlayerTurn();
+        gui.updateGameState(playerManager.getPlayers(), dealer, false, false);
     }
 
     /**

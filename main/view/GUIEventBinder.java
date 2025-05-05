@@ -1,7 +1,10 @@
 package main.view;
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.*;
+
+import main.controller.GameManager;
 import main.model.Player;
 
 /**
@@ -28,7 +31,6 @@ public class GUIEventBinder {
      * These listeners delegate events to the appropriate game logic actions.
      */
     public void attachEventListeners() {
-        // Action listener for the "Hit" button
         window.hitButton.addActionListener(e -> {
             try {
                 window.gameManager.handlePlayerHit();
@@ -47,7 +49,17 @@ public class GUIEventBinder {
         });
 
         // Action listener for the "New Game" button
-        window.newGameButton.addActionListener(e -> window.gameManager.getGameFlowController().startNewGame());
+        window.newGameButton.addActionListener(e -> {
+            GameManager.resetInstance();
+            GameManager gameManager = GameManager.getInstance();
+        
+            BlackjackGUI gui = window;
+            gameManager.setGui(gui);
+            gameManager.getGameFlowController().startNewGame();
+           
+        });
+
+       
 
         // Action listener for the "Pause" button
         window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
