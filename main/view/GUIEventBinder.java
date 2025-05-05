@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import main.controller.GameManager;
+import main.controller.MultiplayerCommand;
 import main.model.Player;
 
 /**
@@ -50,14 +51,32 @@ public class GUIEventBinder {
 
         // Action listener for the "New Game" button
         window.newGameButton.addActionListener(e -> {
-            GameManager.resetInstance();
-            GameManager gameManager = GameManager.getInstance();
-        
-            BlackjackGUI gui = window;
-            gameManager.setGui(gui);
-            gameManager.getGameFlowController().startNewGame();
-           
+            GameManager gameManager = window.gameManager;
+
+            if (gameManager.isMultiplayerMode()) {
+                if (gameManager.isServer()) {
+                    MultiplayerCommand startCmd = MultiplayerCommand.action(
+                        MultiplayerCommand.Type.START_NEW_GAME,
+                        null 
+                    );
+                    gameManager.getNetworkManager().broadcast(startCmd);
+
+                    gameManager.getGameFlowController().startNewGame();
+                } else {
+                    JOptionPane.showMessageDialog(window,
+                        "Only the host can start a new game.",
+                        "Multiplayer",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            } else {
+                GameManager.resetInstance();
+                gameManager = GameManager.getInstance();
+                gameManager.setGui(window);
+                gameManager.getGameFlowController().startNewGame();
+                }
         });
+
 
        
 

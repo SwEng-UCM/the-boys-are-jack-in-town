@@ -1,6 +1,9 @@
 package main.controller;
 
 import java.io.ObjectInputStream;
+
+import javax.swing.SwingUtilities;
+
 import main.view.BlackjackGUI;
 
 /**
@@ -23,23 +26,33 @@ public class BlackjackClientListener extends Thread {
     }
 
     /**
-     * Continuously reads {@link GameState} objects from the input stream
+     * Continuouslys {@link GameState} objects from the input stream
      * and updates the client's GUI to reflect the latest state.
      */
     @Override
-    public void run() {
-        try {
-            while (true) {
-                // Read the GameState object sent from the server
-                GameState gameState = (GameState) in.readObject();
+public void run() {
+    try {
+        while (true) {
+            // Read the GameStateUpdate object from the server
+            GameStateUpdate update = (GameStateUpdate) in.readObject();
 
-                // Apply the received game state to the GUI
-                GameManager gm = GameManager.getInstance();
-                BlackjackGUI.getInstance(gm).applyGameState(gameState);
-            }
-        } catch (Exception e) {
-            // Print any exceptions that occur during listening
-            e.printStackTrace();
+            // Apply update to game logic and GUI safely
+            GameManager gm = GameManager.getInstance();
+            gm.applyGameStateUpdate(update);
+
+            SwingUtilities.invokeLater(() -> {
+                BlackjackGUI.getInstance(gm).updateGameState(
+                    gm.getPlayerManager().getPlayers(),
+                    gm.getDealerManager().getDealer(),
+                    gm.getGameFlowController().isGameOver(),
+                    gm.getGameFlowController().isPaused()
+                );
+            });
         }
+    } catch (Exception e) {
+        System.err.println("Disconnected from server or error reading update:");
+        e.printStackTrace();
     }
+}
+
 }

@@ -19,7 +19,8 @@ public class MultiplayerCommand implements Serializable {
         BET,    // Place a bet
         HIT,    // Request another card
         STAND,  // End the player's turn
-        QUIT    // Player leaves the game
+        QUIT,    // Player leaves the game
+        START_NEW_GAME // New game begins
     }
 
     private final Type type;

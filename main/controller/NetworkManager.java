@@ -81,11 +81,13 @@ public class NetworkManager {
      *
      * @param message the message object to broadcast
      */
-    public void broadcast(Object message) {
-        for (BlackjackClientHandler handler : clientHandlers) {
-            handler.sendMessage(message);
-        }
+    public void broadcastGameState(GameManager gm) {
+        GameState state = new GameState(gm);
+        broadcast(state);
     }
+    
+    public void broadcast(Object message){}
+
 
     /**
      * Shuts down the network, closing the server socket and all client connections.

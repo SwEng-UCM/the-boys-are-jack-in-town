@@ -50,11 +50,14 @@ public class GameFlowController {
      * enabling GUI buttons, and preparing the game state.
      */
     public void startNewGame() {
+        if (gameManager.isMultiplayerMode() && !gameManager.isServer()) {
+            return; // Clients should not start the game
+        }
+    
         setGameOver(false);
         isPaused = false;
-        
-        this.playerManager.setCurrentPlayerIndex(0);
     
+        playerManager.setCurrentPlayerIndex(0);
         gameManager.setDeck(new Deck());
         gameManager.getDeck().shuffle();
     
@@ -67,8 +70,11 @@ public class GameFlowController {
         dealer.reset();
         dealer.receiveCard(gameManager.getDeck().dealCard());
     
+        gameManager.broadcastGameState(); // Synchronize to all clients
+    
         gui.updateGameState(playerManager.getPlayers(), dealer, false, false);
     }
+    
 
     /**
      * Pauses the game and disables the game timer and updates the GUI.

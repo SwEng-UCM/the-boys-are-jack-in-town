@@ -45,7 +45,6 @@ public class GameManager {
     private NetworkManager networkManager;
     private boolean multiplayerMode;
 
-    // TODO:
     private GameManager() {
         this.players = new ArrayList<>();
         this.dealer = new Player("Dealer", INITIAL_BET);
@@ -275,6 +274,10 @@ public class GameManager {
         }
     }
     
+    public boolean isServer() {
+        return multiplayerMode && client == null;
+    }
+    
     /**
      * Handles a multiplayer command sent by a client.
      *
@@ -295,6 +298,13 @@ public class GameManager {
                 break;
             case STAND:
                 handleStand(command);
+                break;
+                case START_NEW_GAME:
+                if (!isMultiplayerMode()) return;
+                if (isServer()) {
+                    gameFlowController.startNewGame();
+                    broadcastGameState();
+                }
                 break;
             default:
                 System.err.println("Unknown command type: " + command.getType());
@@ -493,6 +503,8 @@ public class GameManager {
             gameOver = true;
             gameFlowController.checkGameOver();
             SwingUtilities.invokeLater(() -> gui.updateGameState(players, dealer, true, false));
+
+            if(multiplayerMode)broadcastGameState();
         }
     }
 
