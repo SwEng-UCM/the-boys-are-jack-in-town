@@ -36,7 +36,6 @@ public class GameManager {
     private BlackjackGUI gui;
     private boolean gameOver;
     private BettingManager bettingManager;
-    private int currentPlayerIndex;
     private DifficultyStrategy difficultyStrategy = new MediumDifficulty();
     private BlackjackClient client;
     private GameFlowController gameFlowController;
@@ -191,13 +190,13 @@ public class GameManager {
      * the dealer's turn begins.
      */
     public void startNextPlayerTurn() {
-        if (currentPlayerIndex == 0) {
+        if (playerManager.getCurrentPlayerIndex() == 0) {
             int dealerBet = bettingManager.getDealerBalance() / 10;
             bettingManager.placeDealerBet(dealerBet);
         }
     
-        if (currentPlayerIndex < players.size()) {
-            gui.promptPlayerAction(players.get(currentPlayerIndex));
+        if (playerManager.getCurrentPlayerIndex() < players.size()) {
+            gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
         } else {
             gui.updateGameMessage("Dealer's turn!");
             dealerManager.dealerTurn();
@@ -243,7 +242,7 @@ public class GameManager {
         return new GameStateUpdate(
             players, 
             dealer, 
-            currentPlayerIndex, 
+            playerManager.getCurrentPlayerIndex(), 
             gameOver
         );
     }
@@ -355,7 +354,7 @@ public class GameManager {
     private void handleStand(MultiplayerCommand command) {
         Player player = playerManager.getPlayerByName(command.getPlayerName());
         if (player != null && playerManager.isCurrentPlayer(player)) {
-            currentPlayerIndex++;
+            playerManager.incrementCurrentPlayerIndex();
             broadcastGameState();
         }
     }
@@ -368,29 +367,34 @@ public class GameManager {
     public void handlePlayerHit() throws IOException {
         if (multiplayerMode) {
             if (client != null) {
-                Player current = players.get(currentPlayerIndex);
+                Player current = players.get(playerManager.getCurrentPlayerIndex());
                 client.sendAction(new MultiplayerCommand(
                     MultiplayerCommand.Type.HIT, current.getName(), current));
             }
-        } else if (!gameOver && !isPaused) {
-            Player currentPlayer = players.get(currentPlayerIndex);
-            
+        } else {
+            if (playerManager.getCurrentPlayerIndex() < 0 || playerManager.getCurrentPlayerIndex() >= players.size()) {
+                System.err.println("Invalid player index: " + playerManager.getCurrentPlayerIndex() + " (Total players: " + players.size() + ")");
+                playerManager.setCurrentPlayerIndex(0);
+            }
+        
+            Player currentPlayer = players.get(playerManager.getCurrentPlayerIndex());
+        
             HitCommand hitCommand = new HitCommand(currentPlayer, this);
             commandManager.executeCommand(hitCommand);
             gui.updateUndoButtonState();
-
-    
+        
             gui.updateGameState(players, dealer, gameOver, false);
-    
+        
             if (currentPlayer.calculateScore() > 21) {
                 checkPlayerBust();
             } else {
                 gui.promptPlayerAction(currentPlayer);
             }
-    
+        
             AudioManager.getInstance().playSoundEffect("/resources/sounds/card-sounds.wav");
-        }
+        }    
     }
+    
     
     /**
      * Handles a player's "stand" action in single-player mode.
@@ -400,7 +404,7 @@ public class GameManager {
     public void handlePlayerStand() throws IOException {
         if (multiplayerMode) {
             if (client != null) {
-                Player current = players.get(currentPlayerIndex);
+                Player current = players.get(playerManager.getCurrentPlayerIndex());
                 // Use the action factory method
                 client.sendAction(MultiplayerCommand.action(
                     MultiplayerCommand.Type.STAND, 
@@ -409,10 +413,11 @@ public class GameManager {
             }
         } else {
             if (!gameOver) {
-                currentPlayerIndex++; // move to next player
-                if (currentPlayerIndex < players.size()) {
-                    gui.promptPlayerAction(players.get(currentPlayerIndex));
-                if (currentPlayerIndex == 1) {
+                if(playerManager.getCurrentPlayerIndex() < players.size())
+                    playerManager.incrementCurrentPlayerIndex(); // move to next player
+                if (playerManager.getCurrentPlayerIndex() < players.size()) {
+                    gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
+                if (playerManager.getCurrentPlayerIndex() == 1) {
                     gui.enableBetting(); // custom method to show betting UI
                 }                    
                 } else {
@@ -427,23 +432,26 @@ public class GameManager {
      * Updates the game state and prompts the next player's turn if necessary.
      */
     public void checkPlayerBust() {
-        Player player = players.get(currentPlayerIndex);
+        Player player = players.get(playerManager.getCurrentPlayerIndex());
         if (player.calculateScore() > 21) {
             gui.updateGameMessage(player.getName() + " busts!");
             bettingManager.playerLoses(player.getName());
             bettingManager.dealerWins(null);
-            currentPlayerIndex++;
-    
-            if (currentPlayerIndex < players.size()) {
-                gui.promptPlayerAction(players.get(currentPlayerIndex));
+            
+     
+            if (playerManager.getCurrentPlayerIndex() < players.size()) {
+                // Proceed to the next player
+                gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
             } else {
+                // All players finished their turn, proceed to dealer's turn
                 dealerManager.dealerTurn();
                 gameOver = true;
                 gameFlowController.setGameOver(true);
-                gui.enableBetting(); // allow next round
+                gui.enableBetting(); // Allow next round
             }
         }
     }
+    
 
     /**
      * Determines the winners of the game based on the scores of the players and the dealer.
@@ -546,18 +554,15 @@ public class GameManager {
             switch (card.getType()) {
                 case BLACKJACK_BOMB:
                     gui.updateSpecialMessage("Blackjack Bomb! Player wins instantly! 💣");
-                    System.out.println("BB");
                     gameOver = true;
                     break;
                 case SPLIT_ACE:
                     gui.updateSpecialMessage("Split Ace! Your score will be halved. ♠");
-                    System.out.println("SA");
                     break;
                 case JOKER_WILD:
                     int wildValue = gui.promptJokerWildValue();
                     card.setWildValue(wildValue);
                     gui.updateSpecialMessage("Joker Wild! set to " + wildValue + " 🤡");
-                    System.out.println("JW");
                     break;
                 default:
                     break;
@@ -624,7 +629,7 @@ public class GameManager {
         this.players = new ArrayList<>(memento.getPlayers());
         this.dealer = memento.getDealer();
         this.deck = memento.getDeck();
-        this.currentPlayerIndex = memento.getCurrentPlayerIndex();
+        this.playerManager.setCurrentPlayerIndex(memento.getCurrentPlayerIndex());
         this.gameOver = memento.isGameOver();
 
         SwingUtilities.invokeLater(() -> {
@@ -685,7 +690,7 @@ public class GameManager {
         // Update core game state
         this.players = new ArrayList<>(update.getPlayers());
         this.dealer = new Player(update.getDealer());
-        this.currentPlayerIndex = update.getCurrentPlayerIndex();
+        this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
         
         // Update UI components
@@ -741,12 +746,22 @@ public class GameManager {
      * @param player The player performing the "hit" action.
      * @return The card drawn by the player.
      */
-    public Card hit(Player player) {
+    public Card hit(Player player) {    
         Card drawnCard = deck.dealCard();
+        if (drawnCard == null) {
+            System.out.println("Deck is empty, no card dealt.");
+        } else {
+            System.out.println("Card dealt: " + drawnCard);
+        }
+    
         Card processedCard = handleSpecialCard(drawnCard, player);
         player.receiveCard(processedCard);
+    
+        this.gui.updatePlayerPanels();
+    
         return processedCard;
     }
+    
 
     /**
      * Retrieves the CommandManager instance for managing game commands.
@@ -757,14 +772,6 @@ public class GameManager {
         return commandManager;
     }
 
-    /**
-     * Retrieves the index of the current player.
-     *
-     * @return The index of the current player.
-     */
-    public int getCurrentPlayerIndex() {
-        return this.currentPlayerIndex;
-    }
 
     /**
      * Retrieves the NetworkManager instance associated with the game.
@@ -775,15 +782,6 @@ public class GameManager {
      */
     public NetworkManager getNetworkManager() {
         return this.networkManager;
-    }
-
-    /**
-     * Sets the index of the current player.
-     *
-     * @param index The index to set as the current player.
-     */
-    public void setCurrentPlayerIndex(int index) {
-        this.currentPlayerIndex = index;
     }
 
     /**

@@ -30,7 +30,7 @@ public class HitCommand implements Command {
      * using the game manager and storing the drawn card for undoing later.
      */
     public void execute() {
-        this.card = gameManager.hit(player);
+            this.card = gameManager.hit(player);
     }
 
     /**

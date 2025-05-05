@@ -765,7 +765,7 @@ public class BlackjackGUI extends JFrame {
     private String getCurrentPlayerName() {
         if (gameManager.isMultiplayerMode()) {
             List<Player> players = gameManager.getPlayerManager().getPlayers();
-            int index = gameManager.getCurrentPlayerIndex();
+            int index = gameManager.getPlayerManager().getCurrentPlayerIndex();
             if (index >= 0 && index < players.size()) {
                 return players.get(index).getName();
             }
@@ -840,4 +840,6 @@ public class BlackjackGUI extends JFrame {
     public int getGameHeight(){
         return gameHeight;
     }
+
+    
 }
