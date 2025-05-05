@@ -704,24 +704,25 @@ public class GameManager {
      *
      * @param update The GameStateUpdate object containing the updated state.
      */
-    public void applyGameStateUpdate(GameStateUpdate update) {
-        this.playerManager.setPlayers(new ArrayList<>(update.getPlayers()));
-        this.dealer = new Player(update.getDealer());
-        
-        // ✅ CRITICAL — must update player manager
-        this.playerManager.setPlayers(this.players);
 
-    
+    public void applyGameStateUpdate(GameStateUpdate update) {
+        this.players = new ArrayList<>(update.getPlayers());
+        this.playerManager.setPlayers(this.players);
+        this.dealer = new Player(update.getDealer());
         this.playerManager.setCurrentPlayerIndex(update.getCurrentPlayerIndex());
         this.gameOver = update.isGameOver();
     
-        if (gui != null) {
-            SwingUtilities.invokeLater(() -> {
-                gui.updateGameState(players, dealer, gameOver, false);
-                gui.setGameButtonsEnabled(!gameOver);
-            });
+        SwingUtilities.invokeLater(() -> {
+            gui.updatePlayerPanels();
+            gui.updateGameState(players, dealer, gameOver, false);
+        });
+        System.out.println("Updated players:");
+        for (Player p : players) {
+            System.out.println(" - " + p.getName() + " has " + p.getHand().size() + " cards");
         }
+
     }
+    
     
     
     
@@ -733,6 +734,10 @@ public class GameManager {
      */
     public void setClient(BlackjackClient client) {
         this.client = client;
+    }
+
+    public BlackjackClient getClient() {
+        return this.client;
     }
 
     /**
