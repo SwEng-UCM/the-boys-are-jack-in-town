@@ -56,8 +56,7 @@ public class GameManager {
         this.players.add(p1);
         this.players.add(p2);
         
-        this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); // ✅ after player creation
-        
+        this.bettingManager = new BettingManager(players, INITIAL_BET, INITIAL_BET); 
         this.playerManager = new PlayerManager();
         playerManager.setPlayers(players);
         
