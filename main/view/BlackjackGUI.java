@@ -189,7 +189,8 @@ public class BlackjackGUI extends JFrame {
         DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
 
         for (Card card : dealerInfo.visibleCards) {
-            dealerPanel.add(createCardPanel(card));
+            String imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());
+
         }
 
         for (int i = 0; i < dealerInfo.hiddenCardCount; i++) {
@@ -659,15 +660,28 @@ public class BlackjackGUI extends JFrame {
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
-        JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        String imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());
 
-        JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
-        cardPanel.setLayout(new BorderLayout());
-        cardPanel.add(rankLabel, BorderLayout.CENTER);
-        cardPanel.add(suitLabel, BorderLayout.SOUTH);
+        ImageIcon cardImage = new ImageIcon(imagePath);
+        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+    
+        // Add the image to the card panel
+        cardPanel.add(imageLabel, BorderLayout.CENTER); 
+        switch (card.getType()) {
+            case BLACKJACK_BOMB -> imagePath = "resources/img/blackjack_bomb.png";
+            case SPLIT_ACE -> imagePath = "resources/img/split_ace.png";
+            case JOKER_WILD -> imagePath = "resources/img/joker_wild.png";
+            default -> {
+                String rank = card.getRank().toLowerCase().replace(" ", "_");
+                String suit = card.getSuit().toLowerCase().replace(" ", "_");
+                imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());            }
+        }
+        
+
+
+
 
         return cardPanel;
     }
