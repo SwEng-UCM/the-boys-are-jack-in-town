@@ -367,11 +367,20 @@ public class GameManager {
      * @param command The MultiplayerCommand containing the stand action.
      */
     private void handleStand(String playerName) {
-        Player player = playerManager.getPlayerByName(playerName);
-        if (player != null && playerManager.isCurrentPlayer(player)) {
-            playerManager.incrementCurrentPlayerIndex();
-            broadcastGameState();
-        }
+            Player player = playerManager.getPlayerByName(playerName);
+            if (player != null && playerManager.isCurrentPlayer(player)) {
+                playerManager.incrementCurrentPlayerIndex();
+        
+                // If all players have acted, dealer takes turn
+                if (playerManager.getCurrentPlayerIndex() >= playerManager.getPlayers().size()) {
+                    dealerManager.dealerTurn();
+                    gameOver = true;
+                    gameFlowController.setGameOver(true);
+                }
+        
+                broadcastGameState();
+            }
+        
     }
     
 

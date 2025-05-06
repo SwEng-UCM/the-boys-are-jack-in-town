@@ -105,21 +105,23 @@ public class GUIEventBinder {
             try {
                 int bet = Integer.parseInt(betText);
                 Player currentPlayer = window.gameManager.getPlayerManager().getCurrentPlayer();
-
+    
                 if (window.gameManager.isMultiplayerMode()) {
-                    window.gameManager.getClient().sendAction(
-                        new MultiplayerCommand(MultiplayerCommand.Type.BET, currentPlayer.getName(), bet)
+                    MultiplayerCommand betCommand = new MultiplayerCommand(
+                        MultiplayerCommand.Type.BET,
+                        currentPlayer.getName(),
+                        bet
                     );
+                    window.gameManager.getClient().sendAction(betCommand);
                 } else {
-                    window.placeBet(currentPlayer);
+                    window.placeBet(currentPlayer); 
                 }
-            } catch (NumberFormatException ex) {
+            } catch (NumberFormatException | IOException ex) {
                 JOptionPane.showMessageDialog(window, "Invalid bet amount.");
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
     });
+    
 
         
         // Action listener for the "Pause" button
