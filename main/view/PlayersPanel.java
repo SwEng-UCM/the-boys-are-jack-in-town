@@ -160,6 +160,6 @@ class PlayersPanel extends JPanel {
         cardPanel.add(rankLabel, BorderLayout.CENTER);
         cardPanel.add(suitLabel, BorderLayout.SOUTH);
 
-        return cardPanel;
+        return CardImageRenderer.createCardPanel(card, cardWidth, cardHeight);
     }
 }

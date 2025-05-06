@@ -2,64 +2,55 @@ package main.view;
 
 import main.model.Card;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+//import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CardImageRenderer {
-    private static final String BASE_PATH = "resources/img/cards/";
-    private static final Map<String, ImageIcon> imageCache = new HashMap<>();
+
+    //private static final String IMAGE_BASE_PATH = "src/main/resources/cards/";  // ✅ updated path
 
     public static JPanel createCardPanel(Card card, int width, int height) {
-        JPanel cardPanel = new JPanel(new BorderLayout());
-        cardPanel.setPreferredSize(new Dimension(width, height));
-        cardPanel.setOpaque(false);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        String imagePath = getCardImagePath(card);
-        ImageIcon icon = loadImageIcon(imagePath, width, height);
+        ImageIcon icon = loadImageIcon(getImagePath(card));
 
-        JLabel imageLabel = new JLabel(icon);
-        cardPanel.add(imageLabel, BorderLayout.CENTER);
+        if (icon != null) {
+            Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            panel.add(new JLabel(new ImageIcon(scaled)), BorderLayout.CENTER);
+        } else {
+            JLabel fallback = new JLabel(card.getRank() + " of " + card.getSuit(), SwingConstants.CENTER);
+            fallback.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(fallback, BorderLayout.CENTER);
+        }
 
-        return cardPanel;
+        return panel;
     }
 
-    private static ImageIcon loadImageIcon(String path, int width, int height) {
-        if (imageCache.containsKey(path)) {
-            return imageCache.get(path);
-        }
-
-        try {
-            ImageIcon original = new ImageIcon(path);
-            Image scaled = original.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            ImageIcon scaledIcon = new ImageIcon(scaled);
-            imageCache.put(path, scaledIcon);
-            return scaledIcon;
-        } catch (Exception e) {
-            System.err.println("Failed to load image: " + path);
-            return new ImageIcon();
-        }
+    private static String getImagePath(Card card) {
+        String rank = card.getRank().toLowerCase().replace(" ", "_");
+        String suit = card.getSuit().toLowerCase().replace(" ", "_");
+        return "/cards/" + rank + "_of_" + suit + ".png";
     }
-
-    private static String getCardImagePath(Card card) {
-        String filename;
-
-        switch (card.getType()) {
-            case BLACKJACK_BOMB:
-                filename = "blackjack_bomb.png";
-                break;
-            case SPLIT_ACE:
-                filename = "split_ace.png";
-                break;
-            case JOKER_WILD:
-                filename = "joker_wild.png";
-                break;
-            case STANDARD:
-            default:
-                filename = card.getRank().toLowerCase() + "_of_" + card.getSuit().toLowerCase() + ".png";
-                break;
+    private static ImageIcon loadImageIcon(String relativePath) {
+    try {
+        // Use getResourceAsStream to load from the classpath
+        InputStream is = CardImageRenderer.class.getResourceAsStream(relativePath);
+        if (is != null) {
+            Image image = ImageIO.read(is);
+            return new ImageIcon(image);
+        } else {
+            System.err.println("⚠️ Image not found: " + relativePath);
         }
-        return BASE_PATH + filename;
+    } catch (IOException e) {
+        System.err.println("⚠️ Failed to load image: " + relativePath + " → " + e.getMessage());
+    }
+    return null;
     }
 }

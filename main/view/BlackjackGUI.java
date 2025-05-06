@@ -157,7 +157,7 @@ public class BlackjackGUI extends JFrame {
             JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
             cardsPanel.setOpaque(false);
             for (Card card : info.hand) {
-                cardsPanel.add(createCardPanel(card));
+                CardImageRenderer.createCardPanel(card, cardWidth, cardHeight);
             }
 
             // Info display
@@ -185,18 +185,19 @@ public class BlackjackGUI extends JFrame {
      */
     private void updateDealerHand(DealerManager.DealerCardInfo cardInfo) {
         dealerPanel.removeAll();
-
+    
         boolean gameOver = gameManager.getGameFlowController().isGameOver();
         DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
-
+    
         for (Card card : dealerInfo.visibleCards) {
-            dealerPanel.add(createCardPanel(card));
+            JPanel cardPanel = CardImageRenderer.createCardPanel(card, cardWidth, cardHeight);
+            dealerPanel.add(cardPanel);
         }
-
+    
         for (int i = 0; i < dealerInfo.hiddenCardCount; i++) {
             dealerPanel.add(createHiddenCardPanel());
         }
-
+    
         dealerPanel.revalidate();
         dealerPanel.repaint();
     }
@@ -524,13 +525,13 @@ public class BlackjackGUI extends JFrame {
         if (gameOver) {
             // Show all dealer's cards
             for (Card card : dealer.getHand()) {
-                dealerPanel.add(createCardPanel(card));
+                dealerPanel.add(CardImageRenderer.createCardPanel(card, cardWidth, cardHeight));
             }
             dealerScoreLabel.setText(Texts.guiDealerScore[language] + ": " + dealer.calculateScore());
         } else {
             // Show one card face-up and a hidden card
             if (!dealer.getHand().isEmpty()) {
-                dealerPanel.add(createCardPanel(dealer.getHand().get(0)));
+                dealerPanel.add(CardImageRenderer.createCardPanel(dealer.getHand().get(0), cardWidth, cardHeight));
                 dealerPanel.add(createHiddenCardPanel());
             }
         }
