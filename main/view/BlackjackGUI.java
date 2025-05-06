@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.view.CardImageRenderer;
 import static main.view.BlackJackMenu.language;
 
 
@@ -669,7 +670,7 @@ public class BlackjackGUI extends JFrame {
         cardPanel.add(rankLabel, BorderLayout.CENTER);
         cardPanel.add(suitLabel, BorderLayout.SOUTH);
 
-        return cardPanel;
+        return CardImageRenderer.createCardPanel(card, cardWidth, cardHeight);
     }
 
     /**
