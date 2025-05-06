@@ -668,7 +668,17 @@ public class BlackjackGUI extends JFrame {
         JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
     
         // Add the image to the card panel
-        cardPanel.add(imageLabel, BorderLayout.CENTER);
+        cardPanel.add(imageLabel, BorderLayout.CENTER); 
+        switch (card.getType()) {
+            case BLACKJACK_BOMB -> imagePath = "resources/img/blackjack_bomb.png";
+            case SPLIT_ACE -> imagePath = "resources/img/split_ace.png";
+            case JOKER_WILD -> imagePath = "resources/img/joker_wild.png";
+            default -> {
+                String rank = card.getRank().toLowerCase().replace(" ", "_");
+                String suit = card.getSuit().toLowerCase().replace(" ", "_");
+                imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());            }
+        }
+        
 
 
 
