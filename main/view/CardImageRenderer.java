@@ -36,21 +36,20 @@ public class CardImageRenderer {
     private static String getImagePath(Card card) {
         String rank = card.getRank().toLowerCase().replace(" ", "_");
         String suit = card.getSuit().toLowerCase().replace(" ", "_");
-        return "/cards/" + rank + "_of_" + suit + ".png";
+        return "/cards/" + rank + "_of_" + suit;
     }
-    private static ImageIcon loadImageIcon(String relativePath) {
-    try {
-        // Use getResourceAsStream to load from the classpath
-        InputStream is = CardImageRenderer.class.getResourceAsStream(relativePath);
-        if (is != null) {
-            Image image = ImageIO.read(is);
-            return new ImageIcon(image);
-        } else {
-            System.err.println("⚠️ Image not found: " + relativePath);
+    private static ImageIcon loadImageIcon(String path) {
+        try {
+            java.net.URL cardsUrl = CardImageRenderer.class.getResource(path);
+            if (cardsUrl != null) {
+                return new ImageIcon(cardsUrl);
+            } else {
+                System.err.println("Image not found at: " + path);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
         }
-    } catch (IOException e) {
-        System.err.println("⚠️ Failed to load image: " + relativePath + " → " + e.getMessage());
+        return null;
     }
-    return null;
-    }
+    
 }
