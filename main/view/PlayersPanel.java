@@ -151,17 +151,19 @@ class PlayersPanel extends JPanel {
         cardPanel.setPreferredSize(new Dimension(cardWidth, cardHeight));
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-
-        JLabel rankLabel = new JLabel(card.getRank(), SwingConstants.CENTER);
-        rankLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
-
-        JLabel suitLabel = new JLabel(card.getSuit(), SwingConstants.CENTER);
-        suitLabel.setFont(new Font("Arial", Font.BOLD, cardFontSize));
-
         cardPanel.setLayout(new BorderLayout());
-        cardPanel.add(rankLabel, BorderLayout.CENTER);
-        cardPanel.add(suitLabel, BorderLayout.SOUTH);
 
+        // Load the card image based on rank and suit
+        String imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());
+        ImageIcon cardImage = new ImageIcon(imagePath);
+    
+        // Scale the image to fit the card dimensions
+        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+    
+        // Add the image to the card panel
+        cardPanel.add(imageLabel, BorderLayout.CENTER);
+    
         return cardPanel;
     }
 }
