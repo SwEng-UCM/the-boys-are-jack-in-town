@@ -39,7 +39,6 @@ public class GUIEventBinder {
                         .getPlayerManager()
                         .getCurrentPlayer();
         
-                    // Send command to server, don't run locally!
                     window.gameManager.getClient().sendAction(
                         new MultiplayerCommand(
                             MultiplayerCommand.Type.HIT,
@@ -48,70 +47,83 @@ public class GUIEventBinder {
                         )
                     );
                 } else {
-                    window.gameManager.handlePlayerHit(); // single player
+                    window.gameManager.handlePlayerHit(); 
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
         
-
-        // Action listener for the "Stand" button
-        window.standButton.addActionListener(e -> {
-            try {
-                window.gameManager.handlePlayerStand();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        // Action listener for the "New Game" button
-        window.newGameButton.addActionListener(e -> {
-            GameManager gameManager = window.gameManager;
-
-            if (gameManager.isMultiplayerMode()) {
-                if (gameManager.isServer()) {
-                    MultiplayerCommand startCmd = MultiplayerCommand.action(
-                        MultiplayerCommand.Type.START_NEW_GAME,
-                        null 
-                    );
-                    gameManager.getNetworkManager().broadcast(startCmd);
-
-                    gameManager.getGameFlowController().startNewGame();
-                } else {
-                    JOptionPane.showMessageDialog(window,
-                        "Only the host can start a new game.",
-                        "Multiplayer",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );
-                }
+            // STAND
+    window.standButton.addActionListener(e -> {
+        try {
+            if (window.gameManager.isMultiplayerMode()) {
+                Player current = window.gameManager.getPlayerManager().getCurrentPlayer();
+                window.gameManager.getClient().sendAction(
+                    new MultiplayerCommand(MultiplayerCommand.Type.STAND, current.getName(), null)
+                );
             } else {
-                GameManager.resetInstance();
-                gameManager = GameManager.getInstance();
-                gameManager.setGui(window);
+                window.gameManager.handlePlayerStand();
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    });
+
+    // NEW GAME
+    window.newGameButton.addActionListener(e -> {
+        GameManager gameManager = window.gameManager;
+
+        if (gameManager.isMultiplayerMode()) {
+            if (gameManager.isServer()) {
+                MultiplayerCommand startCmd = new MultiplayerCommand(
+                    MultiplayerCommand.Type.START_NEW_GAME,
+                    "HOST", 
+                    null
+                );
+                gameManager.getNetworkManager().broadcast(startCmd);
                 gameManager.getGameFlowController().startNewGame();
+            } else {
+                JOptionPane.showMessageDialog(window,
+                    "Only the host can start a new game.",
+                    "Multiplayer",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        } else {
+            GameManager.resetInstance();
+            gameManager = GameManager.getInstance();
+            gameManager.setGui(window);
+            gameManager.getGameFlowController().startNewGame();
+        }
+    });
+
+    // PLACE BET
+    window.placeBetButton.addActionListener(e -> {
+        String betText = window.betField.getText();
+        if (!betText.isEmpty()) {
+            try {
+                int bet = Integer.parseInt(betText);
+                Player currentPlayer = window.gameManager.getPlayerManager().getCurrentPlayer();
+
+                if (window.gameManager.isMultiplayerMode()) {
+                    window.gameManager.getClient().sendAction(
+                        new MultiplayerCommand(MultiplayerCommand.Type.BET, currentPlayer.getName(), bet)
+                    );
+                } else {
+                    window.placeBet(currentPlayer);
                 }
-        });
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(window, "Invalid bet amount.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
 
-
-       
-
+        
         // Action listener for the "Pause" button
         window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
-
-        // Action listener for the "Place Bet" button
-        window.placeBetButton.addActionListener(e -> {
-            String betText = window.betField.getText();
-            if (!betText.isEmpty()) {
-                try {
-                    int bet = Integer.parseInt(betText);
-                    Player currentPlayer = window.gameManager.getPlayerManager().getCurrentPlayer();
-                    window.placeBet(currentPlayer); // Call the method in BlackjackGUI to place bet
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(window, "Invalid bet amount.");
-                }
-            }
-        });
 
         // Action listener for the "Undo" button
         window.undoButton.addActionListener(e -> {
