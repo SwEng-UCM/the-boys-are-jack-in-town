@@ -91,7 +91,6 @@ public class GUIEventBinder {
                 );
             }
         } else {
-            GameManager.resetInstance();
             gameManager = GameManager.getInstance();
             gameManager.setGui(window);
             gameManager.getGameFlowController().startNewGame();
@@ -121,8 +120,6 @@ public class GUIEventBinder {
             }
         }
     });
-    
-
         
         // Action listener for the "Pause" button
         window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
