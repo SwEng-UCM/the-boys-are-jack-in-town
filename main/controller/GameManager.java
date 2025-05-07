@@ -312,7 +312,7 @@ public class GameManager {
             default -> System.err.println("Unknown command type: " + command.getType());
         }
     }
-    
+
 
     /**
      * Handles a player joining the game in multiplayer mode.
@@ -327,7 +327,6 @@ public class GameManager {
         }
     }
     
-
     /**
      * Handles a player's bet in multiplayer mode.
      *
@@ -342,7 +341,6 @@ public class GameManager {
         }
     }
     
-
     /**
      * Handles a player's "hit" action in multiplayer mode.
      *
@@ -360,7 +358,6 @@ public class GameManager {
         }
     }
     
-
     /**
      * Handles a player's "stand" action in multiplayer mode.
      *
@@ -437,16 +434,13 @@ public class GameManager {
                 ));
             }
         } else {
-            System.out.print("Standing, GameOver Status = " + gameOver);
             if (!gameOver) {
-                if(playerManager.getCurrentPlayerIndex() < players.size())
+                if(playerManager.getCurrentPlayerIndex() < players.size()){
                     playerManager.incrementCurrentPlayerIndex();
-                    System.out.print("current index: " + playerManager.getCurrentPlayerIndex());
-                if (playerManager.getCurrentPlayerIndex() < players.size()) {
                     gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
+                }
                 if (playerManager.getCurrentPlayerIndex() == 1) {
                     gui.enableBetting(); // custom method to show betting UI
-                }                    
                 } else {
                     dealerManager.dealerTurn();
                 }
@@ -466,11 +460,9 @@ public class GameManager {
             bettingManager.dealerWins(null);
             
      
-            if (playerManager.getCurrentPlayerIndex() < players.size()) {
-                // Proceed to the next player
+            if (playerManager.getCurrentPlayerIndex() < players.size()-1) {
                 gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
             } else {
-                // All players finished their turn, proceed to dealer's turn
                 dealerManager.dealerTurn();
                 gameOver = true;
                 this.setGameOver(true);
