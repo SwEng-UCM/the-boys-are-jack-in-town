@@ -395,7 +395,6 @@ public class GameManager {
             }
         } else {
             if (playerManager.getCurrentPlayerIndex() < 0 || playerManager.getCurrentPlayerIndex() >= players.size()) {
-                System.err.println("Invalid player index: " + playerManager.getCurrentPlayerIndex() + " (Total players: " + players.size() + ")");
                 playerManager.setCurrentPlayerIndex(0);
             }
         
@@ -427,7 +426,6 @@ public class GameManager {
         if (multiplayerMode) {
             if (client != null) {
                 Player current = players.get(playerManager.getCurrentPlayerIndex());
-                // Use the action factory method
                 client.sendAction(MultiplayerCommand.action(
                     MultiplayerCommand.Type.STAND, 
                     current.getName()
@@ -435,12 +433,12 @@ public class GameManager {
             }
         } else {
             if (!gameOver) {
-                if(playerManager.getCurrentPlayerIndex() < players.size()){
+                if(playerManager.getCurrentPlayerIndex() < players.size()-1){
                     playerManager.incrementCurrentPlayerIndex();
                     gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
                 }
                 if (playerManager.getCurrentPlayerIndex() == 1) {
-                    gui.enableBetting(); // custom method to show betting UI
+                    gui.enableBetting(); 
                 } else {
                     dealerManager.dealerTurn();
                 }
@@ -460,13 +458,13 @@ public class GameManager {
             bettingManager.dealerWins(null);
             
      
-            if (playerManager.getCurrentPlayerIndex() < players.size()-1) {
+            if (playerManager.getCurrentPlayerIndex() < (players.size()-1)) {
                 gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
             } else {
                 dealerManager.dealerTurn();
                 gameOver = true;
                 this.setGameOver(true);
-                gui.enableBetting(); // Allow next round
+                gui.enableBetting(); 
             }
         }
     }
