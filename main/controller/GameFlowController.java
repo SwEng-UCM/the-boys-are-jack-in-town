@@ -51,10 +51,10 @@ public class GameFlowController {
      */
     public void startNewGame() {
         if (gameManager.isMultiplayerMode() && !gameManager.isServer()) {
-            return; // Clients should not start the game
+            return; 
         }
     
-        setGameOver(false);
+        this.gameManager.setGameOver(false);
         isPaused = false;
     
         this.playerManager.setCurrentPlayerIndex(0);
@@ -70,7 +70,7 @@ public class GameFlowController {
         dealer.reset();
         dealer.receiveCard(gameManager.getDeck().dealCard());
     
-        gameManager.broadcastGameState(); // Synchronize to all clients
+        gameManager.broadcastGameState();
     
         gui.updateGameState(playerManager.getPlayers(), dealer, false, false);
     }
@@ -167,14 +167,5 @@ public class GameFlowController {
      */
     public boolean isGameOver() {
         return gameOver;
-    }
-
-    /**
-     * Sets the game over state.
-     *
-     * @param b {@code true} to mark the game as over, {@code false} to mark it active
-     */
-    public void setGameOver(boolean b) {
-        this.gameOver = b;
     }
 }
