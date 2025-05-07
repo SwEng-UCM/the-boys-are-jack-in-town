@@ -191,7 +191,6 @@ public class GameManager {
         int currentIndex = playerManager.getCurrentPlayerIndex();
 
         if (currentIndex < 0 || currentIndex >= players.size()) {
-            System.err.println("Invalid currentPlayerIndex: " + currentIndex + ". Resetting to 0.");
             playerManager.setCurrentPlayerIndex(0);
             currentIndex = 0;
         }
@@ -262,7 +261,6 @@ public class GameManager {
     public void playerDisconnected(String playerName) {
         players.removeIf(p -> p.getName().equals(playerName));
         broadcastGameState();
-        System.out.println("Player disconnected: " + playerName);
     }
 
     /**
@@ -272,9 +270,7 @@ public class GameManager {
         if (!multiplayerMode) return;
         
         GameStateUpdate update = createGameStateUpdate();
-        System.out.println("Sending update with players: " + update.getPlayers().size());
         for (Player p : playerManager.getPlayers()) {
-            System.out.println("Player " + p.getName() + " has " + p.getHand().size() + " cards");
         }
         networkManager.getClientHandlers().forEach(handler -> 
             handler.sendMessage(update)
@@ -302,7 +298,6 @@ public class GameManager {
     
         String playerName = command.getPlayerName();
         if (playerName == null && command.getType() != MultiplayerCommand.Type.START_NEW_GAME) {
-            System.err.println("Command missing player name: " + command.getType());
             return;
         }
     
@@ -317,7 +312,6 @@ public class GameManager {
                     broadcastGameState();
                 }
             }
-            default -> System.err.println("Unknown command type: " + command.getType());
         }
     }
 
@@ -330,7 +324,6 @@ public class GameManager {
     private void handlePlayerJoin(String playerName) {
         if (playerManager.getPlayerByName(playerName) == null) {
             playerManager.addPlayer(playerName, 1000);
-            System.out.println("Player joined: " + playerName);
             broadcastGameState(); // Send current state to all clients
         }
     }
@@ -692,7 +685,6 @@ public class GameManager {
      * @param loadedState The GameState object representing the loaded state.
      */
     public void applyGameState(GameState loadedState) {
-        System.out.println("Applying game state");
         
         loadedState.restore(this);
 
@@ -705,8 +697,6 @@ public class GameManager {
             gui.enableBetting();
             startNextPlayerTurn();
         });
-
-        System.out.println("Game loaded successfully!");
     }
 
     /**
@@ -782,9 +772,7 @@ public class GameManager {
     public Card hit(Player player) {    
         Card drawnCard = deck.dealCard();
         if (drawnCard == null) {
-            System.out.println("Deck is empty, no card dealt.");
         } else {
-            System.out.println("Card dealt: " + drawnCard);
         }
     
         Card processedCard = handleSpecialCard(drawnCard, player);
