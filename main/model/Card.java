@@ -195,13 +195,13 @@ public class Card implements Serializable{
      *
      * @return the string representation of the card
      */
-    @Override
-    public String toString() {
+    //@Override
+    /*public String toString() {
         return switch (type) {
             case BLACKJACK_BOMB -> "Blackjack Bomb";
             case SPLIT_ACE -> "Split Ace";
             case JOKER_WILD -> "Joker Wild [Value: " + wildValue + "]";
             default -> rank + " of " + suit;
         };
-    }
+    }*/
 }

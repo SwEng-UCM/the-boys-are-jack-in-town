@@ -152,27 +152,29 @@ class PlayersPanel extends JPanel {
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
         cardPanel.setLayout(new BorderLayout());
+        
 
-        // Load the card image based on rank and suit
-        String imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());
-        ImageIcon cardImage = new ImageIcon(imagePath);
-    
-        // Scale the image to fit the card dimensions
-        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
-        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
-    
-        // Add the image to the card panel
-        cardPanel.add(imageLabel, BorderLayout.CENTER);
+        String imagePath;
         switch (card.getType()) {
             case BLACKJACK_BOMB -> imagePath = "resources/img/blackjack_bomb.png";
             case SPLIT_ACE -> imagePath = "resources/img/split_ace.png";
             case JOKER_WILD -> imagePath = "resources/img/joker_wild.png";
+            
             default -> {
                 String rank = card.getRank().toLowerCase().replace(" ", "_");
                 String suit = card.getSuit().toLowerCase().replace(" ", "_");
                 imagePath = String.format("resources/img/%s_of_%s.png", rank, suit);
             }
         }
+    
+        // Load and scale the image
+        ImageIcon cardImage = new ImageIcon(imagePath);
+        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+    
+        // Add the image to the card panel
+        cardPanel.add(imageLabel, BorderLayout.CENTER);
+    
     
         return cardPanel;
     }
