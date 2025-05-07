@@ -438,7 +438,7 @@ public class BlackjackGUI extends JFrame {
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         setGameButtonsEnabled(true);
-        gameManager.getGameFlowController().setGameOver(false);
+        gameManager.setGameOver(false);
         gameManager.getGameFlowController().resumeGame();
     }
 
