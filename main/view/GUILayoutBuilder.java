@@ -3,13 +3,36 @@ package main.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The {@code GUILayoutBuilder} class is responsible for setting up and arranging
+ * all major components of the Blackjack game's graphical user interface.
+ * <p>
+ * This class is used to modularize and encapsulate the layout logic, separating
+ * it from the {@link BlackjackGUI} constructor.
+ */
 public class GUILayoutBuilder {
     private final BlackjackGUI window;
 
+    /**
+     * Constructs a {@code GUILayoutBuilder} for the specified Blackjack GUI window.
+     *
+     * @param window the {@link BlackjackGUI} instance whose layout is to be built
+     */
     public GUILayoutBuilder(BlackjackGUI window) {
         this.window = window;
     }
 
+    /**
+     * Builds and arranges the components of the Blackjack GUI.
+     * <p>
+     * The layout consists of:
+     * <ul>
+     *     <li>A top panel with achievement and pause buttons, and dealer info</li>
+     *     <li>A center panel for game messages and controls</li>
+     *     <li>A south container with player panels and betting UI</li>
+     * </ul>
+     * This method also starts a new game via the {@link GameFlowController}.
+     */
     public void layoutComponents() {
         window.mainPanel.setLayout(new BorderLayout());
 
@@ -18,23 +41,20 @@ public class GUILayoutBuilder {
         topPanel.setOpaque(false);
 
         // Achievement button
-        JButton achievementButton = window.createStyledButton(""); // Styled yellow button with no text
-
+        JButton achievementButton = window.createStyledButton("");
         ImageIcon rawIcon = new ImageIcon("resources/icons/achievement.png");
         Image scaledImage = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         achievementButton.setIcon(new ImageIcon(scaledImage));
-        
         achievementButton.setToolTipText("View Achievements");
-        achievementButton.setPreferredSize(new Dimension(60, 60)); // smaller size like Undo
+        achievementButton.setPreferredSize(new Dimension(60, 60));
         achievementButton.setHorizontalAlignment(SwingConstants.CENTER);
         achievementButton.setVerticalAlignment(SwingConstants.CENTER);
-        
         achievementButton.addActionListener(e -> new AchievementsWindow().setVisible(true));
-        
-        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10)); // spacing
+
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         topLeftPanel.setOpaque(false);
         topLeftPanel.add(achievementButton);
-        
+
         window.topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         window.topRightPanel.setOpaque(false);
         window.topRightPanel.add(window.pauseButton);
@@ -53,13 +73,14 @@ public class GUILayoutBuilder {
         topPanel.add(dealerArea, BorderLayout.CENTER);
         topPanel.add(window.topRightPanel, BorderLayout.EAST);
 
-        // Center and bottom panels
+        // Center panel with messages and controls
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(window.gameMessageLabel, BorderLayout.NORTH);
         centerPanel.add(window.buttonPanel, BorderLayout.CENTER);
         centerPanel.add(window.specialMessageLabel, BorderLayout.SOUTH);
 
+        // Player and betting panels
         JPanel playersContainer = new JPanel(new BorderLayout());
         playersContainer.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width, 300));
         playersContainer.setOpaque(false);
@@ -73,12 +94,13 @@ public class GUILayoutBuilder {
         southContainer.add(playersContainer, BorderLayout.CENTER);
         southContainer.add(window.betPanel, BorderLayout.SOUTH);
 
-        // Assemble all
+        // Assemble layout
         window.mainPanel.add(topPanel, BorderLayout.NORTH);
         window.mainPanel.add(centerPanel, BorderLayout.CENTER);
         window.mainPanel.add(southContainer, BorderLayout.SOUTH);
         window.add(window.mainPanel);
 
+        // Start the initial game round
         window.gameManager.getGameFlowController().startNewGame();
     }
 }

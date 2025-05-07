@@ -411,7 +411,6 @@ public class BlackjackGUI extends JFrame {
             );
         }
     }
-    
 
     /**
      * Sets the player panels with updated information.
@@ -694,11 +693,6 @@ public class BlackjackGUI extends JFrame {
                 String suit = card.getSuit().toLowerCase().replace(" ", "_");
                 imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());            }
         }
-        
-
-
-
-
         return cardPanel;
     }
 

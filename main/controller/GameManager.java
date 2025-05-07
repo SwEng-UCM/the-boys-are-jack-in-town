@@ -722,10 +722,6 @@ public class GameManager {
         }
 
     }
-    
-    
-    
-    
 
     /**
      * Sets the BlackjackClient instance for multiplayer communication.
