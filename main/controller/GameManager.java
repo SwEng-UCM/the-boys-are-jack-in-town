@@ -375,7 +375,7 @@ public class GameManager {
                 if (playerManager.getCurrentPlayerIndex() >= playerManager.getPlayers().size()) {
                     dealerManager.dealerTurn();
                     gameOver = true;
-                    gameFlowController.setGameOver(true);
+                    this.setGameOver(true);
                 }
         
                 broadcastGameState();
@@ -437,9 +437,11 @@ public class GameManager {
                 ));
             }
         } else {
+            System.out.print("Standing, GameOver Status = " + gameOver);
             if (!gameOver) {
                 if(playerManager.getCurrentPlayerIndex() < players.size())
-                    playerManager.incrementCurrentPlayerIndex(); // move to next player
+                    playerManager.incrementCurrentPlayerIndex();
+                    System.out.print("current index: " + playerManager.getCurrentPlayerIndex());
                 if (playerManager.getCurrentPlayerIndex() < players.size()) {
                     gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
                 if (playerManager.getCurrentPlayerIndex() == 1) {
@@ -471,7 +473,7 @@ public class GameManager {
                 // All players finished their turn, proceed to dealer's turn
                 dealerManager.dealerTurn();
                 gameOver = true;
-                gameFlowController.setGameOver(true);
+                this.setGameOver(true);
                 gui.enableBetting(); // Allow next round
             }
         }
@@ -823,5 +825,13 @@ public class GameManager {
     public static void resetInstance() {
         instance = null;
     }
-    
+
+    /**
+     * Sets the game over state.
+     *
+     * @param b {@code true} to mark the game as over, {@code false} to mark it active
+     */
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 }
