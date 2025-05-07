@@ -218,9 +218,18 @@ public class GameManager {
         if (atLeastOneBet && bettingManager.getDealerBet() == 0) {
             int dealerBet = bettingManager.getDealerBalance() / 10;
             bettingManager.placeDealerBet(dealerBet);
+            dealer.setCurrentBet(dealerBet);
+            dealer.setBalance(bettingManager.getDealerBalance());
+    
             System.out.println("Dealer placed bet of: " + dealerBet);
+    
+            // ✅ Add this to immediately reflect the bet on screen:
+            if (gui != null) {
+                gui.updateGameState(players, dealer, gameOver, isPaused);
+            }
         }
     }
+    
     
 
     /**
