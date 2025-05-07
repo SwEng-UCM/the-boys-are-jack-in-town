@@ -188,6 +188,14 @@ public class GameManager {
      * the dealer's turn begins.
      */
     public void startNextPlayerTurn() {
+        int currentIndex = playerManager.getCurrentPlayerIndex();
+
+        if (currentIndex < 0 || currentIndex >= players.size()) {
+            System.err.println("Invalid currentPlayerIndex: " + currentIndex + ". Resetting to 0.");
+            playerManager.setCurrentPlayerIndex(0);
+            currentIndex = 0;
+        }
+        
         if (playerManager.getCurrentPlayerIndex() == 0) {
             int dealerBet = bettingManager.getDealerBalance() / 10;
             bettingManager.placeDealerBet(dealerBet);
@@ -435,13 +443,14 @@ public class GameManager {
             }
         } else {
             if (!gameOver) {
-                if(playerManager.getCurrentPlayerIndex() < players.size()){
-                    playerManager.incrementCurrentPlayerIndex();
-                    gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
-                }
-                if (playerManager.getCurrentPlayerIndex() == 1) {
-                    gui.enableBetting(); // custom method to show betting UI
+                playerManager.incrementCurrentPlayerIndex();
+                int currentIndex = playerManager.getCurrentPlayerIndex();
+    
+                // ✅ Prevent crash: only access players list if index is valid
+                if (currentIndex < players.size()) {
+                    gui.promptPlayerAction(players.get(currentIndex));
                 } else {
+                    gui.updateGameMessage("Dealer's turn!");
                     dealerManager.dealerTurn();
                 }
             }
