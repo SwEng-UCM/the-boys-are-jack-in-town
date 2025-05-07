@@ -57,7 +57,7 @@ public class GameFlowController {
         setGameOver(false);
         isPaused = false;
     
-        playerManager.setCurrentPlayerIndex(0);
+        this.playerManager.setCurrentPlayerIndex(0);
         gameManager.setDeck(new Deck());
         gameManager.getDeck().shuffle();
     
