@@ -50,7 +50,13 @@ public class Card implements Serializable{
         this.rank = rank;
         this.suit = suit;
         this.hidden = hidden;
-        this.type = CardType.STANDARD;
+        this.type = switch (rank) {
+            case "BB" -> CardType.BLACKJACK_BOMB;
+            case "SA" -> CardType.SPLIT_ACE;
+            case "JW" -> CardType.JOKER_WILD;
+            
+            default -> CardType.STANDARD;
+        };
     }
 
     /**
@@ -196,12 +202,12 @@ public class Card implements Serializable{
      * @return the string representation of the card
      */
     //@Override
-    /*public String toString() {
+    public String toString() {
         return switch (type) {
             case BLACKJACK_BOMB -> "Blackjack Bomb";
             case SPLIT_ACE -> "Split Ace";
             case JOKER_WILD -> "Joker Wild [Value: " + wildValue + "]";
             default -> rank + " of " + suit;
         };
-    }*/
+    }
 }

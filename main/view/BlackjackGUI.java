@@ -189,8 +189,7 @@ public class BlackjackGUI extends JFrame {
         DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
 
         for (Card card : dealerInfo.visibleCards) {
-            String imagePath;
-    
+            String imagePath = null;
             switch (card.getType()) {
                 case BLACKJACK_BOMB -> imagePath = "resources/img/blackjack_bomb.png";
                 case SPLIT_ACE -> imagePath = "resources/img/split_ace.png";
