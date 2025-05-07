@@ -53,8 +53,6 @@ public class GameStateUpdate implements Serializable {
             }
             return copy;
         }
-        
-    
 
     /**
      * Returns a copy of the dealer to maintain immutability.

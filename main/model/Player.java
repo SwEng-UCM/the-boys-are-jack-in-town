@@ -204,34 +204,68 @@ public class Player implements Serializable{
      * -------------------------------------------------------
      */
 
+    /**
+     * Sets the player's current balance.
+     *
+     * @param inputBalance the amount to set as the player's balance
+     */
     public void setBalance(int inputBalance) {
         this.balance = inputBalance;
     }
 
+    /**
+     * Replaces the player's current hand with the specified list of cards.
+     *
+     * @param hand the new hand to assign to the player
+     */
     public void setHand(List<Card> hand) {
         this.hand.clear();
         this.hand.addAll(hand);
     }
 
+    /**
+     * Sets the player's current bet amount.
+     *
+     * @param currentBet the amount the player is betting
+     */
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
     }
 
+    /**
+     * Sets the score multiplier used when calculating the player's score.
+     *
+     * @param scoreMultiplier the multiplier to apply to the player's score
+     */
     public void setScoreMultiplier(double scoreMultiplier) {
         this.scoreMultiplier = scoreMultiplier;
     }
 
+    /**
+     * Updates the player's current score using the {@code calculateScore()} method.
+     */
     public void setCurrentScore() {
         this.currentScore = this.calculateScore();
     }
 
-    public void setScore(int current){
+    /**
+     * Manually sets the player's score to the specified value.
+     *
+     * @param current the value to assign as the player's score
+     */
+    public void setScore(int current) {
         this.currentScore = current;
     }
 
+    /**
+     * Sets whether the player has chosen to stand in the current round.
+     *
+     * @param stood {@code true} if the player has stood, {@code false} otherwise
+     */
     public void setStood(boolean stood) {
         this.hasStood = stood;
     }
+
 
     /**
      * Returns a string representation of the player, including their name and balance.

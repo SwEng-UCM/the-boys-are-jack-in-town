@@ -17,7 +17,7 @@ public class BlackjackClientHandler implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean connected = true;
-    private Player player;  // Track associated player
+    private Player player;  
 
     /**
      * Constructs a new handler for a connected client.
@@ -109,26 +109,22 @@ public class BlackjackClientHandler implements Runnable {
         String playerName = command.getPlayerName();
         int initialBalance = 1000;
     
-        // Add player FIRST
         gameManager.getPlayerManager().addPlayer(playerName, initialBalance);
         this.player = gameManager.getPlayerManager().getPlayerByName(playerName);
     
         System.out.println("Player joined: " + playerName);
         System.out.println("Total players: " + gameManager.getPlayerManager().getPlayers().size());
     
-        // Deal initial hand (example logic — adapt to your flow)
         player.receiveCard(gameManager.getDeck().dealCard());
         player.receiveCard(gameManager.getDeck().dealCard());
 
         System.out.println("Dealt " + player.getHand().size() + " cards to " + player.getName());
 
-        // THEN create and send the update
         GameStateUpdate update = gameManager.createGameStateUpdate();
         System.out.println("Sending update with players: " + update.getPlayers().size());
     
         sendMessage(update);
     
-        // Optionally broadcast to all other clients
         gameManager.broadcastGameState();
     }
     
@@ -146,7 +142,6 @@ public class BlackjackClientHandler implements Runnable {
             if (player != null) {
                 gameManager.playerDisconnected(player.getName());
             }
-            // Safe removal from NetworkManager
             if (gameManager.getNetworkManager() != null) {
                 gameManager.getNetworkManager().getClientHandlers().remove(this);
             }
