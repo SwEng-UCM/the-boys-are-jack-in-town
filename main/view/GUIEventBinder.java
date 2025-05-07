@@ -91,7 +91,7 @@ public class GUIEventBinder {
                 );
             }
         } else {
-            GameManager.resetInstance();
+            //GameManager.resetInstance();
             gameManager = GameManager.getInstance();
             gameManager.setGui(window);
             gameManager.getGameFlowController().startNewGame();
