@@ -70,6 +70,9 @@ public class GameFlowController {
         dealer.reset();
         dealer.receiveCard(gameManager.getDeck().dealCard());
     
+        int dealerBet = gameManager.getBettingManager().getDealerBalance() / 10;
+        gameManager.getBettingManager().placeDealerBet(dealerBet);
+        
         gameManager.broadcastGameState();
     
         gui.updateGameState(playerManager.getPlayers(), dealer, false, false);
