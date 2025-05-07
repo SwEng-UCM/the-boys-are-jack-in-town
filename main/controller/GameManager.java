@@ -188,18 +188,15 @@ public class GameManager {
      * the dealer's turn begins.
      */
     public void startNextPlayerTurn() {
-        if (playerManager.getCurrentPlayerIndex() == 0) {
-            int dealerBet = bettingManager.getDealerBalance() / 10;
-            bettingManager.placeDealerBet(dealerBet);
-        }
-    
         if (playerManager.getCurrentPlayerIndex() < players.size()) {
             gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
         } else {
+            placeInitialDealerBet(); // <--- add this
             gui.updateGameMessage("Dealer's turn!");
             dealerManager.dealerTurn();
         }
     }
+    
 
     /**
      * Checks if the game is in multiplayer mode.
@@ -209,6 +206,22 @@ public class GameManager {
     public boolean isMultiplayerMode() {
         return multiplayerMode;
     }
+    public void placeInitialDealerBet() {
+        boolean atLeastOneBet = false;
+        for (Player p : players) {
+            if (bettingManager.hasPlayerBet(p.getName())) {
+                atLeastOneBet = true;
+                break;
+            }
+        }
+    
+        if (atLeastOneBet && bettingManager.getDealerBet() == 0) {
+            int dealerBet = bettingManager.getDealerBalance() / 10;
+            bettingManager.placeDealerBet(dealerBet);
+            System.out.println("Dealer placed bet of: " + dealerBet);
+        }
+    }
+    
 
     /**
      * Sets the multiplayer mode for the game. Clears default players in multiplayer mode
@@ -373,6 +386,7 @@ public class GameManager {
         
                 // If all players have acted, dealer takes turn
                 if (playerManager.getCurrentPlayerIndex() >= playerManager.getPlayers().size()) {
+                    placeInitialDealerBet();
                     dealerManager.dealerTurn();
                     gameOver = true;
                     gameFlowController.setGameOver(true);
@@ -438,18 +452,23 @@ public class GameManager {
             }
         } else {
             if (!gameOver) {
-                if(playerManager.getCurrentPlayerIndex() < players.size())
+                if (playerManager.getCurrentPlayerIndex() < players.size())
                     playerManager.incrementCurrentPlayerIndex(); // move to next player
+        
                 if (playerManager.getCurrentPlayerIndex() < players.size()) {
                     gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
-                if (playerManager.getCurrentPlayerIndex() == 1) {
-                    gui.enableBetting(); // custom method to show betting UI
-                }                    
+                    if (playerManager.getCurrentPlayerIndex() == 1) {
+                        gui.enableBetting(); // custom method to show betting UI
+                    }                    
                 } else {
+                    placeInitialDealerBet(); 
                     dealerManager.dealerTurn();
+                    gameOver = true;
+                    gameFlowController.setGameOver(true);
                 }
             }
         }
+        
     }
     
     /**
