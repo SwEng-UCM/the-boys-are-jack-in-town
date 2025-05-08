@@ -77,3 +77,12 @@ This project is licensed under the **MIT License**, an open-source license recog
 
 **Team:** *The Boys Are Jack In Town*  
 Coded with passion, ☕, git conflicts, and just enough luck to beat the dealer.
+
+/**
+ * This class was developed with the assistance of OpenAI's ChatGPT (GPT-4),
+ * an AI language model used to support software design, implementation,
+ * debugging, and documentation generation during the development process.
+ *
+ * Citation:
+ * OpenAI. (2025). ChatGPT (GPT-4) [Large language model]. https://openai.com/chatgpt
+ */
