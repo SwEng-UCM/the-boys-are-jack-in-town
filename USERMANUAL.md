@@ -52,15 +52,17 @@ This guide will walk you through how to play, configure, and fully enjoy the gam
     - The Pause Menu is also where you save games to later load them.
 
 10. **Wild Cards**
-      **Blackjack Bomb**
+      Blackjack Bomb
     - Effect: Instantly busts any hand it is drawn into—player or dealer.
     - Strategy Tip: Avoid at all costs! If drawn, it overrides your score regardless of previous cards.
     - Visual: Explosive design with white theme.
-      **Split Ace**
+      
+      Split Ace
     - Effect: Automatically splits a pair of Aces if you draw one and already hold another Ace.
     - Strategy Tip: This lets you play two powerful hands simultaneously. Take advantage of it to double your chances of winning.
     - Visual: Twin Aces
-      **JOKER WILD**
+      
+      JOKER WILD
     - Effect: Acts as any card with a value of your choice between 1 and 11.
     - Strategy Tip: Perfect for filling gaps or reaching a soft 21. You'll be prompted to choose the value when drawn.
     - Visual: A playful, color-shifting Joker card.
