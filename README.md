@@ -31,6 +31,7 @@ This project is licensed under the **MIT License**, an open-source license recog
 3. Use the buttons to place bets, hit, stand, or undo your last move.
 4. Unlock badges by playing — including your first Blackjack, loss, and bet.
 5. Change language and difficulty via the Options menu.
+6. Play multiplayer via Java Sockets by choosing to act as either a Host or a Player.
 
 📸 **Screenshots**:  
 
