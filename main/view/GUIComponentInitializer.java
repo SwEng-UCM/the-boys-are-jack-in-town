@@ -50,6 +50,7 @@ public class GUIComponentInitializer {
         window.dealerPanel.setOpaque(false);
         window.betPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 10));
         window.buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        //window.mainPanel.add(window.dealerPanel, BorderLayout.NORTH);
 
         // Labels for bet and balance
         window.betLabel = window.createStyledLabel(Texts.bet[language] + " $0");
@@ -118,6 +119,7 @@ public class GUIComponentInitializer {
         window.buttonPanel.add(window.newGameButton);
         window.buttonPanel.add(window.undoButton);
         window.buttonPanel.add(window.pauseButton);
+        
     }
 
     /**

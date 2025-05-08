@@ -183,7 +183,7 @@ public class BlackjackGUI extends JFrame {
      * @param cardInfo The dealer's visible card information to display.
      */
     private void updateDealerHand(DealerManager.DealerCardInfo cardInfo) {
-        dealerPanel.removeAll();
+        this.dealerPanel.removeAll();
 
         boolean gameOver = gameManager.getGameFlowController().isGameOver();
         DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
@@ -205,16 +205,16 @@ public class BlackjackGUI extends JFrame {
             ImageIcon icon = new ImageIcon(imagePath);
             Image scaled = icon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
             JLabel cardLabel = new JLabel(new ImageIcon(scaled));
-            dealerPanel.add(cardLabel);
+            this.dealerPanel.add(cardLabel);
         }
     
 
         for (int i = 0; i < dealerInfo.hiddenCardCount; i++) {
-            dealerPanel.add(createHiddenCardPanel());
+            this.dealerPanel.add(createHiddenCardPanel());
         }
 
-        dealerPanel.revalidate();
-        dealerPanel.repaint();
+        this.dealerPanel.revalidate();
+        this.dealerPanel.repaint();
     }
 
     /**
@@ -677,14 +677,8 @@ public class BlackjackGUI extends JFrame {
         cardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
 
         String imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());
-
-
-        ImageIcon cardImage = new ImageIcon(imagePath);
-        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
-        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
-    
         // Add the image to the card panel
-        cardPanel.add(imageLabel, BorderLayout.CENTER); 
+         
         switch (card.getType()) {
             case BLACKJACK_BOMB -> imagePath = "resources/img/blackjack_bomb.png";
             case SPLIT_ACE -> imagePath = "resources/img/split_ace.png";
@@ -694,6 +688,11 @@ public class BlackjackGUI extends JFrame {
                 String suit = card.getSuit().toLowerCase().replace(" ", "_");
                 imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());            }
         }
+        ImageIcon cardImage = new ImageIcon(imagePath);
+        Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        cardPanel.add(imageLabel, BorderLayout.CENTER);
+    
         
 
 
