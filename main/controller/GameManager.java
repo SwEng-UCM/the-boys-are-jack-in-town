@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
+import main.controller.GameAction;
 
 /**
  * The GameManager class is responsible for managing the game state and logic.
@@ -188,6 +189,13 @@ public class GameManager {
      * the dealer's turn begins.
      */
     public void startNextPlayerTurn() {
+        int currentIndex = playerManager.getCurrentPlayerIndex();
+
+        if (currentIndex < 0 || currentIndex >= players.size()) {
+            playerManager.setCurrentPlayerIndex(0);
+            currentIndex = 0;
+        }
+        
         if (playerManager.getCurrentPlayerIndex() == 0) {
             int dealerBet = bettingManager.getDealerBalance() / 10;
             bettingManager.placeDealerBet(dealerBet);
@@ -254,7 +262,6 @@ public class GameManager {
     public void playerDisconnected(String playerName) {
         players.removeIf(p -> p.getName().equals(playerName));
         broadcastGameState();
-        System.out.println("Player disconnected: " + playerName);
     }
 
     /**
@@ -264,9 +271,7 @@ public class GameManager {
         if (!multiplayerMode) return;
         
         GameStateUpdate update = createGameStateUpdate();
-        System.out.println("Sending update with players: " + update.getPlayers().size());
         for (Player p : playerManager.getPlayers()) {
-            System.out.println("Player " + p.getName() + " has " + p.getHand().size() + " cards");
         }
         networkManager.getClientHandlers().forEach(handler -> 
             handler.sendMessage(update)
@@ -294,7 +299,6 @@ public class GameManager {
     
         String playerName = command.getPlayerName();
         if (playerName == null && command.getType() != MultiplayerCommand.Type.START_NEW_GAME) {
-            System.err.println("Command missing player name: " + command.getType());
             return;
         }
     
@@ -309,10 +313,9 @@ public class GameManager {
                     broadcastGameState();
                 }
             }
-            default -> System.err.println("Unknown command type: " + command.getType());
         }
     }
-    
+
 
     /**
      * Handles a player joining the game in multiplayer mode.
@@ -322,12 +325,10 @@ public class GameManager {
     private void handlePlayerJoin(String playerName) {
         if (playerManager.getPlayerByName(playerName) == null) {
             playerManager.addPlayer(playerName, 1000);
-            System.out.println("Player joined: " + playerName);
             broadcastGameState(); // Send current state to all clients
         }
     }
     
-
     /**
      * Handles a player's bet in multiplayer mode.
      *
@@ -342,7 +343,6 @@ public class GameManager {
         }
     }
     
-
     /**
      * Handles a player's "hit" action in multiplayer mode.
      *
@@ -360,18 +360,26 @@ public class GameManager {
         }
     }
     
-
     /**
      * Handles a player's "stand" action in multiplayer mode.
      *
      * @param command The MultiplayerCommand containing the stand action.
      */
     private void handleStand(String playerName) {
-        Player player = playerManager.getPlayerByName(playerName);
-        if (player != null && playerManager.isCurrentPlayer(player)) {
-            playerManager.incrementCurrentPlayerIndex();
-            broadcastGameState();
-        }
+            Player player = playerManager.getPlayerByName(playerName);
+            if (player != null && playerManager.isCurrentPlayer(player)) {
+                playerManager.incrementCurrentPlayerIndex();
+        
+                // If all players have acted, dealer takes turn
+                if (playerManager.getCurrentPlayerIndex() >= playerManager.getPlayers().size()) {
+                    dealerManager.dealerTurn();
+                    gameOver = true;
+                    this.setGameOver(true);
+                }
+        
+                broadcastGameState();
+            }
+        
     }
     
 
@@ -389,7 +397,6 @@ public class GameManager {
             }
         } else {
             if (playerManager.getCurrentPlayerIndex() < 0 || playerManager.getCurrentPlayerIndex() >= players.size()) {
-                System.err.println("Invalid player index: " + playerManager.getCurrentPlayerIndex() + " (Total players: " + players.size() + ")");
                 playerManager.setCurrentPlayerIndex(0);
             }
         
@@ -421,7 +428,6 @@ public class GameManager {
         if (multiplayerMode) {
             if (client != null) {
                 Player current = players.get(playerManager.getCurrentPlayerIndex());
-                // Use the action factory method
                 client.sendAction(MultiplayerCommand.action(
                     MultiplayerCommand.Type.STAND, 
                     current.getName()
@@ -429,14 +435,14 @@ public class GameManager {
             }
         } else {
             if (!gameOver) {
-                if(playerManager.getCurrentPlayerIndex() < players.size())
-                    playerManager.incrementCurrentPlayerIndex(); // move to next player
-                if (playerManager.getCurrentPlayerIndex() < players.size()) {
-                    gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
-                if (playerManager.getCurrentPlayerIndex() == 1) {
-                    gui.enableBetting(); // custom method to show betting UI
-                }                    
+                playerManager.incrementCurrentPlayerIndex();
+                int currentIndex = playerManager.getCurrentPlayerIndex();
+    
+                // ✅ Prevent crash: only access players list if index is valid
+                if (currentIndex < players.size()) {
+                    gui.promptPlayerAction(players.get(currentIndex));
                 } else {
+                    gui.updateGameMessage("Dealer's turn!");
                     dealerManager.dealerTurn();
                 }
             }
@@ -455,15 +461,13 @@ public class GameManager {
             bettingManager.dealerWins(null);
             
      
-            if (playerManager.getCurrentPlayerIndex() < players.size()) {
-                // Proceed to the next player
+            if (playerManager.getCurrentPlayerIndex() < (players.size()-1)) {
                 gui.promptPlayerAction(players.get(playerManager.getCurrentPlayerIndex()));
             } else {
-                // All players finished their turn, proceed to dealer's turn
                 dealerManager.dealerTurn();
                 gameOver = true;
-                gameFlowController.setGameOver(true);
-                gui.enableBetting(); // Allow next round
+                this.setGameOver(true);
+                gui.enableBetting(); 
             }
         }
     }
@@ -682,7 +686,6 @@ public class GameManager {
      * @param loadedState The GameState object representing the loaded state.
      */
     public void applyGameState(GameState loadedState) {
-        System.out.println("Applying game state");
         
         loadedState.restore(this);
 
@@ -695,8 +698,6 @@ public class GameManager {
             gui.enableBetting();
             startNextPlayerTurn();
         });
-
-        System.out.println("Game loaded successfully!");
     }
 
     /**
@@ -722,10 +723,6 @@ public class GameManager {
         }
 
     }
-    
-    
-    
-    
 
     /**
      * Sets the BlackjackClient instance for multiplayer communication.
@@ -772,9 +769,7 @@ public class GameManager {
     public Card hit(Player player) {    
         Card drawnCard = deck.dealCard();
         if (drawnCard == null) {
-            System.out.println("Deck is empty, no card dealt.");
         } else {
-            System.out.println("Card dealt: " + drawnCard);
         }
     
         Card processedCard = handleSpecialCard(drawnCard, player);
@@ -814,5 +809,13 @@ public class GameManager {
     public static void resetInstance() {
         instance = null;
     }
-    
+
+    /**
+     * Sets the game over state.
+     *
+     * @param b {@code true} to mark the game as over, {@code false} to mark it active
+     */
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 }

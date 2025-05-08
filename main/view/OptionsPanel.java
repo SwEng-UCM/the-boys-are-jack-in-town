@@ -8,7 +8,12 @@ import main.controller.OptionsController;
 import static main.view.BlackJackMenu.language;
 
 /**
- * Stylish OptionsPanel matching the Blackjack game's casino theme.
+ * The {@code OptionsPanel} class represents a modal dialog for configuring
+ * game settings such as language and difficulty. It follows the casino theme
+ * styling consistent with the Blackjack game's UI.
+ *
+ * <p>This panel allows users to select a language and a difficulty level
+ * and apply these settings using an {@link OptionsController}.</p>
  */
 public class OptionsPanel extends JDialog {
     private JComboBox<String> languageDropdown;
@@ -16,16 +21,21 @@ public class OptionsPanel extends JDialog {
     private JButton applyButton, cancelButton;
     private final OptionsController controller;
 
+    /**
+     * Constructs a new {@code OptionsPanel} with the given parent menu window.
+     *
+     * @param parent the {@link BlackJackMenu} that invoked this options dialog
+     */
     public OptionsPanel(BlackJackMenu parent) {
         super(parent, Texts.optionsTitle[language], true);
         this.controller = new OptionsController();
 
         setSize(420, 300);
         setLocationRelativeTo(parent);
-        setUndecorated(true); // borderless for custom style
+        setUndecorated(true); 
         setLayout(new BorderLayout());
 
-        // Casino-style main panel with glass effect
+        // Main panel with translucent casino-style background
         JPanel mainPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -42,7 +52,7 @@ public class OptionsPanel extends JDialog {
         Font labelFont = new Font("Segoe UI", Font.BOLD, 16);
         Color labelColor = Color.WHITE;
 
-        // Language
+        // Language selection
         JLabel langLabel = new JLabel("🌐 " + Texts.selectLanguage[language]);
         langLabel.setFont(labelFont);
         langLabel.setForeground(labelColor);
@@ -54,7 +64,7 @@ public class OptionsPanel extends JDialog {
         languageDropdown.setSelectedIndex(language);
         styleComboBox(languageDropdown);
 
-        // Difficulty
+        // Difficulty selection
         JLabel diffLabel = new JLabel("🎯 " + Texts.selectDifficulty[language]);
         diffLabel.setFont(labelFont);
         diffLabel.setForeground(labelColor);
@@ -68,7 +78,7 @@ public class OptionsPanel extends JDialog {
         difficultyCombo.setToolTipText(Texts.tooltipDifficulty[language]);
         styleComboBox(difficultyCombo);
 
-        // Buttons
+        // Apply and Cancel buttons
         applyButton = createStyledButton(Texts.apply[language], new Color(0, 153, 0));
         cancelButton = createStyledButton(Texts.cancel[language], new Color(153, 0, 0));
 
@@ -82,7 +92,7 @@ public class OptionsPanel extends JDialog {
 
         cancelButton.addActionListener(e -> dispose());
 
-        // Add components
+        // Add components to the main panel
         mainPanel.add(langLabel);
         mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(languageDropdown);
@@ -104,7 +114,11 @@ public class OptionsPanel extends JDialog {
     }
 
     /**
-     * Creates a modern, rounded casino-style JButton.
+     * Creates a casino-themed styled button with consistent font and border.
+     *
+     * @param text the label for the button
+     * @param baseColor the base background color of the button
+     * @return the styled {@link JButton}
      */
     private JButton createStyledButton(String text, Color baseColor) {
         JButton button = new JButton(text);
@@ -121,7 +135,10 @@ public class OptionsPanel extends JDialog {
     }
 
     /**
-     * Applies consistent casino-style formatting to a JComboBox.
+     * Styles the given combo box with uniform font, color, and alignment settings
+     * to match the overall theme.
+     *
+     * @param comboBox the {@link JComboBox} to style
      */
     private void styleComboBox(JComboBox<String> comboBox) {
         comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 14));

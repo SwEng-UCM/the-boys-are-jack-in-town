@@ -3,8 +3,6 @@ package main.model;
 import main.view.Texts;
 import static main.view.BlackJackMenu.language;
 
-import java.io.Serializable;
-
 /**
  * The Badge enum represents various achievements that players can unlock during the game.
  * Each badge has a title, a path to its colored image, and a path to its greyed-out image.

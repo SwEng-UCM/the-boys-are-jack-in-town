@@ -118,7 +118,7 @@ public class GameState implements Serializable {
         manager.getDealerManager().getDealer().getHand().clear();
         manager.getDealerManager().getDealer().getHand().addAll(dealerHand);
         manager.getPlayerManager().setCurrentPlayerIndex(currentPlayerIndex);
-        manager.getGameFlowController().setGameOver(gameOver);
+        manager.setGameOver(gameOver);
         manager.getDeck().getCards().clear();
         manager.getDeck().getCards().addAll(deck.getCards());
         restoreDifficulty(manager);
@@ -374,7 +374,7 @@ public class GameState implements Serializable {
         manager.getDealerManager().setDealer(dealer);
         manager.setDeck(deck);
         manager.getPlayerManager().setCurrentPlayerIndex(currentPlayerIndex);
-        manager.getGameFlowController().setGameOver(false);
+        manager.setGameOver(false);
 
         BettingManager bettingManager = new BettingManager(players, players.get(0).getBalance(), dealerBalance);
         bettingManager.placeDealerBet(dealerBet);

@@ -39,7 +39,6 @@ public class GUIEventBinder {
                         .getPlayerManager()
                         .getCurrentPlayer();
         
-                    // Send command to server, don't run locally!
                     window.gameManager.getClient().sendAction(
                         new MultiplayerCommand(
                             MultiplayerCommand.Type.HIT,
@@ -48,35 +47,41 @@ public class GUIEventBinder {
                         )
                     );
                 } else {
-                    window.gameManager.handlePlayerHit(); // single player
+                    window.gameManager.handlePlayerHit(); 
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
         
-
-        // Action listener for the "Stand" button
+            // STAND
         window.standButton.addActionListener(e -> {
             try {
-                window.gameManager.handlePlayerStand();
+                if (window.gameManager.isMultiplayerMode()) {
+                    Player current = window.gameManager.getPlayerManager().getCurrentPlayer();
+                    window.gameManager.getClient().sendAction(
+                        new MultiplayerCommand(MultiplayerCommand.Type.STAND, current.getName(), null)
+                    );
+                } else {
+                    window.gameManager.handlePlayerStand();
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
 
-        // Action listener for the "New Game" button
+        // NEW GAME
         window.newGameButton.addActionListener(e -> {
             GameManager gameManager = window.gameManager;
 
             if (gameManager.isMultiplayerMode()) {
                 if (gameManager.isServer()) {
-                    MultiplayerCommand startCmd = MultiplayerCommand.action(
+                    MultiplayerCommand startCmd = new MultiplayerCommand(
                         MultiplayerCommand.Type.START_NEW_GAME,
-                        null 
+                        "HOST", 
+                        null
                     );
                     gameManager.getNetworkManager().broadcast(startCmd);
-
                     gameManager.getGameFlowController().startNewGame();
                 } else {
                     JOptionPane.showMessageDialog(window,
@@ -86,32 +91,38 @@ public class GUIEventBinder {
                     );
                 }
             } else {
-                GameManager.resetInstance();
                 gameManager = GameManager.getInstance();
                 gameManager.setGui(window);
                 gameManager.getGameFlowController().startNewGame();
-                }
+            }
         });
 
-
-       
-
-        // Action listener for the "Pause" button
-        window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
-
-        // Action listener for the "Place Bet" button
+        // PLACE BET
         window.placeBetButton.addActionListener(e -> {
             String betText = window.betField.getText();
             if (!betText.isEmpty()) {
                 try {
                     int bet = Integer.parseInt(betText);
                     Player currentPlayer = window.gameManager.getPlayerManager().getCurrentPlayer();
-                    window.placeBet(currentPlayer); // Call the method in BlackjackGUI to place bet
-                } catch (NumberFormatException ex) {
+        
+                    if (window.gameManager.isMultiplayerMode()) {
+                        MultiplayerCommand betCommand = new MultiplayerCommand(
+                            MultiplayerCommand.Type.BET,
+                            currentPlayer.getName(),
+                            bet
+                        );
+                        window.gameManager.getClient().sendAction(betCommand);
+                    } else {
+                        window.placeBet(currentPlayer); 
+                    }
+                } catch (NumberFormatException | IOException ex) {
                     JOptionPane.showMessageDialog(window, "Invalid bet amount.");
                 }
             }
         });
+        
+        // Action listener for the "Pause" button
+        window.pauseButton.addActionListener(e -> new PausePanel(window, window.gameManager, window, BlackJackMenu.language).showPauseMenu());
 
         // Action listener for the "Undo" button
         window.undoButton.addActionListener(e -> {

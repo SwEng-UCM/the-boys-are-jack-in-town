@@ -74,9 +74,6 @@ public class PlayerManager {
 
     public void incrementCurrentPlayerIndex(){
         setCurrentPlayerIndex(currentPlayerIndex + 1);
-
-
-        System.out.println("index after incrementing: " + getCurrentPlayerIndex());
     }
     /**
      * Checks if the given player object is the current player.

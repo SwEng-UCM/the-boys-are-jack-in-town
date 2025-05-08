@@ -411,7 +411,6 @@ public class BlackjackGUI extends JFrame {
             );
         }
     }
-    
 
     /**
      * Sets the player panels with updated information.
@@ -454,7 +453,7 @@ public class BlackjackGUI extends JFrame {
         betField.setEnabled(true);
         placeBetButton.setEnabled(true);
         setGameButtonsEnabled(true);
-        gameManager.getGameFlowController().setGameOver(false);
+        gameManager.setGameOver(false);
         gameManager.getGameFlowController().resumeGame();
     }
 
@@ -688,11 +687,14 @@ public class BlackjackGUI extends JFrame {
                 String suit = card.getSuit().toLowerCase().replace(" ", "_");
                 imagePath = String.format("resources/img/%s_of_%s.png", card.getRank().toLowerCase(), card.getSuit().toLowerCase());            }
         }
+
             ImageIcon cardImage = new ImageIcon(imagePath);
             Image scaledImage = cardImage.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
             JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
             cardPanel.add(imageLabel, BorderLayout.CENTER);
     
+
+
         return cardPanel;
     }
 
