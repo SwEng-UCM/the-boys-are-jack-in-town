@@ -47,6 +47,11 @@ This project is licensed under the **MIT License**, an open-source license recog
 - **Options Menu – Language & Difficulty Selection**  
   ![Options Menu](resources/doc%20pics/options.png)
 
+- **Java Sockets Menus and Game**
+  ![Java Sockets](resources/doc%20pics/socketsmenu.png)
+  ![Java Sockets](resources/doc%20pics/socketsclient.png)
+  ![Java Sockets](resources/doc%20pics/socketsgame.png)
+
 
 🔗 Full user manual available here: [User Manual](USERMANUAL.md)
 
