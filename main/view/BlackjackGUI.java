@@ -183,7 +183,7 @@ public class BlackjackGUI extends JFrame {
      * @param cardInfo The dealer's visible card information to display.
      */
     private void updateDealerHand(DealerManager.DealerCardInfo cardInfo) {
-        this.dealerPanel.removeAll();
+        dealerPanel.removeAll();
 
         boolean gameOver = gameManager.getGameFlowController().isGameOver();
         DealerManager.DealerCardInfo dealerInfo = gameManager.getDealerManager().getVisibleDealerCards(gameOver);
@@ -205,16 +205,16 @@ public class BlackjackGUI extends JFrame {
             ImageIcon icon = new ImageIcon(imagePath);
             Image scaled = icon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
             JLabel cardLabel = new JLabel(new ImageIcon(scaled));
-            this.dealerPanel.add(cardLabel);
+            dealerPanel.add(cardLabel);
         }
     
 
         for (int i = 0; i < dealerInfo.hiddenCardCount; i++) {
-            this.dealerPanel.add(createHiddenCardPanel());
+            dealerPanel.add(createHiddenCardPanel());
         }
 
-        this.dealerPanel.revalidate();
-        this.dealerPanel.repaint();
+        dealerPanel.revalidate();
+        dealerPanel.repaint();
     }
 
     /**
