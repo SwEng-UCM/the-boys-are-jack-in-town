@@ -693,11 +693,6 @@ public class BlackjackGUI extends JFrame {
             JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
             cardPanel.add(imageLabel, BorderLayout.CENTER);
     
-        
-
-
-
-
         return cardPanel;
     }
 
