@@ -31,6 +31,7 @@ This project is licensed under the **MIT License**, an open-source license recog
 3. Use the buttons to place bets, hit, stand, or undo your last move.
 4. Unlock badges by playing — including your first Blackjack, loss, and bet.
 5. Change language and difficulty via the Options menu.
+6. Play multiplayer via Java Sockets by choosing to act as either a Host or a Player.
 
 📸 **Screenshots**:  
 
@@ -45,6 +46,11 @@ This project is licensed under the **MIT License**, an open-source license recog
 
 - **Options Menu – Language & Difficulty Selection**  
   ![Options Menu](resources/doc%20pics/options.png)
+
+- **Java Sockets Menus and Game**
+  ![Java Sockets](resources/doc%20pics/socketsmenu.png)
+  ![Java Sockets](resources/doc%20pics/socketsclient.png)
+  ![Java Sockets](resources/doc%20pics/socketsgame.png)
 
 
 🔗 Full user manual available here: [User Manual](USERMANUAL.md)
@@ -71,3 +77,10 @@ This project is licensed under the **MIT License**, an open-source license recog
 
 **Team:** *The Boys Are Jack In Town*  
 Coded with passion, ☕, git conflicts, and just enough luck to beat the dealer.
+
+ * This project was developed with the assistance of OpenAI's ChatGPT (GPT-4),
+   an AI language model used to support software design, implementation,
+   debugging, and documentation generation during the development process.
+ 
+   Citation:
+   OpenAI. (2025). ChatGPT (GPT-4) [Large language model]. https://openai.com/chatgpt
