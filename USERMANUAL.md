@@ -5,6 +5,18 @@ This guide will walk you through how to play, configure, and fully enjoy the gam
 
 ---
 
+## 🚀 Deployment Instructions
+
+1. **Download the latest release JAR file**  
+   👉 From the [Releases](../../releases) section on GitHub.
+
+2. **Run the game using Java 17+**  
+   Open a terminal in the folder where the JAR is located and run:
+   ```bash
+   java -jar BlackjackGame.jar
+
+---
+
 ## 🎮 How to Play
 
 1. **Start the Game**
@@ -71,37 +83,6 @@ This guide will walk you through how to play, configure, and fully enjoy the gam
       
 ---
 
-## ⚙️ Project Configuration
-
-To configure and run this project locally:
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/SwEng-UCM/the-boys-are-jack-in-town.git
-   ```
-   ```bash
-   cd the-boys-are-jack-in-town
-   ```
-2. **Open the project in VS Code, IntelliJ, Eclipse, or any Java IDE**
-3. **Ensure Java 17+ is installed**
-   ```bash
-    java -version
-4. Locate and open the file: `BlackjackGUI.java` in `/src/main/java/blackjack/`
-
----
-
-## 🚀 Deployment Instructions
-
-1. **Package the project as a JAR file using your IDE or:**
-    ```bash
-   jar cfe BlackjackGame.jar blackjack.BlackjackGUI -C out .
-    ```
-2. **To run the JAR:**
-    ```bash
-   java -jar BlackjackGame.jar
-    ```
-
---- 
 
 ## 🙋 FAQ
 
